@@ -7,7 +7,8 @@ export const USER_CONSTANTS = {
 export const TEACHER_CONSTANTS = {
     collectionName: 'teachers',
     nameAttr: 'name',
-    genderAttr: 'gender'
+    genderAttr: 'gender',
+    userIdAttr: 'userId'
 }
 
 export const STUDENT_CONSTANTS = {

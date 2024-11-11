@@ -32,8 +32,7 @@ const typographies = reactive<{
   Body1: "text-sm text-content-secondary",
   Body2: "text-sm/[16px] text-content-primary",
   Body3: "text-xs text-content-primary",
-  Label: "text-base text-content-non-essential",
-  LabelPrimary: "text-base text-content-primary font-semibold"
+  Label: "text-base text-content-secondary"
 })
 
 const selectedTag = computed(() => props.typography === typographies.H1 ? "h1" : "p")

@@ -8,20 +8,25 @@
             <Text :typography="Typography.Body2" class="flex-1">
                 {{ model === '' ? props.placeholder : model }}
             </Text>
-            <ic-chevron-down class="text-2xl"/>
+            <Icon name="mdi:chevron-down" class="text-2xl"/>
         </div>
         <div tabindex="0" ref="dropdown" class="dropdown-content mt-2 w-full h-64 z-[1] overflow-y-scroll shadow bg-base-100 rounded-box border border-border-primary [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
             <TextField
+                v-if="textFieldPlaceholder != ''"
                 v-model="query"
                 class="pt-4 px-4 sticky top-0 bg-white z-10"
-                :placeholder="props.textFieldPlaceholder"
+                :placeholder="textFieldPlaceholder"
                 leading-icon="ic-search"
             />
-            <ul tabindex="0" class="menu p-0 overflow-y-hidden">
+            <ul tabindex="0" class="menu p-0 overflow-y-hidden" :class="textFieldPlaceholder == '' ? 'mt-3' : ''">
                 <li v-for="option in filteredOptions" @click="select(option.key)">
-                    <Text class="py-3">
-                        {{ option.label }}
-                    </Text>
+                    <a>
+                        <div class="py-3 px-4">
+                            <Text>
+                                {{ option.label }}
+                            </Text>
+                        </div>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -62,7 +67,6 @@
 
     const query = ref('')
     const dropdown = ref(null)
-    const { focused } = useFocus(dropdown)
     const filteredOptions = computed(() => 
         props.options.map<FilterOption>((option, index) => (
             { 
@@ -74,6 +78,6 @@
 
     const select = (selected: string) => {
         model.value = selected
-        focused.value = false
+        if (document.activeElement instanceof HTMLElement) document.activeElement.blur()
     }
 </script>

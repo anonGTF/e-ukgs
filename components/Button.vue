@@ -1,12 +1,14 @@
 <template>
-  <button
-    type="button"
-    :class="constructedClass"
-    @click="$emit('click')"
-  >
-    <span v-if="$props.loading" :class="props.loading ? 'loading loading-spinner' : ''"></span>
-    <slot />
-  </button>
+  <NuxtLink :to="to">
+    <button
+      type="button"
+      :class="constructedClass"
+      @click="$emit('click')"
+    >
+      <span v-if="$props.loading" :class="props.loading ? 'loading loading-spinner' : ''"></span>
+      <slot />
+    </button>
+  </NuxtLink>
 </template>
 
 <script lang="ts" setup>
@@ -45,6 +47,10 @@ const props = defineProps({
   class: {
     type: String,
     default: ''
+  },
+  to: {
+    type: String,
+    default: ''
   }
 })
 
@@ -55,7 +61,7 @@ const buttonTypes = reactive<{
 }>({
   Primary: "btn-primary rounded-xl text-white",
   Secondary: "btn-white rounded-xl text-black font-bold",
-  Outlined: "btn-outline rounded-xl",
+  Outlined: "btn-outline rounded-xl border border-border-primary",
   Ghost: "btn-ghost"
 })
 

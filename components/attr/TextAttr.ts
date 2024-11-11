@@ -5,6 +5,5 @@ export enum Typography {
   Body1 = 'Body1',
   Body2 = 'Body2',
   Body3 = 'Body3',
-  Label = 'Label',
-  LabelPrimary = 'LabelPrimary'
+  Label = 'Label'
 }

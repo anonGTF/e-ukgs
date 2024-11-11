@@ -56,7 +56,7 @@ const leadingSpacing = computed(() => props.leadingIcon !== '' ? 'ps-11' : '')
     </div>
     <div class="relative w-full">
         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-          <Icon v-if="props.leadingIcon != ''" :name="props.leadingIcon" class="text-2xl mt-1" />
+          <Icon v-if="props.leadingIcon != ''" :name="props.leadingIcon" class="text-2xl" />
         </div>
         <label :class="`input input-bordered w-full flex items-center focus:outline-transparent focus:border-black ${passwordLetterSpacing} ${errorStyle} ${leadingSpacing}`" >
           <input 
