@@ -4,6 +4,9 @@ const admin = require("firebase-admin")
 
 admin.initializeApp()
 
+const auth = admin.auth()
+const db = admin.firestore()
+
 const REGION = "asia-southeast2"
 
 exports.addTeacher = onCall(
@@ -31,7 +34,7 @@ exports.addTeacher = onCall(
     }
 
     // validate requester is admin
-    return admin.firestore().doc(`/users/${request.auth.uid}`).get()
+    return db.doc(`/users/${request.auth.uid}`).get()
     .then((response) => {
       const requesterRole = response.data()["role"]
 
@@ -40,17 +43,33 @@ exports.addTeacher = onCall(
       }
 
       // create authentication user
-      admin.auth().createUser({
+      auth.createUser({
         email,
         password
       }).then((userCred) => {
         const userCredId = userCred.uid
 
         // add teacher to database
-        admin.firestore().doc(`/teachers/${userCredId}`).create({
-          name,
-          gender,
-          userId
+        db.runTransaction((trx) => {
+          const userRef = db.collection("users").doc(userCredId)
+          const teacherRef = db.collection("teachers").doc(userCredId)
+
+          trx.set(
+            userRef, 
+            {
+              role: "teacher"
+            }
+          )
+
+          trx.set(teacherRef, 
+            {
+              name,
+              gender,
+              userId
+            }
+          )
+
+          return Promise.resolve()
         }).then(() => {
           logger.info("Guru berhasil ditambahkan")
           return {
