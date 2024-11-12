@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from '~/components/attr/Breadcrumb'
+    import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr'
     import { Typography } from '~/components/attr/TextAttr'
 
     definePageMeta({

@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from './attr/Breadcrumb';
+    import type { BreadcrumbArgs } from './attr/BreadcrumbAttr';
     import { Typography } from './attr/TextAttr';
 
     const props = defineProps({

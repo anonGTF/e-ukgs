@@ -1,14 +1,12 @@
 <template>
-  <NuxtLink :to="to">
-    <button
-      type="button"
-      :class="constructedClass"
-      @click="$emit('click')"
-    >
-      <span v-if="$props.loading" :class="props.loading ? 'loading loading-spinner' : ''"></span>
-      <slot />
-    </button>
-  </NuxtLink>
+  <button
+    type="button"
+    :class="constructedClass"
+    @click="handleClick"
+  >
+    <span v-if="$props.loading" :class="props.loading ? 'loading loading-spinner' : ''"></span>
+    <slot />
+  </button>
 </template>
 
 <script lang="ts" setup>
@@ -54,7 +52,7 @@ const props = defineProps({
   }
 })
 
-defineEmits(['click'])
+const emit = defineEmits(['click'])
 
 const buttonTypes = reactive<{
   [key: string]: string
@@ -81,5 +79,13 @@ const constructedClass = computed(() => {
   className += props.underlined ? "font-bold underline text-content-primary " : ""
   return className
 })
+
+const handleClick = () => {
+  if (props.to != "") {
+    navigateTo(props.to)
+  } else {
+    emit("click")
+  }
+}
 
 </script>

@@ -23,3 +23,11 @@ export const GROUP_CONSTANTS = {
     nameAttr: 'name',
     totalStudentAttr: 'totalStudent'
 }
+
+export const MEDIA_CONSTANTS = {
+    videoCollectionName: 'videos',
+    ebookCollectionName: 'ebooks',
+    articleCollectionName: 'articles',
+    titleAttr: 'title',
+    sourceAttr: 'source'
+}

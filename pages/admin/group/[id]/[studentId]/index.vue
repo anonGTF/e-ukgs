@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from '~/components/attr/Breadcrumb'
+    import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr'
     import { ButtonType } from '~/components/attr/ButtonAttr';
     import { Typography } from '~/components/attr/TextAttr'
     import type { Student } from '~/models/group/Student';

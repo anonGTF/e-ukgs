@@ -20,48 +20,40 @@
                 </div>
             </div>
             <Spacer class="h-6"/>
-            <div class="overflow-x-auto">
-                <table class="table table-zebra">
-                    <thead>
-                        <tr>
-                            <th v-for="header in tableHeader">
-                                <Text :typography="Typography.Body2" class="font-semibold">{{ header }}</Text>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(data, index) in filteredTableData">
-                            <th>
-                                <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
-                            </th>
-                            <td>
-                                <Text :typography="Typography.Body2">{{ data.name }}</Text>
-                            </td>
-                            <td>
-                                <Text :typography="Typography.Body2">{{ data.userId }}</Text>
-                            </td>
-                            <td>
-                                <Text :typography="Typography.Body2">{{ data.gender }}</Text>
-                            </td>
-                            <td class="flex justify-end">
-                                <Button 
-                                    :type="ButtonType.Outlined" 
-                                    dense
-                                    @click="navigateTo(`/admin/group/${route.params.id}/${data.id}`)"
-                                >
-                                    Detail
-                                </Button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <Table
+                :headers="tableHeader"
+                :is-empty="filteredTableData.length == 0"
+            >
+                <tr v-for="(data, index) in filteredTableData">
+                    <th>
+                        <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
+                    </th>
+                    <td>
+                        <Text :typography="Typography.Body2">{{ data.name }}</Text>
+                    </td>
+                    <td>
+                        <Text :typography="Typography.Body2">{{ data.userId }}</Text>
+                    </td>
+                    <td>
+                        <Text :typography="Typography.Body2">{{ data.gender }}</Text>
+                    </td>
+                    <td class="flex justify-end">
+                        <Button 
+                            :type="ButtonType.Outlined" 
+                            dense
+                            @click="navigateTo(`/admin/group/${route.params.id}/${data.id}`)"
+                        >
+                            Detail
+                        </Button>
+                    </td>
+                </tr>
+            </Table>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from '~/components/attr/Breadcrumb';
+    import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr';
     import { ButtonType } from '~/components/attr/ButtonAttr';
     import { Typography } from '~/components/attr/TextAttr';
     import type { Group } from '~/models/group/Group';
