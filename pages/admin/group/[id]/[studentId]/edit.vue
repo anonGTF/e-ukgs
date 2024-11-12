@@ -1,21 +1,21 @@
 <template>
-<div class="m-2 sm:m-8">
+    <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Edit Akun Guru</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Edit Data Siswa</Text>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6 lg:w-[30rem]">
             <TextField
                 v-model="name"
-                placeholder="Masukkan Nama Guru"
-                label="Nama Guru"
+                placeholder="Masukkan Nama Siswa"
+                label="Nama Siswa"
             />
             <Spacer height="h-4" />
             <TextField
                 type="text"
                 :placeholder="id"
                 :enabled="false"
-                label="ID Guru (tidak bisa diedit)"
+                label="ID Siswa (tidak bisa diedit)"
             />
             <Spacer height="h-4" />
             <DropdownSelector 
@@ -39,6 +39,7 @@
 <script setup lang="ts">
     import type { BreadcrumbArgs } from '~/components/attr/Breadcrumb'
     import { Typography } from '~/components/attr/TextAttr'
+import type { Student } from '~/models/group/Student';
     import type { Teacher } from '~/models/teacher/Teacher';
     
     definePageMeta({
@@ -54,12 +55,16 @@
             route: "/admin/home"
         },
         {
-            label: "Kelola Akun Guru",
-            route: "/admin/teacher"
+            label: "Kelola Kelompok Siswa",
+            route: "/admin/group"
         },
         {
-            label: "Edit Akun Guru",
-            route: `/admin/teacher/${route.params.id}/edit`
+            label: "Detail Kelompok Siswa",
+            route: `/admin/group/${route.params.id}`
+        },
+        {
+            label: "Edit Data Siswa",
+            route: `/admin/group/${route.params.id}/${route.params.studentId}/edit`
         }
     ])
 
@@ -70,7 +75,7 @@
     const isLoading = ref(false)
 
     const save = async () => {
-        const result = await useSaveTeacer(route.params.id as string, name.value, gender.value)
+        const result = await useSaveStudent(route.params.studentId as string, route.params.id as string, name.value, gender.value)
         if (isLeft(result)) {
             alert(unwrapEither(result))
         } else {
@@ -79,14 +84,14 @@
     }
 
     onMounted(async () => {
-        const result = await useGetTeacherById(route.params.id as string)
+        const result = await useGetStudentById(route.params.studentId as string, route.params.id as string)
         if (isLeft(result)) {
             alert(unwrapEither(result))
         } else {
-            const teacher = unwrapEither(result) as Teacher
-            name.value = teacher.name
-            id.value = teacher.userId
-            gender.value = teacher.gender
+            const student = unwrapEither(result) as Student
+            name.value = student.name
+            id.value = student.userId
+            gender.value = student.gender
         }
     })
 </script>

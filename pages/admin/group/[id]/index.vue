@@ -2,18 +2,18 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Kelompok Siswa</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Kelompok {{ groupData?.name }}</Text>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
             <div class="flex flex-row justify-between">
                 <TextField
                     v-model="searchQuery"
-                    placeholder="Cari kelompok"
+                    :placeholder="isSmall(activeBreakpoint) ? 'Cari siswa dgn nama' : 'Cari siswa berdasarkan nama'"
                     leading-icon="mdi:magnify"
                     class="me-1 w-52 sm:w-[16.7rem]"
                 />
-                <Button class="hidden sm:block" to="/admin/group/add">
-                    Tambah Kelompok
+                <Button class="hidden sm:block" :to="`/admin/group/${route.params.id}/add-student`">
+                    Tambah Siswa
                 </Button>
                 <div class="drawer-button btn btn-square flex justify-center sm:hidden bg-primary text-white">
                     <Icon name="mdi:plus" size="24px"/>
@@ -38,13 +38,16 @@
                                 <Text :typography="Typography.Body2">{{ data.name }}</Text>
                             </td>
                             <td>
-                                <Text :typography="Typography.Body2">{{ data.totalStudent }}</Text>
+                                <Text :typography="Typography.Body2">{{ data.userId }}</Text>
+                            </td>
+                            <td>
+                                <Text :typography="Typography.Body2">{{ data.gender }}</Text>
                             </td>
                             <td class="flex justify-end">
                                 <Button 
                                     :type="ButtonType.Outlined" 
                                     dense
-                                    @click="navigateTo(`/admin/group/${data.id}`)"
+                                    @click="navigateTo(`/admin/group/${route.params.id}/${data.id}`)"
                                 >
                                     Detail
                                 </Button>
@@ -61,10 +64,13 @@
     import type { BreadcrumbArgs } from '~/components/attr/Breadcrumb';
     import { ButtonType } from '~/components/attr/ButtonAttr';
     import { Typography } from '~/components/attr/TextAttr';
+    import type { Group } from '~/models/group/Group';
 
     definePageMeta({
         layout: 'admin'
     })
+
+    const route = useRoute()
 
     const breadcrumbs = ref<BreadcrumbArgs[]>([
         {
@@ -74,18 +80,38 @@
         {
             label: "Kelola Kelompok Siswa",
             route: "/admin/group"
+        },
+        {
+            label: "Detail Kelompok Siswa",
+            route: `/admin/group/${route.params.id}`
         }
     ])
 
     const tableHeader = ref([
         "",
         "Nama",
-        "Jumlah Siswa",
+        "ID Akun",
+        "Jenis Kelamin",
         ""
     ])
 
-    const tableData = useGetAllGroups()
+    const tableData = useGetAllStudents(route.params.id as string)
+    const activeBreakpoint = ref("")
     const searchQuery = ref("")
+    const groupData = ref<Group | null>(null)
 
     const filteredTableData = computed(() => tableData.value.filter((data) => data.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
+
+    onMounted(async () => {
+        window.addEventListener("resize",() => {
+            activeBreakpoint.value = getActiveBreakpoint()
+        })
+
+        const result = await useGetGroupById(route.params.id as string)
+        if (isLeft(result)) {
+            alert(unwrapEither(result))
+        } else {
+            groupData.value = unwrapEither(result)
+        }
+    })
 </script>

@@ -1,4 +1,5 @@
 export type Group = {
     id: string,
-    name: string
+    name: string,
+    totalStudent: number
 }

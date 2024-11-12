@@ -14,10 +14,12 @@ export const TEACHER_CONSTANTS = {
 export const STUDENT_CONSTANTS = {
     collectionName: 'students',
     nameAttr: 'name',
-    genderAttr: 'gender'
+    genderAttr: 'gender',
+    userIdAttr: 'userId'
 }
 
 export const GROUP_CONSTANTS = {
     collectionName: 'groups',
-    nameAttr: 'name'
+    nameAttr: 'name',
+    totalStudentAttr: 'totalStudent'
 }

@@ -13,6 +13,7 @@ export const useGetStudentById = async (id: string, groupId: string): Promise<Ei
         const data = document.data()
         const student: Student = {
             id: id,
+            userId: data[STUDENT_CONSTANTS.userIdAttr],
             name: data[STUDENT_CONSTANTS.nameAttr],
             gender: data[STUDENT_CONSTANTS.genderAttr]
         }
