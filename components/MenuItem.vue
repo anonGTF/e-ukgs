@@ -33,5 +33,5 @@
 
     const route = useRoute()
 
-    const isActive = computed(() => route.path == props.menu.route)
+    const isActive = computed(() => route.path.startsWith(props.menu.route ?? ''))
 </script>

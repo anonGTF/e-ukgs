@@ -9,7 +9,8 @@ export const useGetAllTeachers = (): Ref<Teacher[]> => {
         fromFirestore: (snapshot) => {
             const data = snapshot.data()
             const teacher: Teacher = {
-                id: data[TEACHER_CONSTANTS.userIdAttr],
+                id: snapshot.id,
+                userId: data[TEACHER_CONSTANTS.userIdAttr],
                 name: data[TEACHER_CONSTANTS.nameAttr],
                 gender: data[TEACHER_CONSTANTS.genderAttr]
             }

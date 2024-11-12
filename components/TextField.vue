@@ -25,6 +25,10 @@ const props = defineProps({
   trailingIcon: {
     type: String,
     default: ''
+  },
+  enabled: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -63,7 +67,8 @@ const leadingSpacing = computed(() => props.leadingIcon !== '' ? 'ps-11' : '')
             v-model="model"
             :type="props.type" 
             :placeholder="props.placeholder" 
-            class="grow" 
+            :disabled="!enabled"
+            class="grow"
             @keyup.enter="$emit('enter')"
           />
           <Icon 

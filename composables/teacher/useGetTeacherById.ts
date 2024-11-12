@@ -13,6 +13,7 @@ export const useGetTeacherById = async (id: string): Promise<Either<string, Teac
         const data = document.data()
         const teacher: Teacher = {
             id: id,
+            userId: data[TEACHER_CONSTANTS.userIdAttr],
             name: data[TEACHER_CONSTANTS.nameAttr],
             gender: data[TEACHER_CONSTANTS.genderAttr]
         }

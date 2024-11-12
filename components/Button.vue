@@ -69,7 +69,7 @@ const buttonSizes = reactive<{
   [key: string]: string
 }>({
   Default: "px-4 py-4 ",
-  Dense: "px-4 py-2 "
+  Dense: "px-4 py-2 text-sm "
 })
 
 const constructedClass = computed(() => {

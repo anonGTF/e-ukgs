@@ -38,13 +38,17 @@
                                 <Text :typography="Typography.Body2">{{ data.name }}</Text>
                             </td>
                             <td>
-                                <Text :typography="Typography.Body2">{{ data.id }}</Text>
+                                <Text :typography="Typography.Body2">{{ data.userId }}</Text>
                             </td>
                             <td>
                                 <Text :typography="Typography.Body2">{{ data.gender }}</Text>
                             </td>
                             <td class="flex justify-end">
-                                <Button :type="ButtonType.Outlined">
+                                <Button 
+                                    :type="ButtonType.Outlined" 
+                                    dense
+                                    @click="navigateTo(`/admin/teacher/${data.id}`)"
+                                >
                                     Detail
                                 </Button>
                             </td>
