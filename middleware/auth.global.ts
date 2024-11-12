@@ -31,10 +31,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   if (
-    (role == "student" && !to.path.includes("/student/")) ||
-    (role == "teacher" && !to.path.includes("/teacher/")) ||
-    (role == "guest" && !to.path.includes("/teacher/")) ||
-    (role == "admin" && !to.path.includes("/admin/"))
+    (role == "student" && !to.path.startsWith("/student/")) ||
+    (role == "teacher" && !to.path.startsWith("/teacher/")) ||
+    (role == "guest" && !to.path.startsWith("/teacher/")) ||
+    (role == "admin" && !to.path.startsWith("/admin/"))
   ) {
     return abortNavigation("Halaman tidak bisa diakses")
   }
