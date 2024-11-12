@@ -11,12 +11,31 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     })
   }
 
+  if (user && to.path == "/") {
+    switch (role) {
+      case "student":
+        return navigateTo("/student/home")
+      
+      case "teacher":
+        return navigateTo("/teacher/home")
+
+      case "guest":
+        return navigateTo("/teacher/home")
+
+      case "admin":
+        return navigateTo("/admin/home")
+      
+      default:
+        break
+    }
+  }
+
   if (
     (role == "student" && !to.path.includes("/student/")) ||
     (role == "teacher" && !to.path.includes("/teacher/")) ||
     (role == "guest" && !to.path.includes("/teacher/")) ||
     (role == "admin" && !to.path.includes("/admin/"))
   ) {
-    abortNavigation("Halaman tidak bisa diakses")
+    return abortNavigation("Halaman tidak bisa diakses")
   }
 })
