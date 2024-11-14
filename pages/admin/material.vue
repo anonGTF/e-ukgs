@@ -152,7 +152,13 @@
                 label="Judul"
             />
             <Spacer height="h-4" />
+            <FileInput
+                v-if="selectedType == MediaType.EBOOK"
+                label="Upload Ebook"
+                @change="handleFileChanged"
+            />
             <TextField
+                v-else
                 v-model="source"
                 type="text"
                 placeholder="Masukkan Sumber Bahan (link)"
@@ -231,6 +237,7 @@
     const source = ref("")
     const selectedType = ref<MediaType | null>(null)
     const selectedId = ref("")
+    const selectedFile = ref<File | null | undefined>(null)
     const isLoading = ref(false)
     const showUpsertModal = ref(false)
     const showVideoModal = ref(false)
@@ -264,6 +271,7 @@
         source.value = ""
         selectedType.value = null
         selectedId.value = ""
+        selectedFile.value = null
         showUpsertModal.value = false
         showVideoModal.value = false
         showEbookModal.value = false
@@ -272,6 +280,21 @@
     }
 
     const saveMedia = async () => {
+        isLoading.value = true
+        if (selectedType.value == MediaType.EBOOK) {
+            const downloadLink = await useUploadFile(selectedFile.value)
+            if (isLeft(downloadLink)) {
+                alert(unwrapEither(downloadLink))
+            } else {
+                source.value = unwrapEither(downloadLink) as string
+            }
+        }
+
+        if (title.value == "" && source.value == "") {
+            alert("Judul dan sumber bahan tidak boleh kosong")
+            return
+        }
+
         const result = editMode.value ? await useSaveMedia(
             selectedId.value,
             title.value, 
@@ -285,6 +308,7 @@
         if (isLeft(result)) {
             alert(unwrapEither(result))
         }
+        isLoading.value = false
         closeModal()
     }
 
@@ -300,6 +324,10 @@
     const openVideoModal = (data: string) => {
         source.value = data
         showVideoModal.value = true
+    }
+
+    const handleFileChanged = (file: File | null | undefined) => {
+        selectedFile.value = file
     }
 
     useEventListener("keyup", (event: Event) => {
