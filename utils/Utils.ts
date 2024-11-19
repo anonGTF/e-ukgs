@@ -12,3 +12,8 @@ export const getMediaCollectionName = (type: MediaType): string => {
             return MEDIA_CONSTANTS.videoCollectionName
     }
 }
+
+export const youtubeSourceToEmbed = (source: string): string => {
+    const parts = source.split("youtu.be/")
+    return `https://www.youtube.com/embed/${parts[1]}`
+}

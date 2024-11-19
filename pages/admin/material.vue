@@ -27,6 +27,12 @@
                         <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
                     </th>
                     <td>
+                        <img 
+                            :src="data.thumbnail"
+                            class="w-full h-auto max-w-64 rounded-lg"
+                        />
+                    </td>
+                    <td>
                         <Text :typography="Typography.Body2">{{ data.title }}</Text>
                     </td>
                     <td>
@@ -71,6 +77,12 @@
                     <th>
                         <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
                     </th>
+                    <td>
+                        <img 
+                            :src="data.thumbnail"
+                            class="w-full h-auto max-w-64 rounded-lg"
+                        />
+                    </td>
                     <td>
                         <Text :typography="Typography.Body2">{{ data.title }}</Text>
                     </td>
@@ -117,6 +129,12 @@
                         <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
                     </th>
                     <td>
+                        <img 
+                            :src="data.thumbnail"
+                            class="w-full h-auto max-w-64 rounded-lg"
+                        />
+                    </td>
+                    <td>
                         <Text :typography="Typography.Body2">{{ data.title }}</Text>
                     </td>
                     <td>
@@ -145,26 +163,36 @@
         class="modal modal-bottom sm:modal-middle"
         :class="{ 'modal-open': showPreviewModal }"
     >
-        <template v-if="selectedType == MediaType.VIDEO">
-            <iframe 
-                width="560" 
-                height="315" 
-                :src="selectedSource" 
-                title="YouTube video player" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                referrerpolicy="strict-origin-when-cross-origin" 
-                allowfullscreen
-            ></iframe>
-        </template>
-        <template v-else-if="selectedType == MediaType.ARTICLE">
-            <MarkdownRenderer
-                :markdown-content="selectedSource"
-            />
-        </template>
-        <template v-else>
-            <Text>{{ selectedSource }}</Text>
-        </template>
+        <div class="rounded-2xl bg-white p-4 w-full lg:w-[50%] min-h-[50%] lg:min-h-[60%] flex flex-col">
+            <div class="flex flex-row justify-between items-center mb-2">
+                <Text :typography="Typography.Label" class="font-semibold">Preview</Text>
+                <btn 
+                    class="btn btn-square flex justify-center bg-transparent text-content-non-essential"
+                    @click="closeModal"
+                >
+                    <Icon name="mdi:close"/>
+                </btn>
+            </div>
+            <template v-if="selectedType == MediaType.VIDEO">
+                <iframe 
+                    class="w-full h-full"
+                    :src="youtubeSourceToEmbed(selectedSource)" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen
+                ></iframe>
+            </template>
+            <template v-else-if="selectedType == MediaType.ARTICLE">
+                <MarkdownRenderer
+                    :markdown-content="selectedSource"
+                />
+            </template>
+            <template v-else>
+                <iframe :src="selectedSource" class="h-[80svh] w-full"></iframe>
+            </template>
+        </div>
     </dialog>
     <!-- END OF MODAL FOR PREVIEW -->
 
@@ -332,6 +360,7 @@
 
     const tableHeader = ref([
         "",
+        "Thumbnail",
         "Judul",
         "Link",
         ""
@@ -404,6 +433,7 @@
     const openPreviewModal = (data: Media) => {
         selectedType.value = data.type
         selectedSource.value = data.source
+        showPreviewModal.value = true
     }
 
     const closeModal = () => {
@@ -449,11 +479,13 @@
         }
         if (!isValid) return
 
+        isLoading.value = true
         let thumbnail = selectedVideo.value?.thumbnail ?? ""
         if (thumbnail == "" || videoThumbnail.value != null) {
             const uploadThumbnailResult = await useUploadFile(videoThumbnail.value)
             if (isLeft(uploadThumbnailResult)) {
                 alert(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`)
+                isLoading.value = false
                 return
             }
             thumbnail = unwrapEither(uploadThumbnailResult)
@@ -477,6 +509,7 @@
         } else {
             closeModal()
         }
+        isLoading.value = false
     }
 
     const saveEbook = async () => {
@@ -495,11 +528,13 @@
         }
         if (!isValid) return
 
+        isLoading.value = true
         let thumbnail = selectedEbook.value?.thumbnail ?? ""
         if (thumbnail == "" || ebookThumbnail.value != null) {
             const uploadThumbnailResult = await useUploadFile(ebookThumbnail.value)
             if (isLeft(uploadThumbnailResult)) {
                 alert(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`)
+                isLoading.value = false
                 return
             }
             thumbnail = unwrapEither(uploadThumbnailResult)
@@ -510,6 +545,7 @@
             const uploadEbookResult = await useUploadFile(ebookFile.value)
             if (isLeft(uploadEbookResult)) {
                 alert(`Tidak berhasil upload ebook ${unwrapEither(uploadEbookResult)}`)
+                isLoading.value = false
                 return
             }
             source = unwrapEither(uploadEbookResult)
@@ -533,6 +569,7 @@
         } else {
             closeModal()
         }
+        isLoading.value = false
     }
 
     const saveArticle = async () => {
@@ -551,11 +588,13 @@
         }
         if (!isValid) return
 
+        isLoading.value = true
         let thumbnail = selectedArticle.value?.thumbnail ?? ""
         if (thumbnail == "" || articleThumbnail.value != null) {
-            const uploadThumbnailResult = await useUploadFile(ebookThumbnail.value)
+            const uploadThumbnailResult = await useUploadFile(articleThumbnail.value)
             if (isLeft(uploadThumbnailResult)) {
                 alert(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`)
+                isLoading.value = false
                 return
             }
             thumbnail = unwrapEither(uploadThumbnailResult)
@@ -563,9 +602,10 @@
 
         let source = selectedArticle.value?.source ?? ""
         if (source == "" || articleFile.value != null) {
-            const uploadArticleResult = await useUploadFile(ebookFile.value)
+            const uploadArticleResult = await useUploadFile(articleFile.value)
             if (isLeft(uploadArticleResult)) {
                 alert(`Tidak berhasil upload artikel ${unwrapEither(uploadArticleResult)}`)
+                isLoading.value = false
                 return
             }
             source = unwrapEither(uploadArticleResult)
@@ -589,6 +629,7 @@
         } else {
             closeModal()
         }
+        isLoading.value = false
     }
 
     const deleteMedia = async (data: Media) => {
@@ -601,7 +642,6 @@
     }
 
     useEventListener("keyup", (event: Event) => {
-        console.log(event)
         if ((event as KeyboardEvent).code == "Escape") {
             closeModal()
         }
