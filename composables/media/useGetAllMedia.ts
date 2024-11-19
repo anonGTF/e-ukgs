@@ -13,6 +13,7 @@ export const useGetAllMedia = (type: MediaType): Ref<Media[]> => {
                 id: snapshot.id,
                 title: data[MEDIA_CONSTANTS.titleAttr],
                 source: data[MEDIA_CONSTANTS.sourceAttr],
+                thumbnail: data[MEDIA_CONSTANTS.sourceAttr],
                 type
             }
             return media

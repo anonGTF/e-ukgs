@@ -40,7 +40,7 @@
         </div>
         <div class="drawer-side border-e border-border-divider">
             <label for="teacher-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-            <div class="p-6 min-h-[5dvh] border-b border-border-divider">
+            <div class="w-full p-6 min-h-[5dvh] border-b border-border-divider">
                 <p>Dashboard Guru | E-UKGS</p>
             </div>
             <ul class="menu bg-white h-svh lg:h-auto w-80 pt-4 gap-4 px-4">

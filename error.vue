@@ -3,7 +3,7 @@ import { Typography } from './components/attr/TextAttr';
 import type { NuxtError } from '#app'
 import { Vue3Lottie } from 'vue3-lottie'
 
-const props = defineProps({
+defineProps({
   error: Object as () => NuxtError
 })
 

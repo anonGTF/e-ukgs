@@ -29,5 +29,6 @@ export const MEDIA_CONSTANTS = {
     ebookCollectionName: 'ebooks',
     articleCollectionName: 'articles',
     titleAttr: 'title',
-    sourceAttr: 'source'
+    sourceAttr: 'source',
+    thumbnailAttr: 'thumbnail'
 }

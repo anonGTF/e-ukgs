@@ -161,8 +161,4 @@
     )
 
     const togglePasswordVisibility = () => { passwordVisible.value = !passwordVisible.value }
-
-    const coba = () => {
-        console.log("coba")
-    }
 </script>

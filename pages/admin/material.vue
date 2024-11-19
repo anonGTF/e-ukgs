@@ -9,11 +9,11 @@
                 <Text :typography="Typography.H2">Video Edukasi</Text>
                 <Button 
                     class="hidden sm:block" 
-                    @click="openModal(MediaType.VIDEO)"
+                    @click="openVideoModal(null)"
                 >
                     Tambah Video
                 </Button>
-                <div class="flex sm:hidden justify-center btn btn-square bg-primary text-white" @click="openModal(MediaType.VIDEO)">
+                <div class="flex sm:hidden justify-center btn btn-square bg-primary text-white" @click="openVideoModal(null)">
                     <Icon name="mdi:plus" size="24px"/>
                 </div>
             </div>
@@ -34,10 +34,10 @@
                     </td>
                     <td>
                         <div class="flex flex-row gap-2 justify-end">
-                            <div class="btn btn-square flex justify-center bg-sky-400 text-white" @click="openVideoModal(data.source)">
+                            <div class="btn btn-square flex justify-center bg-sky-400 text-white" @click="openPreviewModal(data)">
                                 <Icon name="mdi:launch" size="24px"/>
                             </div>
-                            <div class="btn btn-square flex justify-center bg-emerald-400 text-white" @click="openEditModal(data)">
+                            <div class="btn btn-square flex justify-center bg-emerald-400 text-white" @click="openVideoModal(data)">
                                 <Icon name="mdi:pencil" size="24px"/>
                             </div>
                             <div class="btn btn-square flex justify-center bg-red-500 text-white" @click="deleteMedia(data)">
@@ -54,11 +54,11 @@
                 <Text :typography="Typography.H2">Ebook</Text>
                 <Button 
                     class="hidden sm:block" 
-                    @click="openModal(MediaType.EBOOK)"
+                    @click="openEbookModal(null)"
                 >
                     Tambah Ebook
                 </Button>
-                <div class="flex sm:hidden btn btn-square bg-primary text-white" @click="openModal(MediaType.EBOOK)">
+                <div class="flex sm:hidden btn btn-square bg-primary text-white" @click="openEbookModal(null)">
                     <Icon name="mdi:plus" size="24px"/>
                 </div>
             </div>
@@ -79,10 +79,10 @@
                     </td>
                     <td>
                         <div class="flex flex-row gap-2 justify-end">
-                            <div class="btn btn-square flex justify-center bg-sky-400 text-white">
+                            <div class="btn btn-square flex justify-center bg-sky-400 text-white" @click="openPreviewModal(data)">
                                 <Icon name="mdi:launch" size="24px"/>
                             </div>
-                            <div class="btn btn-square flex justify-center bg-emerald-400 text-white" @click="openEditModal(data)">
+                            <div class="btn btn-square flex justify-center bg-emerald-400 text-white" @click="openEbookModal(data)">
                                 <Icon name="mdi:pencil" size="24px"/>
                             </div>
                             <div class="btn btn-square flex justify-center bg-red-500 text-white" @click="deleteMedia(data)">
@@ -99,11 +99,11 @@
                 <Text :typography="Typography.H2">Artikel</Text>
                 <Button 
                     class="hidden sm:block" 
-                    @click="openModal(MediaType.ARTICLE)"
+                    @click="openArticleModal(null)"
                 >
                     Tambah Artikel
                 </Button>
-                <div class="flex sm:hidden drawer-button btn btn-square bg-primary text-white" @click="openModal(MediaType.ARTICLE)">
+                <div class="flex sm:hidden drawer-button btn btn-square bg-primary text-white" @click="openArticleModal(null)">
                     <Icon name="mdi:plus" size="24px"/>
                 </div>
             </div>
@@ -124,10 +124,10 @@
                     </td>
                     <td>
                         <div class="flex flex-row gap-2 justify-end">
-                            <div class="btn btn-square flex justify-center bg-sky-400 text-white">
+                            <div class="btn btn-square flex justify-center bg-sky-400 text-white" @click="openPreviewModal(data)">
                                 <Icon name="mdi:launch" size="24px"/>
                             </div>
-                            <div class="btn btn-square flex justify-center bg-emerald-400 text-white" @click="openEditModal(data)">
+                            <div class="btn btn-square flex justify-center bg-emerald-400 text-white" @click="openArticleModal(data)">
                                 <Icon name="mdi:pencil" size="24px"/>
                             </div>
                             <div class="btn btn-square flex justify-center bg-red-500 text-white" @click="deleteMedia(data)">
@@ -139,30 +139,60 @@
             </Table>
         </div>
     </div>
+
+    <!-- MODAL FOR PREVIEW -->
+    <dialog
+        class="modal modal-bottom sm:modal-middle"
+        :class="{ 'modal-open': showPreviewModal }"
+    >
+        <template v-if="selectedType == MediaType.VIDEO">
+            <iframe 
+                width="560" 
+                height="315" 
+                :src="selectedSource" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen
+            ></iframe>
+        </template>
+        <template v-else-if="selectedType == MediaType.ARTICLE">
+            <MarkdownRenderer
+                :markdown-content="selectedSource"
+            />
+        </template>
+        <template v-else>
+            <Text>{{ selectedSource }}</Text>
+        </template>
+    </dialog>
+    <!-- END OF MODAL FOR PREVIEW -->
+
+    <!-- MODAL FOR VIDEO -->
     <dialog 
         class="modal modal-bottom sm:modal-middle"
-        :class="{ 'modal-open': showUpsertModal }"
+        :class="{ 'modal-open': showVideoModal }"
     >
         <div class="modal-box">
-            <Text :typography="Typography.H2">{{ modalTitle }}</Text>
+            <Text :typography="Typography.H2">{{ selectedVideo?.id == "" ? "Tambah" : "Ubah" }} Data Video</Text>
             <Spacer height="h-6" />
             <TextField
-                v-model="title"
+                v-model="videoTitle"
                 placeholder="Masukkan Judul"
                 label="Judul"
             />
             <Spacer height="h-4" />
-            <FileInput
-                v-if="selectedType == MediaType.EBOOK"
-                label="Upload Ebook"
-                @change="handleFileChanged"
-            />
             <TextField
-                v-else
-                v-model="source"
+                v-model="videoSource"
                 type="text"
-                placeholder="Masukkan Sumber Bahan (link)"
+                placeholder="Masukkan Link Video"
                 label="Link"
+            />
+            <Spacer height="h-4" />
+            <FileInput
+                label="Upload Thumbnail"
+                file-type="image/*"
+                @change="saveVideoThumbnail"
             />
             <Spacer height="h-6" />
             <div class="flex flex-row gap-2 w-full">
@@ -176,28 +206,106 @@
                 <Button
                     :loading="isLoading"
                     class="flex-1"
-                    @click="saveMedia"
+                    @click="saveVideo"
                 >
-                    {{ modalActionLabel }}
+                    {{ selectedVideo?.id == "" ? "Tambah" : "Simpan" }}
                 </Button>
             </div>
         </div>
     </dialog>
-    <dialog
+    <!-- END OF MODAL FOR VIDEO -->
+
+    <!-- MODAL FOR EBOOK -->
+    <dialog 
         class="modal modal-bottom sm:modal-middle"
-        :class="{ 'modal-open': showVideoModal }"
+        :class="{ 'modal-open': showEbookModal }"
     >
-        <iframe 
-            width="560" 
-            height="315" 
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=0m20dx9lAFAjCzoU" 
-            title="YouTube video player" f
-            rameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            referrerpolicy="strict-origin-when-cross-origin" 
-            allowfullscreen
-        ></iframe>
+        <div class="modal-box">
+            <Text :typography="Typography.H2">{{ selectedEbook?.id == "" ? "Tambah" : "Ubah" }} Data Ebook</Text>
+            <Spacer height="h-6" />
+            <TextField
+                v-model="ebookTitle"
+                placeholder="Masukkan Judul"
+                label="Judul"
+            />
+            <Spacer height="h-4" />
+            <FileInput
+                label="Upload File Ebook (.pdf)"
+                file-type=".pdf"
+                @change="saveEbookFile"
+            />
+            <Spacer height="h-4" />
+            <FileInput
+                label="Upload Thumbnail"
+                file-type="image/*"
+                @change="saveEbookThumbnail"
+            />
+            <Spacer height="h-6" />
+            <div class="flex flex-row gap-2 w-full">
+                <Button 
+                    :type="ButtonType.Secondary"
+                    class="flex-1"
+                    @click="closeModal"
+                >
+                    Batal
+                </Button>
+                <Button
+                    :loading="isLoading"
+                    class="flex-1"
+                    @click="saveEbook"
+                >
+                    {{ selectedEbook?.id == "" ? "Tambah" : "Simpan" }}
+                </Button>
+            </div>
+        </div>
     </dialog>
+    <!-- END OF MODAL FOR EBOOK -->
+
+    <!-- MODAL FOR ARTICLE -->
+    <dialog 
+        class="modal modal-bottom sm:modal-middle"
+        :class="{ 'modal-open': showArticleModal }"
+    >
+        <div class="modal-box">
+            <Text :typography="Typography.H2">{{ selectedArticle?.id == "" ? "Tambah" : "Ubah" }} Data Artikel</Text>
+            <Spacer height="h-6" />
+            <TextField
+                v-model="articleTitle"
+                placeholder="Masukkan Judul"
+                label="Judul"
+            />
+            <Spacer height="h-4" />
+            <FileInput
+                label="Upload File Artikel (.md)"
+                file-type="text/markdown"
+                @change="saveArticleFile"
+            />
+            <Spacer height="h-4" />
+            <FileInput
+                label="Upload Thumbnail"
+                file-type="image/*"
+                @change="saveArticleThumbnail"
+            />
+            <Spacer height="h-6" />
+            <div class="flex flex-row gap-2 w-full">
+                <Button 
+                    :type="ButtonType.Secondary"
+                    class="flex-1"
+                    @click="closeModal"
+                >
+                    Batal
+                </Button>
+                <Button
+                    :loading="isLoading"
+                    class="flex-1"
+                    @click="saveArticle"
+                >
+                    {{ selectedArticle?.id == "" ? "Tambah" : "Simpan" }}
+                </Button>
+            </div>
+        </div>
+    </dialog>
+    <!-- END OF MODAL FOR ARTICLE -->
 </template>
 
 <script setup lang="ts">
@@ -230,86 +338,257 @@
     ])
 
     const videoData = useGetAllVideos()
+    const videoTitle = ref("")
+    const videoSource = ref("")
+    const videoThumbnail = ref<File | null | undefined>(null)
+    const videoThumbnailPreview = ref("")
+    const selectedVideo = ref<Media | null>(null)
+
     const ebookData = useGetAllEbooks()
+    const ebookTitle = ref("")
+    const ebookFile = ref<File | null | undefined>(null)
+    const ebookThumbnail = ref<File | null | undefined>(null)
+    const ebookThumbnailPreview = ref("")
+    const selectedEbook = ref<Media | null>(null)
+
     const articleData = useGetAllArticles()
-    const editMode = ref(false)
-    const title = ref("")
-    const source = ref("")
-    const selectedType = ref<MediaType | null>(null)
-    const selectedId = ref("")
-    const selectedFile = ref<File | null | undefined>(null)
+    const articleTitle = ref("")
+    const articleFile = ref<File | null | undefined>(null)
+    const articleThumbnail = ref<File | null | undefined>(null)
+    const articleThumbnailPreview = ref("")
+    const selectedArticle = ref<Media | null>(null)
+
     const isLoading = ref(false)
-    const showUpsertModal = ref(false)
+
     const showVideoModal = ref(false)
     const showEbookModal = ref(false)
     const showArticleModal = ref(false)
-    
-    const modalTitle = computed(() => {
-        const label = editMode.value ? "Edit" : "Tambah"
-        const type = selectedType.value == MediaType.VIDEO ? "Video" : selectedType.value == MediaType.EBOOK ? "Ebook" : "Artikel"
-        return `${label} Data ${type}`
-    })
+    const showPreviewModal = ref(false)
+    const selectedSource = ref("")
+    const selectedType = ref<MediaType | null>(null)
 
-    const modalActionLabel = computed(() => editMode.value ? "Simpan" : "Tambahkan")
+    const saveVideoThumbnail = (file: File | null | undefined) => { videoThumbnail.value = file }
+    const saveEbookFile = (file: File | null | undefined) => { ebookFile.value = file }
+    const saveEbookThumbnail = (file: File | null | undefined) => { ebookThumbnail.value = file }
+    const saveArticleFile = (file: File | null | undefined) => { articleFile.value = file }
+    const saveArticleThumbnail = (file: File | null | undefined) => { articleThumbnail.value = file }
 
-    const openModal = (type: MediaType) => {
-        selectedType.value = type
-        showUpsertModal.value = true
+    const openVideoModal = (data: Media | null) => {
+        if (data != null) {
+            selectedVideo.value = data
+            videoTitle.value = data.title
+            videoSource.value = data.source
+            videoThumbnailPreview.value = data.thumbnail
+        }
+        showVideoModal.value = true
     }
 
-    const openEditModal = (data: Media) => {
-        title.value = data.title
-        source.value = data.source
+    const openEbookModal = (data: Media | null) => {
+        if (data != null) {
+            selectedEbook.value = data
+            ebookTitle.value = data.title
+            ebookThumbnailPreview.value = data.thumbnail
+        }
+        showEbookModal.value = true
+    }
+
+    const openArticleModal = (data: Media | null) => {
+        if (data != null) {
+            selectedArticle.value = data
+            articleTitle.value = data.title
+            articleThumbnailPreview.value = data.thumbnail
+        }
+        showArticleModal.value = true
+    }
+
+    const openPreviewModal = (data: Media) => {
         selectedType.value = data.type
-        selectedId.value = data.id
-        editMode.value = true
-        showUpsertModal.value = true
+        selectedSource.value = data.source
     }
 
     const closeModal = () => {
-        title.value = ""
-        source.value = ""
-        selectedType.value = null
-        selectedId.value = ""
-        selectedFile.value = null
-        showUpsertModal.value = false
+        videoTitle.value = ""
+        videoSource.value = ""
+        videoThumbnail.value = null
+        videoThumbnailPreview.value = ""
+        selectedVideo.value = null
+
+        ebookTitle.value = ""
+        ebookFile.value = null
+        ebookThumbnail.value = null
+        ebookThumbnailPreview.value = ""
+        selectedEbook.value = null
+
+        articleTitle.value = ""
+        articleFile.value = null
+        articleThumbnail.value = null
+        articleThumbnailPreview.value = ""
+        selectedArticle.value = null
+        
         showVideoModal.value = false
         showEbookModal.value = false
         showArticleModal.value = false
-        editMode.value = false
+        showPreviewModal.value = false
+        selectedType.value = null
+        selectedSource.value = ""
     }
 
-    const saveMedia = async () => {
-        isLoading.value = true
-        if (selectedType.value == MediaType.EBOOK) {
-            const downloadLink = await useUploadFile(selectedFile.value)
-            if (isLeft(downloadLink)) {
-                alert(unwrapEither(downloadLink))
-            } else {
-                source.value = unwrapEither(downloadLink) as string
+    const saveVideo = async () => {
+        let isValid = true
+        if (videoTitle.value == "") {
+            alert("Judul video tidak boleh kosong")
+            isValid = false
+        }
+        if (videoSource.value == "") {
+            alert("Sumber video tidak boleh kosong")
+            isValid = false
+        }
+        if (selectedVideo.value != null && videoThumbnail.value == null) {
+            alert("Thumbnail video tidak boleh kosong")
+            isValid = false
+        }
+        if (!isValid) return
+
+        let thumbnail = selectedVideo.value?.thumbnail ?? ""
+        if (thumbnail == "" || videoThumbnail.value != null) {
+            const uploadThumbnailResult = await useUploadFile(videoThumbnail.value)
+            if (isLeft(uploadThumbnailResult)) {
+                alert(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`)
+                return
             }
+            thumbnail = unwrapEither(uploadThumbnailResult)
         }
 
-        if (title.value == "" && source.value == "") {
-            alert("Judul dan sumber bahan tidak boleh kosong")
-            return
-        }
+        const result = selectedVideo.value == null ? await useAddMedia({
+            id: "",
+            title: videoTitle.value,
+            source: videoSource.value,
+            thumbnail,
+            type: MediaType.VIDEO
+        } satisfies Media) : await useSaveMedia({
+            ...selectedVideo.value,
+            title: videoTitle.value,
+            source: videoSource.value,
+            thumbnail
+        })
 
-        const result = editMode.value ? await useSaveMedia(
-            selectedId.value,
-            title.value, 
-            source.value, 
-            selectedType.value ?? MediaType.ARTICLE
-        ) : await useAddMedia(
-            title.value,
-            source.value,
-            selectedType.value ?? MediaType.ARTICLE
-        )
         if (isLeft(result)) {
             alert(unwrapEither(result))
+        } else {
+            closeModal()
         }
-        isLoading.value = false
-        closeModal()
+    }
+
+    const saveEbook = async () => {
+        let isValid = true
+        if (ebookTitle.value == "") {
+            alert("Judul ebook tidak boleh kosong")
+            isValid = false
+        }
+        if (selectedEbook.value != null && ebookFile.value == null) {
+            alert("Sumber ebook tidak boleh kosong")
+            isValid = false
+        }
+        if (selectedEbook.value != null && ebookThumbnail.value == null) {
+            alert("Thumbnail ebook tidak boleh kosong")
+            isValid = false
+        }
+        if (!isValid) return
+
+        let thumbnail = selectedEbook.value?.thumbnail ?? ""
+        if (thumbnail == "" || ebookThumbnail.value != null) {
+            const uploadThumbnailResult = await useUploadFile(ebookThumbnail.value)
+            if (isLeft(uploadThumbnailResult)) {
+                alert(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`)
+                return
+            }
+            thumbnail = unwrapEither(uploadThumbnailResult)
+        }
+
+        let source = selectedEbook.value?.source ?? ""
+        if (source == "" || ebookFile.value != null) {
+            const uploadEbookResult = await useUploadFile(ebookFile.value)
+            if (isLeft(uploadEbookResult)) {
+                alert(`Tidak berhasil upload ebook ${unwrapEither(uploadEbookResult)}`)
+                return
+            }
+            source = unwrapEither(uploadEbookResult)
+        }
+
+        const result = selectedEbook.value == null ? await useAddMedia({
+            id: "",
+            title: ebookTitle.value,
+            source,
+            thumbnail,
+            type: MediaType.EBOOK
+        } satisfies Media) : await useSaveMedia({
+            ...selectedEbook.value,
+            title: ebookTitle.value,
+            source,
+            thumbnail
+        })
+
+        if (isLeft(result)) {
+            alert(unwrapEither(result))
+        } else {
+            closeModal()
+        }
+    }
+
+    const saveArticle = async () => {
+        let isValid = true
+        if (articleTitle.value == "") {
+            alert("Judul artikel tidak boleh kosong")
+            isValid = false
+        }
+        if (selectedArticle.value != null && articleFile.value == null) {
+            alert("Sumber artikel tidak boleh kosong")
+            isValid = false
+        }
+        if (selectedArticle.value != null && articleThumbnail.value == null) {
+            alert("Thumbnail artikel tidak boleh kosong")
+            isValid = false
+        }
+        if (!isValid) return
+
+        let thumbnail = selectedArticle.value?.thumbnail ?? ""
+        if (thumbnail == "" || articleThumbnail.value != null) {
+            const uploadThumbnailResult = await useUploadFile(ebookThumbnail.value)
+            if (isLeft(uploadThumbnailResult)) {
+                alert(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`)
+                return
+            }
+            thumbnail = unwrapEither(uploadThumbnailResult)
+        }
+
+        let source = selectedArticle.value?.source ?? ""
+        if (source == "" || articleFile.value != null) {
+            const uploadArticleResult = await useUploadFile(ebookFile.value)
+            if (isLeft(uploadArticleResult)) {
+                alert(`Tidak berhasil upload artikel ${unwrapEither(uploadArticleResult)}`)
+                return
+            }
+            source = unwrapEither(uploadArticleResult)
+        }
+
+        const result = selectedArticle.value == null ? await useAddMedia({
+            id: "",
+            title: articleTitle.value,
+            source,
+            thumbnail,
+            type: MediaType.ARTICLE
+        } satisfies Media) : await useSaveMedia({
+            ...selectedArticle.value,
+            title: articleTitle.value,
+            source,
+            thumbnail
+        })
+
+        if (isLeft(result)) {
+            alert(unwrapEither(result))
+        } else {
+            closeModal()
+        }
     }
 
     const deleteMedia = async (data: Media) => {
@@ -319,15 +598,6 @@
         } else {
             alert("Data berhasil dihapus")
         }
-    }
-
-    const openVideoModal = (data: string) => {
-        source.value = data
-        showVideoModal.value = true
-    }
-
-    const handleFileChanged = (file: File | null | undefined) => {
-        selectedFile.value = file
     }
 
     useEventListener("keyup", (event: Event) => {
