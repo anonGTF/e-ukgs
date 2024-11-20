@@ -132,6 +132,7 @@
     import { ButtonType } from '~/components/attr/ButtonAttr';
     import type { CustomDropdownOption } from '~/components/attr/CustomDropdownAttr';
     import { Typography } from '~/components/attr/TextAttr'
+    import { ToastType } from '~/components/attr/ToastAttr';
     import type { Answer } from '~/models/questionnaire/Answer';
     import type { Questionnarie } from '~/models/questionnaire/Questionnarie';
     import { AnswerType } from '~/models/questionnaire/Section';
@@ -141,6 +142,7 @@
     })
 
     const route = useRoute()
+    const uiStore = useUiStore()
 
     const breadcrumbs = ref<BreadcrumbArgs[]>([
         {
@@ -281,10 +283,10 @@
         if (data.value != null) {
             const result = await useSaveQuestionnarie(data.value)
             if (isLeft(result)) {
-                alert(unwrapEither(result))
+                uiStore.showToast(unwrapEither(result), ToastType.ERROR)
                 isLoading.value = false
             } else {
-                alert("Data berhasil diubah")
+                uiStore.showToast("Data berhasil diubah", ToastType.SUCCESS)
                 navigateTo("/admin/questionnarie")
             }
         }
@@ -354,7 +356,7 @@
     onMounted(async () => {
         const result = await useGetQuestionnarieById(route.params.id as string)
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             data.value = unwrapEither(result)
             if (data.value.sections.length == 0) {

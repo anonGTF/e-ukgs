@@ -12,10 +12,13 @@
 </template>
 
 <script setup lang="ts">
+    import { ToastType } from '~/components/attr/ToastAttr';
+
+    const uiStore = useUiStore()
     const logout = async () => {
         const result = await useLogout()
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         }
     }
 </script>

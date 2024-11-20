@@ -1,4 +1,4 @@
-import type { ConfirmationModalState } from "~/components/attr/ConfirmationModalAttr"
+import type { ConfirmationModalState, ConfirmationType } from "~/components/attr/ConfirmationModalAttr"
 import { ToastType, type ToastState } from "~/components/attr/ToastAttr"
 
 export const useUiStore = defineStore(
@@ -23,13 +23,21 @@ export const useUiStore = defineStore(
             }, 5000)
         }
 
+        const hideToast = () => {
+            toast.value = null
+        }
+
         const confirm = (
+            title: string,
             message: string,
+            type: ConfirmationType,
             onConfirm: () => void,
             onCancel: () => void
         ) => {
             confirmationModal.value = {
+                title,
                 message,
+                type,
                 onConfirm,
                 onCancel
             }
@@ -41,7 +49,11 @@ export const useUiStore = defineStore(
 
         return {
             toast,
-            confirm: confirmationModal,
+            confirmationModal,
+            confirm,
+            hideConfirmationModal,
+            showToast,
+            hideToast,
             $reset
         }
   }, 

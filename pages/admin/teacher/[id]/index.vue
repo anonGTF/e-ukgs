@@ -33,6 +33,7 @@
     import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr'
     import { ButtonType } from '~/components/attr/ButtonAttr';
     import { Typography } from '~/components/attr/TextAttr'
+    import { ToastType } from '~/components/attr/ToastAttr';
     import type { Teacher } from '~/models/teacher/Teacher';
 
     const route = useRoute()
@@ -72,10 +73,12 @@
         }
     ])
 
+    const uiStore = useUiStore()
+
     onMounted(async () => {
         const result = await useGetTeacherById(route.params.id as string)
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             teacherData.value = unwrapEither(result) as Teacher
         }

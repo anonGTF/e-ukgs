@@ -33,9 +33,11 @@
     import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr'
     import { ButtonType } from '~/components/attr/ButtonAttr';
     import { Typography } from '~/components/attr/TextAttr'
+    import { ToastType } from '~/components/attr/ToastAttr';
     import type { Student } from '~/models/group/Student';
 
     const route = useRoute()
+    const uiStore = useUiStore()
 
     definePageMeta({
         layout: 'admin'
@@ -79,7 +81,7 @@
     onMounted(async () => {
         const result = await useGetStudentById(route.params.studentId as string, route.params.id as string)
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             studentData.value = unwrapEither(result) as Student
         }

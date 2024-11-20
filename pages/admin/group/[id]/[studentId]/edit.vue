@@ -39,7 +39,8 @@
 <script setup lang="ts">
     import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr'
     import { Typography } from '~/components/attr/TextAttr'
-import type { Student } from '~/models/group/Student';
+    import { ToastType } from '~/components/attr/ToastAttr';
+    import type { Student } from '~/models/group/Student';
     import type { Teacher } from '~/models/teacher/Teacher';
     
     definePageMeta({
@@ -48,6 +49,7 @@ import type { Student } from '~/models/group/Student';
     
     const router = useRouter()
     const route = useRoute()
+    const uiStore = useUiStore()
 
     const breadcrumbs = ref<BreadcrumbArgs[]>([
         {
@@ -77,7 +79,7 @@ import type { Student } from '~/models/group/Student';
     const save = async () => {
         const result = await useSaveStudent(route.params.studentId as string, route.params.id as string, name.value, gender.value)
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             router.go(-2)
         }
@@ -86,7 +88,7 @@ import type { Student } from '~/models/group/Student';
     onMounted(async () => {
         const result = await useGetStudentById(route.params.studentId as string, route.params.id as string)
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             const student = unwrapEither(result) as Student
             name.value = student.name

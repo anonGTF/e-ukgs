@@ -56,6 +56,7 @@
     import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr';
     import { ButtonType } from '~/components/attr/ButtonAttr';
     import { Typography } from '~/components/attr/TextAttr';
+    import { ToastType } from '~/components/attr/ToastAttr';
     import type { Group } from '~/models/group/Group';
 
     definePageMeta({
@@ -91,6 +92,7 @@
     const activeBreakpoint = ref("")
     const searchQuery = ref("")
     const groupData = ref<Group | null>(null)
+    const uiStore = useUiStore()
 
     const filteredTableData = computed(() => tableData.value.filter((data) => data.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
 
@@ -101,7 +103,7 @@
 
         const result = await useGetGroupById(route.params.id as string)
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             groupData.value = unwrapEither(result)
         }

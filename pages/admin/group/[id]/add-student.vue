@@ -46,6 +46,7 @@
 <script setup lang="ts">
     import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr'
     import { Typography } from '~/components/attr/TextAttr'
+    import { ToastType } from '~/components/attr/ToastAttr';
 
     definePageMeta({
         layout: 'admin'
@@ -76,6 +77,7 @@
     const isLoading = ref(false)
 
     const router = useRouter()
+    const uiStore = useUiStore()
 
     watch(name, () => {
         id.value = name.value.toLowerCase().trim().replaceAll(" ", ".")
@@ -93,10 +95,10 @@
 
         if (isLeft(result)) {
             isLoading.value = false
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             isLoading.value = false
-            alert("Siswa berhasil ditambahkan")
+            uiStore.showToast("Siswa berhasil ditambahkan", ToastType.SUCCESS)
             router.back()
         }
     }

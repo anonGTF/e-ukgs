@@ -1,5 +1,9 @@
 export type ConfirmationModalState = {
-    message: string
+    title: string,
+    message: string,
+    type: ConfirmationType,
     onConfirm: () => void
     onCancel: () => void
 }
+
+export enum ConfirmationType { DANGER, INFO }

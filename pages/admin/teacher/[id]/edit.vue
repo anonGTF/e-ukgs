@@ -39,7 +39,10 @@
 <script setup lang="ts">
     import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr'
     import { Typography } from '~/components/attr/TextAttr'
+    import { ToastType } from '~/components/attr/ToastAttr';
     import type { Teacher } from '~/models/teacher/Teacher';
+
+    const uiStore = useUiStore()
     
     definePageMeta({
         layout: 'admin'
@@ -72,7 +75,7 @@
     const save = async () => {
         const result = await useSaveTeacer(route.params.id as string, name.value, gender.value)
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             router.go(-2)
         }
@@ -81,7 +84,7 @@
     onMounted(async () => {
         const result = await useGetTeacherById(route.params.id as string)
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             const teacher = unwrapEither(result) as Teacher
             name.value = teacher.name

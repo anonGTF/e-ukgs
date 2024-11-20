@@ -65,6 +65,7 @@
 <script setup lang="ts">
     import type { MenuItemArgs } from '~/components/attr/MenuItemAttr';
     import { Typography } from '~/components/attr/TextAttr';
+    import { ToastType } from '~/components/attr/ToastAttr';
 
     const teacherMenuItems: Ref<Array<MenuItemArgs>> = ref([
         {
@@ -115,10 +116,12 @@
 
     const toggleDrawer = () => { isDrawerOpen.value = !isDrawerOpen.value }
 
+    const uiStore = useUiStore()
+
     const logout = async () => {
         const result = await useLogout()
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         }
     }
 </script>
