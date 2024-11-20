@@ -340,6 +340,7 @@
     import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr';
     import { ButtonType } from '~/components/attr/ButtonAttr';
     import { Typography } from '~/components/attr/TextAttr';
+    import { ToastType } from '~/components/attr/ToastAttr';
     import type { Media } from '~/models/media/Media';
     import { MediaType } from '~/models/media/MediaType';
 
@@ -365,6 +366,8 @@
         "Link",
         ""
     ])
+
+    const uiStore = useUiStore()
 
     const videoData = useGetAllVideos()
     const videoTitle = ref("")
@@ -466,15 +469,15 @@
     const saveVideo = async () => {
         let isValid = true
         if (videoTitle.value == "") {
-            alert("Judul video tidak boleh kosong")
+            uiStore.showToast("Judul video tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
         if (videoSource.value == "") {
-            alert("Sumber video tidak boleh kosong")
+            uiStore.showToast("Sumber video tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
         if (selectedVideo.value != null && videoThumbnail.value == null) {
-            alert("Thumbnail video tidak boleh kosong")
+            uiStore.showToast("Thumbnail video tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
         if (!isValid) return
@@ -484,7 +487,7 @@
         if (thumbnail == "" || videoThumbnail.value != null) {
             const uploadThumbnailResult = await useUploadFile(videoThumbnail.value)
             if (isLeft(uploadThumbnailResult)) {
-                alert(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`)
+                uiStore.showToast(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`, ToastType.ERROR)
                 isLoading.value = false
                 return
             }
@@ -505,7 +508,7 @@
         })
 
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             closeModal()
         }
@@ -515,15 +518,15 @@
     const saveEbook = async () => {
         let isValid = true
         if (ebookTitle.value == "") {
-            alert("Judul ebook tidak boleh kosong")
+            uiStore.showToast("Judul ebook tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
         if (selectedEbook.value != null && ebookFile.value == null) {
-            alert("Sumber ebook tidak boleh kosong")
+            uiStore.showToast("Sumber ebook tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
         if (selectedEbook.value != null && ebookThumbnail.value == null) {
-            alert("Thumbnail ebook tidak boleh kosong")
+            uiStore.showToast("Thumbnail ebook tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
         if (!isValid) return
@@ -533,7 +536,7 @@
         if (thumbnail == "" || ebookThumbnail.value != null) {
             const uploadThumbnailResult = await useUploadFile(ebookThumbnail.value)
             if (isLeft(uploadThumbnailResult)) {
-                alert(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`)
+                uiStore.showToast(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`, ToastType.ERROR)
                 isLoading.value = false
                 return
             }
@@ -544,7 +547,7 @@
         if (source == "" || ebookFile.value != null) {
             const uploadEbookResult = await useUploadFile(ebookFile.value)
             if (isLeft(uploadEbookResult)) {
-                alert(`Tidak berhasil upload ebook ${unwrapEither(uploadEbookResult)}`)
+                uiStore.showToast(`Tidak berhasil upload ebook ${unwrapEither(uploadEbookResult)}`, ToastType.ERROR)
                 isLoading.value = false
                 return
             }
@@ -565,7 +568,7 @@
         })
 
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             closeModal()
         }
@@ -575,15 +578,15 @@
     const saveArticle = async () => {
         let isValid = true
         if (articleTitle.value == "") {
-            alert("Judul artikel tidak boleh kosong")
+            uiStore.showToast("Judul artikel tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
         if (selectedArticle.value != null && articleFile.value == null) {
-            alert("Sumber artikel tidak boleh kosong")
+            uiStore.showToast("Sumber artikel tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
         if (selectedArticle.value != null && articleThumbnail.value == null) {
-            alert("Thumbnail artikel tidak boleh kosong")
+            uiStore.showToast("Thumbnail artikel tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
         if (!isValid) return
@@ -593,7 +596,7 @@
         if (thumbnail == "" || articleThumbnail.value != null) {
             const uploadThumbnailResult = await useUploadFile(articleThumbnail.value)
             if (isLeft(uploadThumbnailResult)) {
-                alert(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`)
+                uiStore.showToast(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`, ToastType.ERROR)
                 isLoading.value = false
                 return
             }
@@ -604,7 +607,7 @@
         if (source == "" || articleFile.value != null) {
             const uploadArticleResult = await useUploadFile(articleFile.value)
             if (isLeft(uploadArticleResult)) {
-                alert(`Tidak berhasil upload artikel ${unwrapEither(uploadArticleResult)}`)
+                uiStore.showToast(`Tidak berhasil upload artikel ${unwrapEither(uploadArticleResult)}`, ToastType.ERROR)
                 isLoading.value = false
                 return
             }
@@ -625,7 +628,7 @@
         })
 
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             closeModal()
         }
@@ -635,9 +638,9 @@
     const deleteMedia = async (data: Media) => {
         const result = await useDeleteMedia(data.id, data.type)
         if (isLeft(result)) {
-            alert(unwrapEither(result))
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
-            alert("Data berhasil dihapus")
+            uiStore.showToast("Data berhasil dihapus", ToastType.SUCCESS)
         }
     }
 
