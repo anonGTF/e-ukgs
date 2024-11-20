@@ -60,6 +60,7 @@ const buttonTypes = reactive<{
   Primary: "btn-primary rounded-xl text-white",
   Secondary: "btn-white rounded-xl text-black font-bold",
   Outlined: "btn-outline rounded-xl border border-border-primary",
+  DashOutlined: "btn-outline rounded-xl border border-border-primary border-dashed",
   Ghost: "btn-ghost"
 })
 

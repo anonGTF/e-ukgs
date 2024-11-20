@@ -32,3 +32,10 @@ export const MEDIA_CONSTANTS = {
     sourceAttr: 'source',
     thumbnailAttr: 'thumbnail'
 }
+
+export const QUESTIONNARIE_CONSTANTS = {
+    collectionName: 'questionnaire',
+    titleAttr: 'title',
+    typeAttr: 'type',
+    sectionsAttr: 'sections'
+}
