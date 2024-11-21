@@ -2,36 +2,25 @@
     <div class="drawer lg:drawer-open">
         <input v-model="isDrawerOpen" id="teacher-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content bg-background-blue-light">
-            <div class="navbar bg-white min-h-[5dvh]">
+            <div class="navbar bg-white min-h-[5dvh] sticky top-0">
                 <div class="flex-none">
                     <label for="teacher-drawer" class="drawer-button btn btn-square lg:hidden">
                         <Icon name="mdi:menu" size="24px"/>
                     </label>
                 </div>
-                <div class="flex-1 justify-end">
-                    <a class="btn btn-ghost text-xl">daisyUI</a>
-                </div>
+                <div class="flex-1 justify-end"></div>
                 <div class="flex-none gap-2">
-                    <div class="dropdown dropdown-end">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                        <div class="w-10 rounded-full">
-                        <img
-                            alt="Tailwind CSS Navbar component"
-                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                        </div>
+                    <div class="border-2 border-primary rounded-full w-10 h-10 flex items-center justify-center">
+                        <Icon :name="profileIcon" size="1.75rem" class="text-primary"/>
                     </div>
-                    <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-lg z-[1] mt-3 w-52 p-2 shadow">
-                        <li @click="logout">
-                            <a>
-                                <span></span>
-                                <span class="px-4 py-2 flex flex-row min-w-full">
-                                    <Text :typography="Typography.Body1" class="flex-1">Logout</Text>
-                                </span>
-                                <Icon name="mdi:logout" class="me-2"/>
-                            </a>
-                        </li>
-                    </ul>
-                    </div>
+                    <Text :typography="Typography.Label" class="font-semibold" color="text-black">{{ userStore.teacher?.name }}</Text>
+                    <Button
+                        dense
+                        @click="logout"
+                    >
+                        Logout
+                        <Icon name="mdi:logout"/>
+                    </Button>
                 </div>
             </div>
             <div class="h-svh lg:h-auto">
@@ -40,8 +29,8 @@
         </div>
         <div class="drawer-side border-e border-border-divider">
             <label for="teacher-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-            <div class="w-full p-6 min-h-[5dvh] border-b border-border-divider">
-                <p>Dashboard Guru | E-UKGS</p>
+            <div class="w-full p-6 h-[7vh] border-b border-border-divider">
+                <Text :typography="Typography.Label" class="text-center font-bold" color="text-black">Dashboard Guru | E-UKGS</Text>
             </div>
             <ul class="menu bg-white h-svh lg:h-auto w-80 pt-4 gap-4 px-4">
                 <li class="menu-title -ms-4">MENU</li>
@@ -112,11 +101,14 @@
         }
     ])
 
+    const uiStore = useUiStore()
+    const userStore = useUserStore()
+
+    const profileIcon = computed(() => userStore.teacher?.gender == "Laki-laki" ? "mdi:face-man" : "mdi:face-woman")
+
     const isDrawerOpen = ref(false)
 
     const toggleDrawer = () => { isDrawerOpen.value = !isDrawerOpen.value }
-
-    const uiStore = useUiStore()
 
     const logout = async () => {
         const result = await useLogout()
