@@ -36,6 +36,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     (role == "guest" && !to.path.startsWith("/teacher/")) ||
     (role == "admin" && !to.path.startsWith("/admin/"))
   ) {
-    return abortNavigation("Halaman tidak bisa diakses")
+    abortNavigation("Halaman tidak bisa diakses")
   }
 })

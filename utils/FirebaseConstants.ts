@@ -39,3 +39,13 @@ export const QUESTIONNARIE_CONSTANTS = {
     typeAttr: 'type',
     sectionsAttr: 'sections'
 }
+
+export const TOOTH_HEALTH_CONSTANTS = {
+    collectionName: 'tooth-health',
+    studentIdAttr: 'studentId',
+    groupIdAttr: 'groupId',
+    periodIdAttr: 'periodId',
+    ohisAttr: 'ohis',
+    dmftAttr: 'dmft',
+    referralAttr: 'referral'
+}

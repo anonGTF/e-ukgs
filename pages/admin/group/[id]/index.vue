@@ -97,15 +97,15 @@
     const filteredTableData = computed(() => tableData.value.filter((data) => data.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
 
     onMounted(async () => {
-        window.addEventListener("resize",() => {
-            activeBreakpoint.value = getActiveBreakpoint()
-        })
-
         const result = await useGetGroupById(route.params.id as string)
         if (isLeft(result)) {
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {
             groupData.value = unwrapEither(result)
         }
+    })
+
+    useEventListener("resize", () => {
+        activeBreakpoint.value = getActiveBreakpoint()
     })
 </script>

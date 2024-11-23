@@ -3,14 +3,14 @@ import type { Group } from "~/models/group/Group"
 export const useGroupStore = defineStore(
     'group',
     () => {
-        const groupId = ref<String | null>(null)
+        const group = ref<Group | null>(null)
 
         const $reset = () => {
-            groupId.value = null
+            group.value = null
         }
 
         return {
-            groupId,
+            group,
             $reset
         }
     },
