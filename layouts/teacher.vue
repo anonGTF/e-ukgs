@@ -1,7 +1,7 @@
 <template>
     <div class="drawer lg:drawer-open">
         <input v-model="isDrawerOpen" id="teacher-drawer" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content bg-background-blue-light">
+        <div class="drawer-content bg-background-blue-light z-[100]">
             <div class="navbar bg-white h-[7vh] sticky top-0 border-b border-border-divider">
                 <div class="flex-none">
                     <label for="teacher-drawer" class="drawer-button btn btn-square lg:hidden">

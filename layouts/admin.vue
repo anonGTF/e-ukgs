@@ -2,7 +2,7 @@
     <div class="drawer lg:drawer-open">
         <input v-model="isDrawerOpen" id="admin-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content bg-background-blue-light">
-            <div class="navbar bg-white h-[7vh] sticky top-0 border-b border-border-divider">
+            <div class="navbar bg-white h-[7vh] z-[100] sticky top-0 border-b border-border-divider">
                 <div class="flex-none">
                     <label for="admin-drawer" class="drawer-button btn btn-square lg:hidden">
                         <Icon name="mdi:menu" size="24px"/>

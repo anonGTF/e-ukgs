@@ -175,7 +175,7 @@
             </div>
             <template v-if="selectedType == MediaType.VIDEO">
                 <iframe 
-                    class="w-full h-full"
+                    class="flex-1"
                     :src="youtubeSourceToEmbed(selectedSource)" 
                     title="YouTube video player" 
                     frameborder="0" 
@@ -185,9 +185,7 @@
                 ></iframe>
             </template>
             <template v-else-if="selectedType == MediaType.ARTICLE">
-                <MarkdownRenderer
-                    :markdown-content="selectedSource"
-                />
+                <iframe :src="selectedSource" class="flex-1"></iframe>
             </template>
             <template v-else>
                 <iframe :src="selectedSource" class="h-[80svh] w-full"></iframe>
@@ -291,6 +289,7 @@
 
     <!-- MODAL FOR ARTICLE -->
     <dialog 
+        id="modal-article"
         class="modal modal-bottom sm:modal-middle"
         :class="{ 'modal-open': showArticleModal }"
     >
@@ -304,15 +303,15 @@
             />
             <Spacer height="h-4" />
             <FileInput
-                label="Upload File Artikel (.md)"
-                file-type="text/markdown"
-                @change="saveArticleFile"
-            />
-            <Spacer height="h-4" />
-            <FileInput
                 label="Upload Thumbnail"
                 file-type="image/*"
                 @change="saveArticleThumbnail"
+            />
+            <Spacer height="h-4" />
+            <ckeditor
+                v-model="articleContent"
+                :editor="ClassicEditor"
+                :config="defaultCkEditorConfig"
             />
             <Spacer height="h-6" />
             <div class="flex flex-row gap-2 w-full">
@@ -343,6 +342,9 @@
     import { ToastType } from '~/components/attr/ToastAttr';
     import type { Media } from '~/models/media/Media';
     import { MediaType } from '~/models/media/MediaType';
+    import { ClassicEditor } from 'ckeditor5';
+    import 'ckeditor5/ckeditor5.css';
+    import { defaultCkEditorConfig } from '~/utils/Utils';
 
     definePageMeta({
         layout: 'admin'
@@ -385,10 +387,10 @@
 
     const articleData = useGetAllArticles()
     const articleTitle = ref("")
-    const articleFile = ref<File | null | undefined>(null)
     const articleThumbnail = ref<File | null | undefined>(null)
     const articleThumbnailPreview = ref("")
     const selectedArticle = ref<Media | null>(null)
+    const articleContent = ref('<p>Masukkan konten artikel di sini</p>')
 
     const isLoading = ref(false)
 
@@ -402,7 +404,6 @@
     const saveVideoThumbnail = (file: File | null | undefined) => { videoThumbnail.value = file }
     const saveEbookFile = (file: File | null | undefined) => { ebookFile.value = file }
     const saveEbookThumbnail = (file: File | null | undefined) => { ebookThumbnail.value = file }
-    const saveArticleFile = (file: File | null | undefined) => { articleFile.value = file }
     const saveArticleThumbnail = (file: File | null | undefined) => { articleThumbnail.value = file }
 
     const openVideoModal = (data: Media | null) => {
@@ -453,7 +454,7 @@
         selectedEbook.value = null
 
         articleTitle.value = ""
-        articleFile.value = null
+        articleContent.value = ""
         articleThumbnail.value = null
         articleThumbnailPreview.value = ""
         selectedArticle.value = null
@@ -485,7 +486,7 @@
         isLoading.value = true
         let thumbnail = selectedVideo.value?.thumbnail ?? ""
         if (thumbnail == "" || videoThumbnail.value != null) {
-            const uploadThumbnailResult = await useUploadFile(videoThumbnail.value)
+            const uploadThumbnailResult = await useUploadFile(videoThumbnail.value, "thumbnail")
             if (isLeft(uploadThumbnailResult)) {
                 uiStore.showToast(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`, ToastType.ERROR)
                 isLoading.value = false
@@ -534,7 +535,7 @@
         isLoading.value = true
         let thumbnail = selectedEbook.value?.thumbnail ?? ""
         if (thumbnail == "" || ebookThumbnail.value != null) {
-            const uploadThumbnailResult = await useUploadFile(ebookThumbnail.value)
+            const uploadThumbnailResult = await useUploadFile(ebookThumbnail.value, "thumbnail")
             if (isLeft(uploadThumbnailResult)) {
                 uiStore.showToast(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`, ToastType.ERROR)
                 isLoading.value = false
@@ -545,7 +546,7 @@
 
         let source = selectedEbook.value?.source ?? ""
         if (source == "" || ebookFile.value != null) {
-            const uploadEbookResult = await useUploadFile(ebookFile.value)
+            const uploadEbookResult = await useUploadFile(ebookFile.value, "ebook")
             if (isLeft(uploadEbookResult)) {
                 uiStore.showToast(`Tidak berhasil upload ebook ${unwrapEither(uploadEbookResult)}`, ToastType.ERROR)
                 isLoading.value = false
@@ -581,8 +582,8 @@
             uiStore.showToast("Judul artikel tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
-        if (selectedArticle.value != null && articleFile.value == null) {
-            uiStore.showToast("Sumber artikel tidak boleh kosong", ToastType.ERROR)
+        if (selectedArticle.value != null && articleContent.value == "") {
+            uiStore.showToast("Konten artikel tidak boleh kosong", ToastType.ERROR)
             isValid = false
         }
         if (selectedArticle.value != null && articleThumbnail.value == null) {
@@ -594,7 +595,7 @@
         isLoading.value = true
         let thumbnail = selectedArticle.value?.thumbnail ?? ""
         if (thumbnail == "" || articleThumbnail.value != null) {
-            const uploadThumbnailResult = await useUploadFile(articleThumbnail.value)
+            const uploadThumbnailResult = await useUploadFile(articleThumbnail.value, "thumbnail")
             if (isLeft(uploadThumbnailResult)) {
                 uiStore.showToast(`Tidak berhasil upload thumbnail ${unwrapEither(uploadThumbnailResult)}`, ToastType.ERROR)
                 isLoading.value = false
@@ -604,8 +605,9 @@
         }
 
         let source = selectedArticle.value?.source ?? ""
-        if (source == "" || articleFile.value != null) {
-            const uploadArticleResult = await useUploadFile(articleFile.value)
+        if (source == "" || articleContent.value != "") {
+            const articleFile = new File([articleContent.value], `${articleTitle.value}.html`, { type: "text/html" })
+            const uploadArticleResult = await useUploadFile(articleFile, "article")
             if (isLeft(uploadArticleResult)) {
                 uiStore.showToast(`Tidak berhasil upload artikel ${unwrapEither(uploadArticleResult)}`, ToastType.ERROR)
                 isLoading.value = false
@@ -650,3 +652,17 @@
         }
     })
 </script>
+
+<style>
+#modal-article .modal-box {
+    width: 100vw;
+    max-width: none;
+}
+
+@media (min-width: 770px) {
+    #modal-article .modal-box {
+        width: 80vw;
+        max-width: none;
+    }
+}
+</style>
