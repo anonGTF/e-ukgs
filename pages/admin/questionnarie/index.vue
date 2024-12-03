@@ -5,7 +5,7 @@
         <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Kelola Kuesioner</Text>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
-            <Table
+            <DataTable
                 :headers="tableHeader"
                 :is-empty="tableData.length == 0"
             >
@@ -26,7 +26,7 @@
                         </Button>
                     </td>
                 </tr>
-            </Table>
+            </DataTable>
         </div>
     </div>
 </template>

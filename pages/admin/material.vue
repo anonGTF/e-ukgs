@@ -18,7 +18,7 @@
                 </div>
             </div>
             <Spacer class="h-6"/>
-            <Table
+            <DataTable
                 :headers="tableHeader"
                 :is-empty="videoData.length == 0"
             >
@@ -52,7 +52,7 @@
                         </div>
                     </td>
                 </tr>
-            </Table>
+            </DataTable>
         </div>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
@@ -69,7 +69,7 @@
                 </div>
             </div>
             <Spacer class="h-6"/>
-            <Table
+            <DataTable
                 :headers="tableHeader"
                 :is-empty="ebookData.length == 0"
             >
@@ -103,7 +103,7 @@
                         </div>
                     </td>
                 </tr>
-            </Table>
+            </DataTable>
         </div>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
@@ -120,7 +120,7 @@
                 </div>
             </div>
             <Spacer class="h-6"/>
-            <Table
+            <DataTable
                 :headers="tableHeader"
                 :is-empty="articleData.length == 0"
             >
@@ -154,7 +154,7 @@
                         </div>
                     </td>
                 </tr>
-            </Table>
+            </DataTable>
         </div>
     </div>
 

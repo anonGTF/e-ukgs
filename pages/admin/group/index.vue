@@ -20,7 +20,7 @@
                 </div>
             </div>
             <Spacer class="h-6"/>
-            <Table
+            <DataTable
                 :headers="tableHeader"
                 :is-empty="filteredTableData.length == 0"
             >
@@ -44,7 +44,7 @@
                         </Button>
                     </td>
                 </tr>
-            </Table>
+            </DataTable>
         </div>
     </div>
 </template>
