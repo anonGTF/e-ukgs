@@ -11,7 +11,6 @@
 
 <script lang="ts" setup>
 import type { PropType } from 'vue';
-import { ButtonType } from './attr/ButtonAttr';
 
 const props = defineProps({
   type: {

@@ -1,5 +1,8 @@
 export type User = {
     id: string,
     role: string,
-    groupdId?: string
+    name: string,
+    gender: string,
+    userId: string,
+    schoolId?: string
 }

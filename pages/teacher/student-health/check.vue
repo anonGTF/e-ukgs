@@ -66,7 +66,7 @@
     import { ButtonType } from '~/components/attr/ButtonAttr';
     import { Typography } from '~/components/attr/TextAttr';
     import { ToastType } from '~/components/attr/ToastAttr';
-    import type { Student } from '~/models/group/Student';
+    import type { Student } from '~/models/school/Student';
     import type { ToothHealth } from '~/models/tooth-health/ToothHealth';
 
     definePageMeta({
@@ -89,11 +89,11 @@
     ])
 
     const route = useRoute()
-    const groupStore = useGroupStore()
+    const userStore = useUserStore()
     const uiStore = useUiStore()
 
     const selectedStudent = ref<Student | null>(null)
-    const allStudents = useGetAllStudents(groupStore.group?.id as string)
+    const allStudents = useGetAllStudents(userStore.school?.id as string)
     const studentDropdownOptions = computed<CustomDropdownOption<Student>[]>(() => allStudents.value.map((student) => ({
         label: student.name,
         data: student
@@ -122,7 +122,7 @@
 
     onMounted(async () => {
         if (route.query.id != null) {
-            const studentResult = await useGetStudentById(route.query.id as string, groupStore.group?.id as string)
+            const studentResult = await useGetStudentById(route.query.id as string, userStore.school?.id as string)
             if (isLeft(studentResult)) {
                 uiStore.showToast(unwrapEither(studentResult), ToastType.ERROR)
             } else {

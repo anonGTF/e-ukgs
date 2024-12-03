@@ -1,6 +1,4 @@
 import { doc, updateDoc } from "firebase/firestore";
-import type { Either } from "~/models/base/Either";
-import type { Questionnarie } from "~/models/questionnaire/Questionnarie";
 
 export const useSaveQuestionnarie = async (data: Questionnarie): Promise<Either<string, null>> => {
     const db = useFirestore()

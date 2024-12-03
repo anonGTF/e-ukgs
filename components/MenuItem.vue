@@ -19,8 +19,6 @@
 
 <script setup lang="ts">
     import type { PropType } from 'vue';
-    import type { MenuItemArgs } from './attr/MenuItemAttr';
-    import { Typography } from '~/components/attr/TextAttr'
 
     const props = defineProps({
         menu: {

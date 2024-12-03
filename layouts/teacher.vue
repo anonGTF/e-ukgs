@@ -13,7 +13,7 @@
                     <div class="border-2 border-primary rounded-full w-10 h-10 flex items-center justify-center">
                         <Icon :name="profileIcon" size="1.75rem" class="text-primary"/>
                     </div>
-                    <Text :typography="Typography.Label" class="font-semibold" color="text-black">{{ userStore.teacher?.name }}</Text>
+                    <Text :typography="Typography.Label" class="font-semibold" color="text-black">{{ userStore.user?.name }}</Text>
                     <Button
                         dense
                         @click="logout"
@@ -52,10 +52,6 @@
 </template>
 
 <script setup lang="ts">
-    import type { MenuItemArgs } from '~/components/attr/MenuItemAttr';
-    import { Typography } from '~/components/attr/TextAttr';
-    import { ToastType } from '~/components/attr/ToastAttr';
-
     const teacherMenuItems: Ref<Array<MenuItemArgs>> = ref([
         {
             label: "Beranda",
@@ -64,47 +60,40 @@
             selectedIcon: "mdi:view-dashboard"
         },
         {
-            label: "Penilaian Kuesioner Siswa",
+            label: "Kelola Sekolah dan Siswa",
+            route: "/teacher/school",
+            icon: "mdi:school-outline" ,
+            selectedIcon: "mdi:school" 
+        },
+        {
+            label: "Kelola Kegiatan UKGS",
+            route: "/teacher/activity" ,
+            icon: "mdi:hospital-building" 
+        },
+        {
+            label: "Penilaian Perilaku Siswa",
             route: "/teacher/student-assignment",
             icon: "mdi:file-document-edit-outline" ,
             selectedIcon: "mdi-file-document-edit" 
         },
         {
-            label: "Penilaian Peran Lingkungan",
-            icon: "mdi:account-group-outline" ,
-            selectedIcon: "mdi:account-group" ,
-            subMenuItems: [
-                {
-                    label: "Kuesioner Guru",
-                    route: "/teacher/teacher-questionnaire"
-                },
-                {
-                    label: "Kuesioner Dokter Kecil",
-                    route: "/teacher/student-doctor-questionnaire"
-                },
-                {
-                    label: "Kuesioner Orang Tua",
-                    route: "/teacher/parent-questionnaire"
-                },
-            ]
+            label: "Penilaian Peran Orang Tua",
+            icon: "mdi:account-child" ,
+            selectedIcon: "mdi:account-child-circle" ,
+            route: "/teacher/parent-questionnarie"
         },
         {
             label: "Penilaian Kesehatan Gigi Siswa",
             route: "/teacher/student-health",
             icon: "mdi:tooth-outline" ,
             selectedIcon: "mdi:tooth" 
-        },
-        {
-            label: "Kegiatan UKGS",
-            route: "/teacher/activity" ,
-            icon: "mdi:hospital-building" 
         }
     ])
 
     const uiStore = useUiStore()
     const userStore = useUserStore()
 
-    const profileIcon = computed(() => userStore.teacher?.gender == "Laki-laki" ? "mdi:face-man" : "mdi:face-woman")
+    const profileIcon = computed(() => userStore.user?.gender == "Laki-laki" ? "mdi:face-man" : "mdi:face-woman")
 
     const isDrawerOpen = ref(false)
 

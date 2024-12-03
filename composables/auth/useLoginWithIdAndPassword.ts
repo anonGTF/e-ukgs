@@ -1,5 +1,4 @@
 import { getAuth, signInWithEmailAndPassword, type UserCredential } from "firebase/auth"
-import type { Either } from "~/models/base/Either"
 
 export const useLoginWithIdAndPassword = async (id: string, password: string): Promise<Either<string, UserCredential>> => {
   const app = useFirebaseApp()

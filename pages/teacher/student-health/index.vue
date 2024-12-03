@@ -2,7 +2,7 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Penilaian Kesehatan Gigi Siswa {{ groupStore.group?.name }}</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Penilaian Kesehatan Gigi Siswa {{ userStore.school?.name }}</Text>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
             <div class="flex flex-row justify-between">
@@ -62,8 +62,8 @@
     import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr';
     import { ButtonType } from '~/components/attr/ButtonAttr';
     import { Typography } from '~/components/attr/TextAttr';
-    import type { Group } from '~/models/group/Group';
-    import type { Student } from '~/models/group/Student';
+    import type { School } from '~/models/school/School';
+    import type { Student } from '~/models/school/Student';
     import type { ToothHealth } from '~/models/tooth-health/ToothHealth';
 
     definePageMeta({
@@ -95,11 +95,11 @@
         ""
     ])
 
-    const groupStore = useGroupStore()
+    const userStore = useUserStore()
     const searchQuery = ref("")
     const activeBreakpoint = ref("")
     const studentData = useGetAllStudents("7aid0cn08014dfm456DM")
-    const resultData = useGetAllToothHealthByGroup("7aid0cn08014dfm456DM")
+    const resultData = useGetAllToothHealthBySchool("7aid0cn08014dfm456DM")
     const studentResultData = computed(() => {
         return studentData.value
             .sort((curr, next) => curr.name.localeCompare(next.name))
@@ -121,10 +121,10 @@
     })
 
     onMounted(() => {
-        groupStore.group = {
+        userStore.school = {
             id: "7aid0cn08014dfm456DM",
             name: "coba",
             totalStudent: 0
-        } as Group
+        } as School
     })
 </script>

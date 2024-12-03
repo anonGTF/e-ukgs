@@ -34,8 +34,6 @@
 </template>
 
 <script setup lang="ts">
-    import { Typography } from './attr/TextAttr';
-
     type FilterOption = {
         key: string,
         label: string

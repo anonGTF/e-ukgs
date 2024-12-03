@@ -20,9 +20,6 @@
 </template>
 
 <script setup lang="ts">
-    import { ButtonType } from './attr/ButtonAttr';
-    import { Typography } from './attr/TextAttr';
-
     defineProps({
         label: {
             type: String,

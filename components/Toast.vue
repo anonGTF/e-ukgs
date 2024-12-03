@@ -19,8 +19,6 @@
 </template>
 
 <script setup lang="ts">
-    import { ToastType } from './attr/ToastAttr';
-
     const uiStore = useUiStore()
     const activeBreakpoint = ref("")
 

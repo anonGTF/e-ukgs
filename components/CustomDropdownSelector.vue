@@ -44,8 +44,6 @@
 
 <script setup lang="ts">
     import type { PropType } from 'vue';
-    import { Typography } from './attr/TextAttr';
-    import type { CustomDropdownOption } from './attr/CustomDropdownAttr';
 
     const props = defineProps({
         label: {

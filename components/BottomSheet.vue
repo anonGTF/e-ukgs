@@ -26,9 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import { Typography } from './attr/TextAttr';
-import { ButtonType } from './attr/ButtonAttr';
-
 const props = defineProps({
   isShow: {
     type: Boolean,

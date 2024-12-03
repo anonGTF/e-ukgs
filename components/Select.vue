@@ -7,8 +7,6 @@
 </template>
 
 <script setup lang="ts">
-  import { Typography } from './attr/TextAttr';
-
   const props = defineProps({
     text: {
       type: String,

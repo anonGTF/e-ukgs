@@ -1,6 +1,4 @@
 import { doc, getDoc } from "firebase/firestore";
-import type { Either } from "~/models/base/Either";
-import type { Questionnarie } from "~/models/questionnaire/Questionnarie";
 
 export const useGetQuestionnarieById = async (id: string): Promise<Either<string, Questionnarie>> => {
     const db = useFirestore()
@@ -10,14 +8,7 @@ export const useGetQuestionnarieById = async (id: string): Promise<Either<string
         if (!document.exists() || document.data() == undefined) {
             return makeLeft('Kuesioner tidak ditemukan')
         }
-        const data = document.data()
-        const questionnarie: Questionnarie = {
-            id: id,
-            title: data[QUESTIONNARIE_CONSTANTS.titleAttr],
-            type: data[QUESTIONNARIE_CONSTANTS.typeAttr],
-            sections: data[QUESTIONNARIE_CONSTANTS.sectionsAttr]
-        }
-        return makeRight(questionnarie)
+        return makeRight(document.toQuestionnarie())
     })
     .catch((error) => makeLeft(error.message))
 }

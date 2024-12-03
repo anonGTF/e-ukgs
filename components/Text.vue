@@ -6,7 +6,6 @@
 
 <script lang="ts" setup>
 import { twMerge } from 'tailwind-merge';
-import { Typography } from './attr/TextAttr';
 
 const props = defineProps({
   typography: {

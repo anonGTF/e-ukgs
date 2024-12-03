@@ -1,9 +1,7 @@
-<template>
-    <h1>STUDENT ASSIGNMENT</h1>
-</template>
+<template></template>
 
 <script setup lang="ts">
     definePageMeta({
-        layout: 'teacher'
+        layout: "teacher"
     })
 </script>

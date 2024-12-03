@@ -1,7 +1,6 @@
 import { addDoc, collection, getFirestore } from "firebase/firestore";
-import type { Questionnarie } from "~/models/questionnaire/Questionnarie";
 
-export const useAddQuestionnaire = (data: Questionnarie) => {
+export const useAddQuestionnaire = async (data: Questionnarie) => {
     const db = getFirestore()
     const collectionRef = collection(db, QUESTIONNARIE_CONSTANTS.collectionName)
     return addDoc(collectionRef, data)

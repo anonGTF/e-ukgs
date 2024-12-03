@@ -128,15 +128,6 @@
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr'
-    import { ButtonType } from '~/components/attr/ButtonAttr';
-    import type { CustomDropdownOption } from '~/components/attr/CustomDropdownAttr';
-    import { Typography } from '~/components/attr/TextAttr'
-    import { ToastType } from '~/components/attr/ToastAttr';
-    import type { Answer } from '~/models/questionnaire/Answer';
-    import type { Questionnarie } from '~/models/questionnaire/Questionnarie';
-    import { AnswerType } from '~/models/questionnaire/Section';
-
     definePageMeta({
         layout: 'admin'
     })

@@ -1,23 +1,11 @@
 import { collection, type DocumentData } from "firebase/firestore";
 import { firestoreDefaultConverter } from "vuefire";
-import type { Media } from "~/models/media/Media";
-import { MediaType } from "~/models/media/MediaType";
 
 export const useGetAllMedia = (type: MediaType): Ref<Media[]> => {
     const db = useFirestore()
     const collectionRef = collection(db, getMediaCollectionName(type))
     const mediaList = useCollection(collectionRef.withConverter<Media, DocumentData>({
-        fromFirestore: (snapshot) => {
-            const data = snapshot.data()
-            const media: Media = {
-                id: snapshot.id,
-                title: data[MEDIA_CONSTANTS.titleAttr],
-                source: data[MEDIA_CONSTANTS.sourceAttr],
-                thumbnail: data[MEDIA_CONSTANTS.thumbnailAttr],
-                type
-            }
-            return media
-        },
+        fromFirestore: (snapshot) => snapshot.toMedia(type),
         toFirestore: firestoreDefaultConverter.toFirestore
     }))
     return mediaList

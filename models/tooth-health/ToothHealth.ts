@@ -1,10 +1,10 @@
 export type ToothHealth = {
     id: string,
     studentId: string,
-    groupId: string,
-    periodId: string,
+    schoolId: string,
     ohis: Ohis,
     dmft: Dmft,
+    gums: Gums,
     referral?: Referral
 }
 
@@ -17,5 +17,7 @@ export type Dmft = {
     missing: number,
     totalScore: number
 }
+
+export type Gums  = {}
 
 export type Referral = {}

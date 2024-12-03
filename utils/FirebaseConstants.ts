@@ -1,25 +1,23 @@
 export const USER_CONSTANTS = {
     collectionName: 'users',
     roleAttr: 'role',
-    groupId: 'groupId'
-}
-
-export const TEACHER_CONSTANTS = {
-    collectionName: 'teachers',
+    schoolIdAttr: 'schoolId',
     nameAttr: 'name',
+    userIdAttr: 'userId',
     genderAttr: 'gender',
-    userIdAttr: 'userId'
 }
 
 export const STUDENT_CONSTANTS = {
     collectionName: 'students',
     nameAttr: 'name',
     genderAttr: 'gender',
-    userIdAttr: 'userId'
+    userIdAttr: 'userId',
+    gradeAttr: 'grade',
+    parentPhoneNumberAttr: 'parentPhoneNumber'
 }
 
-export const GROUP_CONSTANTS = {
-    collectionName: 'groups',
+export const SCHOOL_CONSTANTS = {
+    collectionName: 'schools',
     nameAttr: 'name',
     totalStudentAttr: 'totalStudent'
 }
@@ -43,9 +41,10 @@ export const QUESTIONNARIE_CONSTANTS = {
 export const TOOTH_HEALTH_CONSTANTS = {
     collectionName: 'tooth-health',
     studentIdAttr: 'studentId',
-    groupIdAttr: 'groupId',
+    schoolIdAttr: 'groupId',
     periodIdAttr: 'periodId',
     ohisAttr: 'ohis',
     dmftAttr: 'dmft',
+    gumsAttr: 'gums',
     referralAttr: 'referral'
 }

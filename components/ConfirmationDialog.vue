@@ -36,9 +36,5 @@
 </template>
 
 <script setup lang="ts">
-    import { Typography } from './attr/TextAttr';
-    import { ButtonType } from './attr/ButtonAttr';
-    import { ConfirmationType } from './attr/ConfirmationModalAttr';
-    
     const uiStore = useUiStore()
 </script>

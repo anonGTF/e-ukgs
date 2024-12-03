@@ -32,10 +32,6 @@
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr';
-    import { ButtonType } from '~/components/attr/ButtonAttr';
-    import { Typography } from '~/components/attr/TextAttr';
-
     definePageMeta({
         layout: 'admin'
     })

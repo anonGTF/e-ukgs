@@ -46,10 +46,6 @@
 </template>
 
 <script setup lang="ts">
-    import type { MenuItemArgs } from '~/components/attr/MenuItemAttr';
-    import { Typography } from '~/components/attr/TextAttr';
-    import { ToastType } from '~/components/attr/ToastAttr';
-
     const uiStore = useUiStore()
 
     const adminMenuItems: Ref<Array<MenuItemArgs>> = ref([
@@ -60,21 +56,16 @@
             selectedIcon: "mdi:view-dashboard"
         },
         {
-            label: "Kelola Kelompok Siswa",
-            route: "/admin/group",
-            icon: "mdi:account-school-outline" ,
-            selectedIcon: "mdi:account-school"  
+            label: "Data Pelaksanaan UKGS",
+            route: "/admin/ukgs" ,
+            icon: "mdi:chart-box-outline" ,
+            selectedIcon: "mdi:chart-box"
         },
         {
-            label: "Kelola Akun Guru",
-            route: "/admin/teacher",
-            icon: "mdi:account-tie-outline" ,
-            selectedIcon: "mdi:account-tie" 
-        },
-        {
-            label: "Kelola Akun Tamu",
-            route: "/admin/guest",
-            icon: "mdi:doctor" 
+            label: "Kelola Sekolah",
+            route: "/admin/school",
+            icon: "mdi:school-outline" ,
+            selectedIcon: "mdi:school"  
         },
         {
             label: "Kelola Kuesioner",
@@ -83,17 +74,17 @@
             selectedIcon: "mdi-file-document-edit" 
         },
         {
-            label: "Penilaian Monev",
-            route: "/admin/monev" ,
-            icon: "mdi:chart-box-outline" ,
-            selectedIcon: "mdi:chart-box"
-        },
-        {
             label: "Kelola Bahan Penyuluhan",
             route: "/admin/material" ,
             icon: "mdi:book-open-variant-outline",
             selectedIcon: "mdi:book-open-variant" 
-        }
+        },
+        {
+            label: "Kelola Akun",
+            route: "/admin/account",
+            icon: "mdi:account-group-outline" ,
+            selectedIcon: "mdi:account-group"
+        },
     ])
 
     const isDrawerOpen = ref(false)

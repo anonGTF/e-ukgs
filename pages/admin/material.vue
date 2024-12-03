@@ -336,15 +336,8 @@
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr';
-    import { ButtonType } from '~/components/attr/ButtonAttr';
-    import { Typography } from '~/components/attr/TextAttr';
-    import { ToastType } from '~/components/attr/ToastAttr';
-    import type { Media } from '~/models/media/Media';
-    import { MediaType } from '~/models/media/MediaType';
     import { ClassicEditor } from 'ckeditor5';
     import 'ckeditor5/ckeditor5.css';
-    import { defaultCkEditorConfig } from '~/utils/Utils';
 
     definePageMeta({
         layout: 'admin'
