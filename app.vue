@@ -14,10 +14,12 @@
     onMounted(() => {
         watch(user, (user, prevUser) => {
             if (prevUser && !user) {
-                router.push('/')
+                router.push('/login')
             } else if (user && typeof route.query.redirect === 'string') {
                 router.push(route.query.redirect)
             }
         })
+
+        setupDocumentSnapshotUtil()
     })
 </script>

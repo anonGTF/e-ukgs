@@ -1,139 +1,113 @@
 <template>
-    <div class="h-full w-full flex flex-row">
-        <div class="bg-primary items-stretch w-0 lg:w-[60%]"></div>
-        <div class="flex-1 flex justify-center items-center bg-background-blue-light">
-            <div class="lg:w-96 sm:w-[60%] w-full lg:mx-0 mx-2 px-6 py-12 bg-white rounded-2xl">
-                <Text :typography="Typography.H1">Selamat Datang</Text>
+    <div class="flex flex-row items-center gap-2 sm:gap-4 mt-4">
+        <div class="w-12 h-12 rounded-lg bg-gray-300"></div>
+        <Text 
+            :typography="Typography.Label" 
+            class="font-bold flex-1" 
+            color="text-black"
+        >
+            E-UKGS
+        </Text>
+        <Button
+            dense
+            to="/login"
+        >
+            <Icon name="mdi:login-variant"/> Login Petugas
+        </Button>
+    </div>
+    <Spacer height="h-6"/>
+    <div class="bg-primary rounded-2xl p-6">
+        <Text :typography="Typography.H1" color="text-white">Selamat datang di website E-UKGS! 🌟</Text>
+        <Spacer height="h-4"/>
+        <Text :typography="Typography.Label" color="text-white">Jelajahi berbagai informasi menarik yang telah kami siapkan untuk Anda. Tingkatkan pengetahuan tentang cara menjaga kesehatan gigi melalui:</Text>
+        <Spacer height="h-6"/>
+        <div class="flex flex-col md:flex-row gap-2">
+            <Button
+                class="flex-1 bg-white/25"
+            >
+                <Icon name="mdi:book-open-variant" size="1.5rem"/>
+                6 Ebook Edukasi
+            </Button>
+            <Button class="flex-1 bg-white/25">
+                <Icon name="mdi:movie" size="1.5rem"/>
+                18 Video Edukasi
+            </Button>
+            <Button class="flex-1 bg-white/25">
+                <Icon name="mdi:script-text" size="1.5rem"/>
+                10 Artikel Edukasi
+            </Button>
+        </div>
+    </div>
+    <Spacer height="h-6"/>
+    <div class="p-4">
+        <Text :typography="Typography.H2"><span class="text-2xl">📚</span> Ebook Edukasi</Text>
+        <Spacer height="h-2"/>
+        <Text>Ebook penuh warna dengan panduan dan tips lengkap yang bisa diunduh dan dibaca kapan saja.</Text>
+        <Spacer height="h-4"/>
+        <div class="flex flex-row gap-4 overflow-scroll">
+            <div v-for="i in 5">
+                <div class="bg-gray-300 rounded-lg w-56 h-80"></div>
                 <Spacer height="h-2"/>
-                <Text :typography="Typography.Body1">Masukkan ID dan password yang telah diberikan oleh admin pada isian di bawah.</Text>
-                <Spacer height="h-10"/>
-                <TextField
-                    v-model="id"
-                    placeholder="Masukkan ID"
-                    label="ID Anda"
-                    :error-message="idErrorMessage"
-                    @enter="login"
-                />
-                <Spacer height="h-4" />
-                <TextField
-                    v-model="password"
-                    :type="passwordVisible ? 'text' : 'password'"
-                    placeholder="Masukkan Password"
-                    label="Password Anda"
-                    :error-message="passwordErrorMessage"
-                    :trailing-icon="passwordVisible ? 'mdi:eye' : 'mdi:eye-off'"
-                    @trailing-icon-click="togglePasswordVisibility"
-                    @enter="login"
-                />
-                <Spacer height="h-12" />
-                <Button 
-                    :loading="isLoading"
-                    full-width
-                    @click="login"
-                >
-                    Masuk ke dalam akun
-                </Button>
-                <Spacer height="h-10" />
-                <Text :typography="Typography.Body1" class="text-center">Belum mendapat ID & Password ?</Text>
-                <Spacer height="h-1" />
-                <Button 
-                    :type="ButtonType.Ghost"
-                    class="mx-auto flex hover:bg-transparent py-0"
-                    underlined
-                    @click="openWhatsapp"
-                >
-                    Hubungi Admin
-                </Button>
+                <Text :typography="Typography.Label" class=" font-semibold">Judul Ebook di sini</Text>
             </div>
+        </div>
+    </div>
+    <Spacer height="h-6"/>
+    <div class="bg-primary rounded-2xl p-4">
+        <Text :typography="Typography.H2" color="text-white"><span class="text-2xl">🎦</span> Video Edukasi</Text>
+        <Spacer height="h-2"/>
+        <Text color="text-white">Tonton langkah-langkah praktis dan tips sederhana untuk menjaga kesehatan gigi dengan cara yang menyenangkan.</Text>
+        <Spacer height="h-4"/>
+        <div class="flex flex-row gap-4 overflow-scroll">
+            <div v-for="i in 5">
+                <div class="bg-gray-300 rounded-lg w-56 h-32"></div>
+                <Spacer height="h-2"/>
+                <Text 
+                    :typography="Typography.Label" 
+                    class="font-semibold" 
+                    color="text-white"
+                >Judul Video di sini</Text>
+            </div>
+        </div>
+    </div>
+    <Spacer height="h-6"/>
+    <div class="p-4">
+        <Text :typography="Typography.H2"><span class="text-2xl">📒</span> Artikel Edukasi</Text>
+        <Spacer height="h-2"/>
+        <Text>Pelajari lebih banyak tentang kebiasaan sehat, mitos seputar kesehatan gigi, dan wawasan dari para ahli dari artikel-artikel di bawah.</Text>
+        <Spacer height="h-4"/>
+        <div class="flex flex-row gap-4 overflow-scroll">
+            <div v-for="i in 5">
+                <div class="bg-gray-300 rounded-lg w-56 h-32"></div>
+                <Spacer height="h-2"/>
+                <Text :typography="Typography.Label" class=" font-semibold">Judul Artikel di sini</Text>
+            </div>
+        </div>
+    </div>
+    <Spacer height="h-6"/>
+    <div class="bg-primary rounded-2xl p-6 mb-6">
+        <Text :typography="Typography.H1" class="text-center" color="text-white">Saatnya isi Kuesioner 🚀</Text>
+        <Spacer height="h-4"/>
+        <Text :typography="Typography.Label" class="text-center" color="text-white">
+            Jawab dengan jujur yaa~ <span class="text-xl">💖</span>, 
+            hanya butuh beberapa menit, kok. Bersama-sama kita wujudkan senyuman sehat untuk semua. <span class="text-xl">😁</span></Text>
+        <Spacer height="h-6"/>
+        <div class="flex flex-col md:flex-row gap-2">
+            <Button
+                class="flex-1 bg-white/25"
+                to="/student-questionnarie"
+            >
+            <span class="text-2xl">🎓</span> Kuesioner untuk Siswa
+            </Button>
+            <Button 
+                class="flex-1 bg-white/25"
+                to="/parent-questionnarie"
+            >
+                <span class="text-2xl">👨🏻🧕🏻</span> Kuesioner untuk Orang Tua/Wali
+            </Button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import type { UserCredential } from 'firebase/auth';
-
-    const id = ref('')
-    const password = ref('')
-    const isLoading = ref(false)
-    const idErrorMessage = ref('')
-    const passwordErrorMessage = ref('')
-    const passwordVisible = ref(false)
-
-    const userStore = useUserStore()
-
-    const login = async () => {
-        idErrorMessage.value = ''
-        passwordErrorMessage.value = ''  
-
-        // validate
-        let isValid = true
-        if (id.value.length === 0) {
-            idErrorMessage.value = 'ID tidak boleh kosong'
-            isValid = false
-        }
-        if (password.value.length === 0) {
-            passwordErrorMessage.value = 'Password tidak boleh kosong'
-            isValid = false
-        }
-
-        if (!isValid) return
-
-        // logging in
-        isLoading.value = true
-        const loginResult = await useLoginWithIdAndPassword(id.value, password.value)
-        if (isLeft(loginResult)) {
-            const error = unwrapEither(loginResult) as string
-            idErrorMessage.value = error
-            passwordErrorMessage.value = error
-            isLoading.value = false
-            return
-        }
-            
-        const userCred = unwrapEither(loginResult) as UserCredential
-        const userResult = await useGetUserById(userCred.user.uid)
-        if (isLeft(userResult)) {
-            const error = unwrapEither(userResult) as string
-            idErrorMessage.value = error
-            passwordErrorMessage.value = error
-            isLoading.value = false
-            return
-        }
-
-        const data = unwrapEither(userResult) as User
-        userStore.user = data
-
-        // get detail profile and redirect
-        switch (data.role) {
-            case "admin":
-                navigateTo('/admin/home')
-                break
-        
-            case "teacher":
-                const schoolResult = await useGetSchoolById(data.schoolId ?? "")
-                if (isLeft(schoolResult)) {
-                    const error = unwrapEither(schoolResult) as string
-                    idErrorMessage.value = error
-                    passwordErrorMessage.value = error
-                    isLoading.value = false
-                    return
-                }
-                const school = unwrapEither(schoolResult) as School
-                userStore.school = school
-                navigateTo('/teacher/home')
-                break
-            
-            default:
-                break
-        }
-    }
-
-    const openWhatsapp = () => navigateTo(
-        CONFIG.adminWhatsappLink, {
-            open: {
-                target: '_blank'
-            }
-        }
-    )
-
-    const togglePasswordVisibility = () => { passwordVisible.value = !passwordVisible.value }
 </script>

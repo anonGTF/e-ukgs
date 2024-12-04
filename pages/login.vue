@@ -1,9 +1,8 @@
 <template>
-    <div class="h-full w-full flex flex-row">
-        <div class="bg-primary items-stretch w-0 lg:w-[60%]"></div>
-        <div class="flex-1 flex justify-center items-center bg-background-blue-light">
+    <div class="h-dvh flex items-center bg-background-blue-light rounded-2xl">
+        <div class="flex-1 flex justify-center items-center">
             <div class="lg:w-96 sm:w-[60%] w-full lg:mx-0 mx-2 px-6 py-12 bg-white rounded-2xl">
-                <Text :typography="Typography.H1">Selamat Datang</Text>
+                <Text :typography="Typography.H1">Selamat Datang Petugas</Text>
                 <Spacer height="h-2"/>
                 <Text :typography="Typography.Body1">Masukkan ID dan password yang telah diberikan oleh admin pada isian di bawah.</Text>
                 <Spacer height="h-10"/>
@@ -51,6 +50,10 @@
 
 <script setup lang="ts">
     import type { UserCredential } from 'firebase/auth';
+
+    definePageMeta({
+        layout: false
+    })
 
     const id = ref('')
     const password = ref('')

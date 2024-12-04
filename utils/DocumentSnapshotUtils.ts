@@ -84,9 +84,11 @@ declare module "firebase/firestore" {
     }
 }
 
-DocumentSnapshot.prototype.toUser = toUser
-DocumentSnapshot.prototype.toStudent = toStudent
-DocumentSnapshot.prototype.toSchool = toSchool
-DocumentSnapshot.prototype.toMedia = toMedia
-DocumentSnapshot.prototype.toQuestionnarie = toQuestionnarie
-DocumentSnapshot.prototype.toToothHealth = toToothHealth
+export const setupDocumentSnapshotUtil = () => {
+    DocumentSnapshot.prototype.toUser = toUser
+    DocumentSnapshot.prototype.toStudent = toStudent
+    DocumentSnapshot.prototype.toSchool = toSchool
+    DocumentSnapshot.prototype.toMedia = toMedia
+    DocumentSnapshot.prototype.toQuestionnarie = toQuestionnarie
+    DocumentSnapshot.prototype.toToothHealth = toToothHealth
+}

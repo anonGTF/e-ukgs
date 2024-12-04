@@ -1,4 +1,4 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async (to, _) => {
   const user = await getCurrentUser()
   const role = useUserStore().$state.user?.role
 
@@ -13,13 +13,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (user && to.path == "/") {
     switch (role) {
-      case "student":
-        return navigateTo("/student/home")
-      
       case "teacher":
-        return navigateTo("/teacher/home")
-
-      case "guest":
         return navigateTo("/teacher/home")
 
       case "admin":
@@ -31,9 +25,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   if (
-    (role == "student" && !to.path.startsWith("/student/")) ||
     (role == "teacher" && !to.path.startsWith("/teacher/")) ||
-    (role == "guest" && !to.path.startsWith("/teacher/")) ||
     (role == "admin" && !to.path.startsWith("/admin/"))
   ) {
     abortNavigation("Halaman tidak bisa diakses")
