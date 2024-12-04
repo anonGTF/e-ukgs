@@ -2,27 +2,13 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Tambah Akun Guru</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Tambah Akun</Text>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6 lg:w-[30rem]">
             <TextField
                 v-model="name"
-                placeholder="Masukkan Nama Guru"
-                label="Nama Guru"
-            />
-            <Spacer height="h-4" />
-            <TextField
-                v-model="id"
-                type="text"
-                placeholder="Masukkan ID Guru"
-                label="ID Guru"
-            />
-            <Spacer height="h-4" />
-            <TextField
-                v-model="password"
-                type="text"
-                placeholder="Masukkan Password untuk Akun Guru"
-                label="Password Akun Guru"
+                placeholder="Masukkan Nama"
+                label="Nama Pemilik Akun"
             />
             <Spacer height="h-4" />
             <DropdownSelector 
@@ -31,23 +17,53 @@
                 placeholder="Pilih Jenis Kelamin"
                 :options="genderSelection"
             />
+            <Spacer height="h-4" />
+            <CustomDropdownSelector 
+                label="Role" 
+                placeholder="Pilih Role"
+                :selected="wrapRoleWithDropdownOption(role)"
+                :options="roleOptions"
+                class="w-full"
+                @change="data => role = data.data"
+            />
+            <template v-if="role == 'teacher'">
+                <Spacer height="h-4" />
+                <CustomDropdownSelector 
+                    label="Sekolah" 
+                    placeholder="Pilih Sekolah"
+                    :selected="wrapSchoolWithDropdownOption(selectedSchool)"
+                    :options="schoolDropdownOptions"
+                    class="w-full"
+                    @change="data => selectedSchool = data.data"
+                />
+            </template>
+            <Spacer height="h-4" />
+            <TextField
+                v-model="id"
+                type="text"
+                placeholder="Masukkan ID Akun"
+                label="ID Akun"
+            />
+            <Spacer height="h-4" />
+            <TextField
+                v-model="password"
+                type="text"
+                placeholder="Masukkan Password untuk Akun"
+                label="Password Akun"
+            />
             <Spacer height="h-12" />
             <Button 
                 full-width
                 :loading="isLoading"
                 @click="create"
             >
-                Buat Akun Guru
+                Buat Akun
             </Button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr'
-    import { Typography } from '~/components/attr/TextAttr'
-    import { ToastType } from '~/components/attr/ToastAttr';
-
     definePageMeta({
         layout: 'admin'
     })
@@ -62,7 +78,7 @@
             route: "/admin/account"
         },
         {
-            label: "Tambah Akun Guru",
+            label: "Tambah Akun",
             route: "/admin/account/add"
         }
     ])
@@ -72,9 +88,32 @@
     const password = ref('')
     const gender = ref('')
     const genderSelection = ref(["Laki-laki", "Perempuan"])
+    const role = ref('')
+    const roleOptions = ref([
+        {
+            label: "Guru",
+            data: "teacher"
+        },
+        {
+            label: "Admin",
+            data: "admin"
+        }
+    ])
+    const schools = useGetAllSchools()
+    const schoolDropdownOptions = computed(() => schools.value.map((school) => ({
+        label: school.name,
+        data: school
+    } satisfies CustomDropdownOption<School>)))
+    const selectedSchool = ref<School | null>(null)
     const isLoading = ref(false)
 
     const router = useRouter()
+
+    const wrapRoleWithDropdownOption = (data: string): CustomDropdownOption<string> | undefined => 
+        roleOptions.value.find((option) => option.data == data) ?? undefined
+    
+    const wrapSchoolWithDropdownOption = (data: School | null): CustomDropdownOption<School> | undefined => 
+        schoolDropdownOptions.value.find((option) => option.data == data) ?? undefined
 
     watch(name, () => {
         id.value = name.value.toLowerCase().trim().replaceAll(" ", ".")
@@ -83,21 +122,23 @@
     const uiStore = useUiStore()
 
     const create = async () => {
-        // isLoading.value = true
-        // const result = await useAddTeacher(
-        //     name.value, 
-        //     id.value,
-        //     password.value,
-        //     gender.value
-        // )
+        isLoading.value = true
+        const result = await useAddUser(
+            role.value,
+            name.value, 
+            gender.value,
+            selectedSchool.value?.id ?? null,
+            id.value,
+            password.value
+        )
 
-        // if (isLeft(result)) {
-        //     isLoading.value = false
-        //     uiStore.showToast(unwrapEither(result), ToastType.ERROR)
-        // } else {
-        //     isLoading.value = false
-        //     uiStore.showToast("Guru berhasil ditambahkan", ToastType.SUCCESS)
-        //     router.back()
-        // }
+        if (isLeft(result)) {
+            isLoading.value = false
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
+        } else {
+            isLoading.value = false
+            uiStore.showToast("Akun berhasil ditambahkan", ToastType.SUCCESS)
+            router.back()
+        }
     }
 </script>

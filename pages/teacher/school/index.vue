@@ -64,6 +64,8 @@
     })
 
     const route = useRoute()
+    const uiStore = useUiStore()
+    const userStore = useUserStore()
 
     const breadcrumbs = ref<BreadcrumbArgs[]>([
         {
@@ -84,12 +86,10 @@
         ""
     ])
 
-    const tableData = useGetAllStudents(route.params.id as string)
+    const tableData = useGetAllStudents(userStore.school?.id ?? "")
     const activeBreakpoint = ref("")
     const searchQuery = ref("")
     const groupData = ref<School | null>(null)
-    const uiStore = useUiStore()
-    const userStore = useUserStore()
 
     const filteredTableData = computed(() => tableData.value.filter((data) => data.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
 

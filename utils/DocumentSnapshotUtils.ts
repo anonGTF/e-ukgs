@@ -5,12 +5,12 @@ function toUser(this: DocumentSnapshot): User {
     if (data == undefined) throw Error("Document not found")
     const role = data[USER_CONSTANTS.roleAttr]
     return {
-        id: data.id,
+        id: this.id,
         role,
-        name: data[USER_CONSTANTS.nameAttr],
-        gender: data[USER_CONSTANTS.genderAttr],
-        userId: data[USER_CONSTANTS.userIdAttr],
-        schoolId: role == "student" ? data[USER_CONSTANTS.schoolIdAttr] : null
+        name: data[USER_CONSTANTS.nameAttr] ?? "",
+        gender: data[USER_CONSTANTS.genderAttr] ?? "",
+        userId: data[USER_CONSTANTS.userIdAttr] ?? "",
+        schoolId: role == "teacher" ? data[USER_CONSTANTS.schoolIdAttr] : null
     } satisfies User
 }
 
@@ -32,6 +32,7 @@ function toSchool(this: DocumentSnapshot): School {
     return {
         id: this.id,
         name: data[SCHOOL_CONSTANTS.nameAttr],
+        address: data[SCHOOL_CONSTANTS.addressAttr],
         totalStudent: data[SCHOOL_CONSTANTS.totalStudentAttr]
     } satisfies School
 }

@@ -2,20 +2,23 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Kelompok Siswa</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Daftar Sekolah</Text>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
             <div class="flex flex-row justify-between">
                 <TextField
                     v-model="searchQuery"
-                    placeholder="Cari kelompok"
+                    placeholder="Cari nama sekolah"
                     leading-icon="mdi:magnify"
                     class="me-1 w-52 sm:w-[16.7rem]"
                 />
-                <Button class="hidden sm:block" to="/admin/group/add">
-                    Tambah Kelompok
+                <Button class="hidden sm:block" to="/admin/school/add">
+                    Tambah Sekolah
                 </Button>
-                <div class="drawer-button btn btn-square flex justify-center sm:hidden bg-primary text-white">
+                <div 
+                    class="drawer-button btn btn-square flex justify-center sm:hidden bg-primary text-white"
+                    @click="navigateTo('/admin/school/add')"
+                >
                     <Icon name="mdi:plus" size="24px"/>
                 </div>
             </div>
@@ -34,11 +37,14 @@
                     <td>
                         <Text :typography="Typography.Body2">{{ data.totalStudent }}</Text>
                     </td>
+                    <td>
+                        <Text :typography="Typography.Body2">{{ data.address }}</Text>
+                    </td>
                     <td class="flex justify-end">
                         <Button 
                             :type="ButtonType.Outlined" 
                             dense
-                            @click="navigateTo(`/admin/group/${data.id}`)"
+                            @click="navigateTo(`/admin/school/${data.id}`)"
                         >
                             Detail
                         </Button>
@@ -67,8 +73,9 @@
 
     const tableHeader = ref([
         "",
-        "Nama",
+        "Nama Sekolah",
         "Jumlah Siswa",
+        "Alamat",
         ""
     ])
 

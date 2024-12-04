@@ -2,27 +2,27 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Guru</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Daftar Akun</Text>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
             <div class="flex flex-row justify-between">
                 <TextField
                     v-model="searchQuery"
-                    :placeholder="isSmall(activeBreakpoint) ? 'Cari guru dgn nama' : 'Cari guru berdasarkan nama'"
+                    :placeholder="isSmall(activeBreakpoint) ? 'Cari akun dgn nama' : 'Cari akun berdasarkan nama'"
                     leading-icon="mdi:magnify"
                     class="me-1 w-52 sm:w-[16.7rem]"
                 />
-                <Button class="hidden sm:block" to="/admin/teacher/add">
-                    Tambah Guru
+                <Button class="hidden sm:block" to="/admin/account/add">
+                    Tambah Akun
                 </Button>
-                <NuxtLink to="/admin/teacher/add" class="flex sm:hidden justify-center">
+                <NuxtLink to="/admin/account/add" class="flex sm:hidden justify-center">
                     <div class="drawer-button btn btn-square bg-primary text-white">
                         <Icon name="mdi:plus" size="24px"/>
                     </div>
                 </NuxtLink>
             </div>
             <Spacer class="h-6"/>
-            <!-- <DataTable
+            <DataTable
                 :headers="tableHeader"
                 :is-empty="filteredTableData.length == 0"
             >
@@ -31,34 +31,36 @@
                         <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
                     </th>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.name }}</Text>
+                        <Text :typography="Typography.Body2">{{ data.user.name }}</Text>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.userId }}</Text>
+                        <Text :typography="Typography.Body2">{{ data.user.userId }}</Text>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.gender }}</Text>
+                        <Text :typography="Typography.Body2">{{ data.user.gender }}</Text>
+                    </td>
+                    <td>
+                        <Text :typography="Typography.Body2">{{ data.user.role }}</Text>
+                    </td>
+                    <td>
+                        <Text :typography="Typography.Body2">{{ data.school?.name ?? "-" }}</Text>
                     </td>
                     <td class="flex justify-end">
                         <Button 
                             :type="ButtonType.Outlined" 
                             dense
-                            @click="navigateTo(`/admin/teacher/${data.id}`)"
+                            @click="navigateTo(`/admin/account/${data.user.id}`)"
                         >
                             Detail
                         </Button>
                     </td>
                 </tr>
-            </DataTable> -->
+            </DataTable>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr';
-    import { ButtonType } from '~/components/attr/ButtonAttr';
-    import { Typography } from '~/components/attr/TextAttr';
-
     definePageMeta({
         layout: 'admin'
     })
@@ -79,16 +81,26 @@
         "Nama",
         "ID Akun",
         "Jenis Kelamin",
+        "Tugas",
+        "Sekolah",
         ""
     ])
 
-    // const tableData = useGetAllAcc()
+    const users = useGetAllUsers()
+    const schools = useGetAllSchools()
     const activeBreakpoint = ref("")
     const searchQuery = ref("")
-
-    // const filteredTableData = computed(() => tableData.value.filter((data) => data.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
+    const tableData = computed(() => users.value.map((user) => ({
+        user,
+        school: schools.value.find((school) => school.id == user.schoolId)
+    })))
+    const filteredTableData = computed(() => tableData.value.filter((data) => data.user.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
 
     useEventListener("resize", () => {
         activeBreakpoint.value = getActiveBreakpoint()
+    })
+
+    onMounted(() => {
+        console.log(useGetAllSchools())
     })
 </script>

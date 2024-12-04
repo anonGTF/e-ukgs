@@ -19,6 +19,7 @@ export const STUDENT_CONSTANTS = {
 export const SCHOOL_CONSTANTS = {
     collectionName: 'schools',
     nameAttr: 'name',
+    addressAttr: 'address',
     totalStudentAttr: 'totalStudent'
 }
 
