@@ -13,6 +13,7 @@ export const STUDENT_CONSTANTS = {
     genderAttr: 'gender',
     userIdAttr: 'userId',
     gradeAttr: 'grade',
+    ageAttr: 'age',
     parentPhoneNumberAttr: 'parentPhoneNumber'
 }
 

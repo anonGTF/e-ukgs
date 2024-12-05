@@ -1,6 +1,3 @@
-import type { ConfirmationModalState, ConfirmationType } from "~/components/attr/ConfirmationModalAttr"
-import { ToastType, type ToastState } from "~/components/attr/ToastAttr"
-
 export const useUiStore = defineStore(
     'ui', 
     () => {

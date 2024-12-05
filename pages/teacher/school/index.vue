@@ -2,7 +2,7 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Kelompok {{ groupData?.name }}</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Daftar Siswa {{ userStore.school?.name }}</Text>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
             <div class="flex flex-row justify-between">
@@ -12,10 +12,13 @@
                     leading-icon="mdi:magnify"
                     class="me-1 w-52 sm:w-[16.7rem]"
                 />
-                <Button class="hidden sm:block" :to="`/admin/group/${route.params.id}/add-student`">
+                <Button class="hidden sm:block" to="/teacher/school/add">
                     Tambah Siswa
                 </Button>
-                <div class="drawer-button btn btn-square flex justify-center sm:hidden bg-primary text-white">
+                <div 
+                    class="drawer-button btn btn-square flex justify-center sm:hidden bg-primary text-white"
+                    @click="navigateTo('teacher/school/add')"
+                >
                     <Icon name="mdi:plus" size="24px"/>
                 </div>
             </div>
@@ -32,7 +35,7 @@
                         <Text :typography="Typography.Body2">{{ data.name }}</Text>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ "" }}</Text>
+                        <Text :typography="Typography.Body2">{{ data.grade }}</Text>
                     </td>
                     <td>
                         <Text :typography="Typography.Body2">{{ data.gender }}</Text>
@@ -41,7 +44,7 @@
                         <Button 
                             :type="ButtonType.Outlined" 
                             dense
-                            @click="navigateTo(`/admin/group/${route.params.id}/${data.id}`)"
+                            :to="`/teacher/school/${data.id}`"
                         >
                             Detail
                         </Button>
@@ -53,12 +56,6 @@
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr';
-    import { ButtonType } from '~/components/attr/ButtonAttr';
-    import { Typography } from '~/components/attr/TextAttr';
-    import { ToastType } from '~/components/attr/ToastAttr';
-    import type { School } from '~/models/school/School';
-
     definePageMeta({
         layout: 'teacher'
     })
@@ -81,7 +78,7 @@
     const tableHeader = ref([
         "",
         "Nama",
-        "ID Akun",
+        "Kelas",
         "Jenis Kelamin",
         ""
     ])
@@ -89,18 +86,7 @@
     const tableData = useGetAllStudents(userStore.school?.id ?? "")
     const activeBreakpoint = ref("")
     const searchQuery = ref("")
-    const groupData = ref<School | null>(null)
-
     const filteredTableData = computed(() => tableData.value.filter((data) => data.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
-
-    onMounted(async () => {
-        const result = await useGetSchoolById(userStore.school?.id ?? "")
-        if (isLeft(result)) {
-            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
-        } else {
-            groupData.value = unwrapEither(result)
-        }
-    })
 
     useEventListener("resize", () => {
         activeBreakpoint.value = getActiveBreakpoint()

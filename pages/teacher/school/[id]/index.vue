@@ -11,11 +11,11 @@
                     :type="ButtonType.Outlined" 
                     dense
                     class="hidden md:block"
-                    @click="navigateTo(`/admin/group/${route.params.id}/${route.params.studentId}/edit`)"
+                    @click="navigateTo(`/teacher/school/${route.params.id}/edit`)"
                 >
                     Edit Detail Siswa
                 </Button>
-                <div class="btn btn-square md:hidden" @click="navigateTo(`/admin/group/${route.params.id}/${route.params.studentId}/edit`)">
+                <div class="btn btn-square md:hidden" @click="navigateTo(`/teacher/school/${route.params.id}/edit`)">
                     <Icon name="mdi:pencil" size="24px"/>
                 </div>
             </div>
@@ -30,14 +30,9 @@
 </template>
 
 <script setup lang="ts">
-    import type { BreadcrumbArgs } from '~/components/attr/BreadcrumbAttr'
-    import { ButtonType } from '~/components/attr/ButtonAttr';
-    import { Typography } from '~/components/attr/TextAttr'
-    import { ToastType } from '~/components/attr/ToastAttr';
-    import type { Student } from '~/models/school/Student';
-
     const route = useRoute()
     const uiStore = useUiStore()
+    const userStore = useUserStore()
 
     definePageMeta({
         layout: 'teacher'
@@ -53,7 +48,7 @@
             route: "/teacher/school"
         },
         {
-            label: "Tambah Siswa",
+            label: "Detail Siswa",
             route: `/teacher/school/${route.params.id}`
         }
     ])
@@ -65,17 +60,25 @@
             data: studentData.value?.name
         },
         {
-            label: "ID Siswa",
-            data: studentData.value?.id
+            label: "Kelas",
+            data: studentData.value?.grade
+        },
+        {
+            label: "Umur",
+            data: `${studentData.value?.age} tahun`
         },
         {
             label: "Jenis Kelamin",
             data: studentData.value?.gender
+        },
+        {
+            label: "Nomor HP Orang Tua/Wali",
+            data: studentData.value?.parentPhoneNumber
         }
     ])
 
     onMounted(async () => {
-        const result = await useGetStudentById(route.params.studentId as string, route.params.id as string)
+        const result = await useGetStudentById(route.params.id as string, userStore.school?.id ?? "")
         if (isLeft(result)) {
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
         } else {

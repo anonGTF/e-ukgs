@@ -12,17 +12,17 @@
             />
             <Spacer height="h-4" />
             <TextField
-                v-model="id"
-                type="text"
-                placeholder="Masukkan ID Siswa"
-                label="ID Siswa"
+                v-model:number="age"
+                type="number"
+                placeholder="Masukkan Umur Siswa (hanya angka)"
+                label="Umur Siswa (Tahun)"
             />
             <Spacer height="h-4" />
             <TextField
-                v-model="password"
+                v-model="grade"
                 type="text"
-                placeholder="Masukkan Password untuk Akun Siswa"
-                label="Password Akun Siswa"
+                placeholder="Masukkan Kelas Siswa (contoh: Kelas 1, Kelas 2, dst)"
+                label="Kelas"
             />
             <Spacer height="h-4" />
             <DropdownSelector 
@@ -30,6 +30,13 @@
                 label="Jenis Kelamin" 
                 placeholder="Pilih Jenis Kelamin"
                 :options="genderSelection"
+            />
+            <Spacer height="h-4" />
+            <TextField
+                v-model="parentPhoneNumber"
+                type="text"
+                placeholder="Masukkan Nomor HP Orang tua/Wali Siswa"
+                label="Nomor HP Orang tua/Wali (Format: 62xxxx)"
             />
             <Spacer height="h-12" />
             <Button 
@@ -65,33 +72,47 @@
         },
         {
             label: "Tambah Siswa",
-            route: `/teacher/school/add`
+            route: "/teacher/school/add"
         }
     ])
 
     const name = ref('')
-    const id = ref('')
-    const password = ref('')
+    const age = ref(0)
+    const grade = ref('')
     const gender = ref('')
     const genderSelection = ref(["Laki-laki", "Perempuan"])
+    const parentPhoneNumber = ref('')
     const isLoading = ref(false)
 
     const router = useRouter()
     const uiStore = useUiStore()
-
-    watch(name, () => {
-        id.value = name.value.toLowerCase().trim().replaceAll(" ", ".")
-    })
+    const userStore = useUserStore()
 
     const create = async () => {
+        if (name.value == "" || age.value == 0 || grade.value == "" || gender.value == "" || parentPhoneNumber.value == "") {
+            console.log("lengkap")
+            uiStore.showToast("Data harus lengkap!", ToastType.ERROR)
+            return
+        }
+
+        if (!parentPhoneNumber.value.startsWith("62")) {
+            console.log("coba")
+            uiStore.showToast("Nomor HP harus dengan format 62xxxx", ToastType.ERROR)
+            return
+        }
+
         isLoading.value = true
-        const result = await useAddStudent({
-            id: "",
-            name: name.value,
-            gender: gender.value,
-            grade: "",
-            parentPhoneNumber: ""
-        } satisfies Student)
+        const result = await useAddStudent(
+            userStore.school?.id ?? "",
+            {
+                id: "",
+                name: name.value,
+                age: age.value,
+                gender: gender.value,
+                grade: grade.value,
+                parentPhoneNumber: parentPhoneNumber.value
+            }
+        )
 
         if (isLeft(result)) {
             isLoading.value = false

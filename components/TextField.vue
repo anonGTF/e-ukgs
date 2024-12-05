@@ -9,20 +9,38 @@
           <Icon v-if="props.leadingIcon != ''" :name="props.leadingIcon" class="text-2xl" />
         </div>
         <label :class="`input input-bordered w-full flex items-center focus:outline-transparent focus:border-black ${passwordLetterSpacing} ${errorStyle} ${leadingSpacing}`" >
-          <input 
-            v-model="model"
-            :type="props.type" 
-            :placeholder="props.placeholder" 
-            :disabled="!enabled"
-            class="grow"
-            @keyup.enter="$emit('enter')"
-          />
-          <Icon 
-            v-if="props.trailingIcon != ''" 
-            :name="props.trailingIcon" 
-            class="txet-2xl" 
-            @click="$emit('trailingIconClick')"
-           />
+          <template v-if="type != 'number'">
+            <input 
+              v-model="model"
+              :type="type" 
+              :placeholder="placeholder" 
+              :disabled="!enabled"
+              class="grow"
+              @keyup.enter="$emit('enter')"
+            />
+            <Icon 
+              v-if="trailingIcon != ''" 
+              :name="trailingIcon" 
+              class="txet-2xl" 
+              @click="$emit('trailingIconClick')"
+             />
+          </template>
+          <template v-else>
+            <input 
+              v-model="numberModel"
+              :type="type" 
+              :placeholder="placeholder" 
+              :disabled="!enabled"
+              class="grow"
+              @keyup.enter="$emit('enter')"
+            />
+            <Icon 
+              v-if="trailingIcon != ''" 
+              :name="trailingIcon" 
+              class="txet-2xl" 
+              @click="$emit('trailingIconClick')"
+             />
+          </template>
         </label>
     </div>
     <Text 
@@ -36,7 +54,6 @@
 </template>
 
 <script lang="ts" setup>
-
 const props = defineProps({
   type: {
     type: String,
@@ -65,12 +82,21 @@ const props = defineProps({
   enabled: {
     type: Boolean,
     default: true
+  },
+  readOnly: {
+    type: Boolean,
+    default: false
   }
 })
 
 const model = defineModel({
   type: String,
   default: ''
+})
+
+const numberModel = defineModel("number", {
+  type: Number,
+  default: 0
 })
 
 defineEmits([

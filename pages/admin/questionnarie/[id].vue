@@ -54,22 +54,18 @@
                                         <Text class="rounded-e-lg border border-border-primary p-2">{{ option.point }}</Text>
                                     </div>
                                 </div>
-                                <template v-if="section.answerType == AnswerType.RATING">
-                                    <div class="flex flex-row gap-4">
-                                        <div v-for="option in question.answerOption" class="flex flex-row">
-                                            <Text class="rounded-s-lg border border-border-primary p-2 min-w-14">{{ option.text }}</Text>
-                                            <Text class="rounded-e-lg border border-border-primary p-2">{{ option.point }}</Text>
-                                        </div>
+                                <div v-if="section.answerType == AnswerType.BINARY_APPRORIATE" class="flex flex-row gap-4">
+                                    <div v-for="option in question.answerOption" class="flex flex-row">
+                                        <Text class="rounded-s-lg border border-border-primary p-2 min-w-14">{{ option.text }}</Text>
+                                        <Text class="rounded-e-lg border border-border-primary p-2">{{ option.point }}</Text>
                                     </div>
-                                    <Spacer height="h-4"/>
-                                    <DropdownSelector
-                                        v-model="question.indicator"
-                                        label="Pilih Indikator"
-                                        text-field-placeholder="Cari Indikator"
-                                        :options="indicatorOption"
-                                        class="max-w-80"
-                                    />
-                                </template>
+                                </div>
+                                <div v-if="section.answerType == AnswerType.RATING" class="flex flex-row gap-4">
+                                    <div v-for="option in question.answerOption" class="flex flex-row">
+                                        <Text class="rounded-s-lg border border-border-primary p-2 min-w-14">{{ option.text }}</Text>
+                                        <Text class="rounded-e-lg border border-border-primary p-2">{{ option.point }}</Text>
+                                    </div>
+                                </div>
                                 <div v-if="section.answerType == AnswerType.MULTIPLE_CHOICE">
                                     <div v-for="(option, index) in question.answerOption" class="flex flex-row gap-2 mb-4 items-center">
                                         <SelectionButton
@@ -162,28 +158,14 @@
 
     const data = ref<Questionnarie | null>(null)
     const isLoading = ref(false)
-    const indicatorOption = [
-        "Perencanaan",
-        "Pelaksanaan",
-        "Monitoring",
-        "Evaluasi",
-        "Kemudahan pengguna",
-        "Kecepatan akses",
-        "Keandalan sistem",
-        "Fleksibilitas sistem",
-        "Kegunaan fitur dan fungsi sistem",
-        "Keamanan",
-        "Akurasi",
-        "Kelengkapan informasi",
-        "Ketepatan waktu",
-        "Relevansi",
-        "Kecepatan layanan",
-        "Kemampuan teknik"
-    ]
     const answerDropdownOption: CustomDropdownOption<AnswerType>[] = [
         {
             label: "Ya/Tidak",
             data: AnswerType.BINARY_OPTION
+        },
+        {
+            label: "Sesuai/Tidak Sesuai",
+            data: AnswerType.BINARY_APPRORIATE
         },
         {
             label: "Pilihan Ganda",
@@ -341,6 +323,18 @@
                     },
                     {
                         text: "Tidak",
+                        point: 0
+                    },
+                ]
+
+            case AnswerType.BINARY_APPRORIATE: 
+                return [
+                    {
+                        text: "Sesuai",
+                        point: 1
+                    },
+                    {
+                        text: "Tidak Sesuai",
                         point: 0
                     },
                 ]

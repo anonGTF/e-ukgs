@@ -20,6 +20,7 @@ function toStudent(this: DocumentSnapshot): Student {
     return {
         id: this.id,
         name: data[STUDENT_CONSTANTS.nameAttr],
+        age: data[STUDENT_CONSTANTS.ageAttr],
         gender: data[STUDENT_CONSTANTS.genderAttr],
         grade: data[STUDENT_CONSTANTS.gradeAttr],
         parentPhoneNumber: data[STUDENT_CONSTANTS.parentPhoneNumberAttr]

@@ -6,4 +6,4 @@ export type Section = {
     questions: Question[]
 }
 
-export enum AnswerType { MULTIPLE_CHOICE, BINARY_OPTION, RATING }
+export enum AnswerType { MULTIPLE_CHOICE, BINARY_OPTION, BINARY_APPRORIATE, RATING }
