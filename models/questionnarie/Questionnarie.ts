@@ -13,7 +13,6 @@ export const QuestionType = {
     SoalPerilaku: "soal-perilaku",
     PeranGuru: "peran-guru",
     PeranOrangTua: "peran-orang-tua",
-    PeranDokterKecil: "peran-dokter-kecil",
-    MutuManajemenUkgs: "mutu-manajemen-ukgs",
-    LayananKesehatanGigi: "layanan-kesehatan-gigi"
+    EvaluasiEUkgs: "evaluasi-e-ukgs",
+    KualitasManajemenUkgs: "kualitas-manajemen-ukgs"
 } as const;

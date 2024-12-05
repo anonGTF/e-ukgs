@@ -43,7 +43,7 @@
         },
         {
             label: "Kelola Kuesioner",
-            route: "/admin/questionnaire"
+            route: "/admin/questionnarie"
         }
     ])
 

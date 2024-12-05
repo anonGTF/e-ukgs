@@ -3,5 +3,6 @@ import type { Answer } from "./Answer"
 export type Question = {
     orderNo: number,
     question: string,
+    indicator?: string,
     answerOption: Answer[]
 }

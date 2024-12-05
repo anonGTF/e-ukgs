@@ -54,12 +54,22 @@
                                         <Text class="rounded-e-lg border border-border-primary p-2">{{ option.point }}</Text>
                                     </div>
                                 </div>
-                                <div v-if="section.answerType == AnswerType.RATING" class="flex flex-row gap-4">
-                                    <div v-for="option in question.answerOption" class="flex flex-row">
-                                        <Text class="rounded-s-lg border border-border-primary p-2 min-w-14">{{ option.text }}</Text>
-                                        <Text class="rounded-e-lg border border-border-primary p-2">{{ option.point }}</Text>
+                                <template v-if="section.answerType == AnswerType.RATING">
+                                    <div class="flex flex-row gap-4">
+                                        <div v-for="option in question.answerOption" class="flex flex-row">
+                                            <Text class="rounded-s-lg border border-border-primary p-2 min-w-14">{{ option.text }}</Text>
+                                            <Text class="rounded-e-lg border border-border-primary p-2">{{ option.point }}</Text>
+                                        </div>
                                     </div>
-                                </div>
+                                    <Spacer height="h-4"/>
+                                    <DropdownSelector
+                                        v-model="question.indicator"
+                                        label="Pilih Indikator"
+                                        text-field-placeholder="Cari Indikator"
+                                        :options="indicatorOption"
+                                        class="max-w-80"
+                                    />
+                                </template>
                                 <div v-if="section.answerType == AnswerType.MULTIPLE_CHOICE">
                                     <div v-for="(option, index) in question.answerOption" class="flex flex-row gap-2 mb-4 items-center">
                                         <SelectionButton
@@ -142,16 +152,34 @@
         },
         {
             label: "Kelola Kuesioner",
-            route: "/admin/questionnaire"
+            route: "/admin/questionnarie"
         },
         {
             label: "Atur",
-            route: `/admin/questionnaire/${route.params.id}`
+            route: `/admin/questionnarie/${route.params.id}`
         }
     ])
 
     const data = ref<Questionnarie | null>(null)
     const isLoading = ref(false)
+    const indicatorOption = [
+        "Perencanaan",
+        "Pelaksanaan",
+        "Monitoring",
+        "Evaluasi",
+        "Kemudahan pengguna",
+        "Kecepatan akses",
+        "Keandalan sistem",
+        "Fleksibilitas sistem",
+        "Kegunaan fitur dan fungsi sistem",
+        "Keamanan",
+        "Akurasi",
+        "Kelengkapan informasi",
+        "Ketepatan waktu",
+        "Relevansi",
+        "Kecepatan layanan",
+        "Kemampuan teknik"
+    ]
     const answerDropdownOption: CustomDropdownOption<AnswerType>[] = [
         {
             label: "Ya/Tidak",

@@ -1,7 +1,12 @@
 <template>
     <div class="h-dvh flex items-center bg-background-blue-light rounded-2xl">
         <div class="flex-1 flex justify-center items-center">
-            <div class="lg:w-96 sm:w-[60%] w-full lg:mx-0 mx-2 px-6 py-12 bg-white rounded-2xl">
+            <div class="lg:w-96 sm:w-[60%] w-full lg:mx-0 mx-2 px-6 pb-12 pt-6 bg-white rounded-2xl">
+                <div class="flex flex-row items-center gap-1 cursor-pointer" @click="navigateTo('/')">
+                    <Icon name="mdi:keyboard-backspace" size="1.5rem"/>
+                    <Text class="font-semibold">Kembali</Text>
+                </div>
+                <Spacer height="h-6"/>
                 <Text :typography="Typography.H1">Selamat Datang Petugas</Text>
                 <Spacer height="h-2"/>
                 <Text :typography="Typography.Body1">Masukkan ID dan password yang telah diberikan oleh admin pada isian di bawah.</Text>
