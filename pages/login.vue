@@ -1,5 +1,5 @@
 <template>
-    <div class="h-dvh flex items-center bg-background-blue-light rounded-2xl">
+    <div class="h-dvh flex items-center">
         <div class="flex-1 flex justify-center items-center">
             <div class="lg:w-96 sm:w-[60%] w-full lg:mx-0 mx-2 px-6 pb-12 pt-6 bg-white rounded-2xl">
                 <div class="flex flex-row items-center gap-1 cursor-pointer" @click="navigateTo('/')">
@@ -55,10 +55,6 @@
 
 <script setup lang="ts">
     import type { UserCredential } from 'firebase/auth';
-
-    definePageMeta({
-        layout: false
-    })
 
     const id = ref('')
     const password = ref('')

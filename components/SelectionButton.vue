@@ -1,7 +1,6 @@
 <template>
     <div 
-        class="cursor-pointer rounded-lg p-4 flex items-center justify-center"
-        :class="getActiveClass()"
+        :class="`cursor-pointer rounded-lg flex items-center justify-center ${getActiveClass()} ${getPadding()}`"
         @click="$emit('select')"
     >
         <Icon 
@@ -21,6 +20,10 @@
             type: String,
             default: ""
         },
+        dense: {
+            type: Boolean,
+            default: false
+        },
         selected: {
             type: Boolean,
             default: false
@@ -34,6 +37,14 @@
             return "bg-primary"
         } else {
             return "hover:bg-gray-200"
+        }
+    }
+
+    const getPadding = () => {
+        if (props.dense) {
+            return "p-3"
+        } else {
+            return "p-4"
         }
     }
 
