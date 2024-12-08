@@ -4,5 +4,6 @@ export type Question = {
     orderNo: number,
     question: string,
     indicator?: string,
-    answerOption: Answer[]
+    answerOption: Answer[],
+    selectedAnswer?: Answer
 }

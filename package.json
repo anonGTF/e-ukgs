@@ -15,6 +15,7 @@
   "devDependencies": {
     "@nuxt/icon": "^1.7.0",
     "@nuxtjs/tailwindcss": "^6.12.2",
+    "@samk-dev/nuxt-vcalendar": "^1.0.4",
     "@types/pdf2image": "^1.2.4",
     "daisyui": "^4.12.14",
     "nuxt": "^3.14.159",

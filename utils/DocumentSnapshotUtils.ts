@@ -75,6 +75,20 @@ function toToothHealth(this: DocumentSnapshot): ToothHealth {
     } satisfies ToothHealth
 }
 
+function toActivity(this: DocumentSnapshot): Activity {
+    const data = this.data()
+    if (data == undefined) throw Error("Document not found")
+    return {
+        id: this.id,
+        title: data[ACTIVITY_CONSTANTS.titleAttr],
+        startTime: parseToDate(data[ACTIVITY_CONSTANTS.startTimeAttr]),
+        endTime: parseToDate(data[ACTIVITY_CONSTANTS.endTimeAttr]),
+        status: data[ACTIVITY_CONSTANTS.statusAttr],
+        place: data[ACTIVITY_CONSTANTS.placeAttr],
+        picId: data[ACTIVITY_CONSTANTS.picIdAttr]
+    } satisfies Activity
+}
+
 declare module "firebase/firestore" {
     interface DocumentSnapshot {
         toUser(): User
@@ -83,6 +97,7 @@ declare module "firebase/firestore" {
         toMedia(type: MediaType): Media
         toQuestionnarie(): Questionnarie
         toToothHealth(): ToothHealth
+        toActivity(): Activity
     }
 }
 
@@ -93,4 +108,5 @@ export const setupDocumentSnapshotUtil = () => {
     DocumentSnapshot.prototype.toMedia = toMedia
     DocumentSnapshot.prototype.toQuestionnarie = toQuestionnarie
     DocumentSnapshot.prototype.toToothHealth = toToothHealth
+    DocumentSnapshot.prototype.toActivity = toActivity
 }

@@ -28,6 +28,7 @@ export default defineNuxtConfig({
     'nuxt-vuefire',
     '@nuxt/icon',
     'pinia-plugin-persistedstate/nuxt',
+    '@samk-dev/nuxt-vcalendar',
     '@pinia/nuxt'
   ],
 

@@ -24,6 +24,16 @@ export const SCHOOL_CONSTANTS = {
     totalStudentAttr: 'totalStudent'
 }
 
+export const ACTIVITY_CONSTANTS = {
+    collectionName: 'activities',
+    titleAttr: 'title',
+    startTimeAttr: 'startTime',
+    endTimeAttr: 'endTime',
+    statusAttr: 'status',
+    placeAttr: 'place',
+    picIdAttr: 'picId'
+}
+
 export const MEDIA_CONSTANTS = {
     videoCollectionName: 'videos',
     ebookCollectionName: 'ebooks',

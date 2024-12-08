@@ -44,6 +44,38 @@ export const youtubeSourceToEmbed = (source: string): string => {
     return `https://www.youtube.com/embed/${parts[1]}`
 }
 
+export const parseToDate = ({ seconds, nanoseconds }: { seconds: number, nanoseconds: number}) => {
+    if (typeof seconds !== 'number' || typeof nanoseconds !== 'number') {
+        throw new Error("Invalid input: both 'seconds' and 'nanoseconds' must be numbers.");
+    }
+    
+    const milliseconds = seconds * 1000 + nanoseconds / 1_000_000
+    return new Date(milliseconds)
+}
+
+export const multipleChoiceLabel = [
+    {
+        label: "A",
+        icon:  "mdi:alpha-a-box-outline",
+        selectedIcon: "mdi:alpha-a"
+    },
+    {
+        label: "B",
+        icon: "mdi:alpha-b-box-outline",
+        selectedIcon: "mdi:alpha-b"
+    },
+    {
+        label: "C",
+        icon: "mdi:alpha-c-box-outline",
+        selectedIcon: "mdi:alpha-c"
+    },
+    {
+        label: "D",
+        icon: "mdi:alpha-d-box-outline",
+        selectedIcon: "mdi:alpha-d"
+    }
+]
+
 export const defaultCkEditorConfig = {
     plugins: [
         Essentials, 

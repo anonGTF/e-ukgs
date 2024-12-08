@@ -39,7 +39,9 @@
                     <Spacer height="h-6"/>
                     <div>
                         <div class="flex flex-row gap-4 items-start">
-                            <Text class="border rounded-full border-border-primary py-4 px-5 font-bold">{{ questionIndex + 1 }}</Text>
+                            <div class="border rounded-full border-border-primary w-12 h-12 flex justify-center items-center">
+                                <Text class="font-bold">{{ questionIndex + 1 }}</Text>
+                            </div>
                             <div class="flex-1">
                                 <TextField
                                     v-model="question.question"
@@ -174,28 +176,6 @@
         {
             label: "Rating",
             data: AnswerType.RATING
-        }
-    ]
-    const multipleChoiceLabel = [
-        {
-            label: "A",
-            icon:  "mdi:alpha-a-box-outline",
-            selectedIcon: "mdi:alpha-a"
-        },
-        {
-            label: "B",
-            icon: "mdi:alpha-b-box-outline",
-            selectedIcon: "mdi:alpha-b"
-        },
-        {
-            label: "C",
-            icon: "mdi:alpha-c-box-outline",
-            selectedIcon: "mdi:alpha-c"
-        },
-        {
-            label: "D",
-            icon: "mdi:alpha-d-box-outline",
-            selectedIcon: "mdi:alpha-d"
         }
     ]
     const wrapWithDropdownOption = (data: AnswerType): CustomDropdownOption<AnswerType> => 
