@@ -8,7 +8,7 @@ export type Activity = {
     picId: string
 }
 
-export enum ActivityStatus { TODO, READY_TO_START, ONPRPGRESS, DONE, DROPPED }
+export enum ActivityStatus { TODO, READY_TO_START, ONPROGRESS, DONE, DROPPED }
 
 export type ActivityWithPic = {
     activity: Activity,
@@ -20,4 +20,11 @@ export const ACTIVITY_TYPE = {
     parentForm: "Pengisian Kuesioner Peran Orang Tua",
     toothHealthCheck: "Kegiatan Pemeriksaan Gigi",
     other: "Lainnya (isi judul kegiatan sendiri)"
+}
+
+export const ACTIVITY_UPDATE = {
+    budgeting: "budgeting",
+    starting: "starting",
+    execution: "execution",
+    dropping: "dropping"
 }

@@ -98,7 +98,7 @@
     const userStore = useUserStore()
     const searchQuery = ref("")
     const activeBreakpoint = ref("")
-    const studentData = useGetAllStudents("7aid0cn08014dfm456DM")
+    const studentData = useGetAllStudents(userStore.school?.id)
     const resultData = useGetAllToothHealthBySchool("7aid0cn08014dfm456DM")
     const studentResultData = computed(() => {
         return studentData.value
@@ -118,13 +118,5 @@
 
     useEventListener("resize", () => {
         activeBreakpoint.value = getActiveBreakpoint()
-    })
-
-    onMounted(() => {
-        userStore.school = {
-            id: "7aid0cn08014dfm456DM",
-            name: "coba",
-            totalStudent: 0
-        } as School
     })
 </script>

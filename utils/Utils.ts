@@ -53,6 +53,11 @@ export const parseToDate = ({ seconds, nanoseconds }: { seconds: number, nanosec
     return new Date(milliseconds)
 }
 
+export const formatPrice = (price: number) => {
+    const numberFormatter = new Intl.NumberFormat("id-ID")
+    return numberFormatter.format(price)
+}
+
 export const multipleChoiceLabel = [
     {
         label: "A",

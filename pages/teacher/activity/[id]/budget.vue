@@ -2,9 +2,83 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Buat Rancangan Anggaran Biaya</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Buat Rencana Anggaran Biaya</Text>
         <Spacer class="h-6"/>
-        <div class="bg-white border border-border-primary rounded-2xl p-6"></div>
+        <div class="bg-white border border-border-primary rounded-2xl p-6">
+            <DataTable :headers="tableHeader">
+                <tr v-for="(data, index) in budgetingItems">
+                    <th>
+                        <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
+                    </th>
+                    <td>
+                        <TextField 
+                            v-model="data.name"
+                            placeholder="Nama alat/bahan"
+                        />
+                    </td>
+                    <td>
+                        <TextField 
+                            v-model="data.unit"
+                            placeholder="Satuan"
+                        />
+                    </td>
+                    <td>
+                        <TextField 
+                            v-model:number="data.count"
+                            type="number"
+                            placeholder="Jumlah"
+                        />
+                    </td>
+                    <td>
+                        <AmountTextField
+                            v-model="data.pricePerUnit"
+                            placeholder="Harga satuan (Rp)"
+                        />
+                    </td>
+                    <td>
+                        <Text class="font-semibold">Rp{{ formatPrice(data.subtotal) }}</Text>
+                    </td>
+                    <td class="flex justify-end gap-2">
+                        <Button 
+                            v-if="budgetingItems.length > 1"
+                            :type="ButtonType.Primary" 
+                            class="bg-error border-none hover:bg-error/75"
+                            @click="deleteItem(index)"
+                        >
+                            <Icon name="mdi:trash-can" class="text-white"/>
+                        </Button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <Text :typography="Typography.Label" color="text-black" class="text-end font-semibold">TOTAL</Text>
+                    </td>
+                    <td colspan="2">
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Rp{{ formatPrice(budgetTotal) }}</Text>
+                    </td>
+                </tr>
+            </DataTable>
+            <Spacer height="h-4"/>
+            <Button 
+                full-width
+                :type="ButtonType.DashOutlined"
+                class="hover:bg-gray-200 hover:text-black hover:border-gray-200"
+                @click="addItem"
+            >
+                <span class="flex flex-row items-center">
+                    <Icon name="mdi:plus"/>
+                    <Spacer width="w-2"/>
+                    Tambah Item
+                </span>
+            </Button>
+            <Spacer height="h-8"/>
+            <Button 
+                full-width
+                @click="save"
+            >
+                Simpan
+            </Button>
+        </div>
     </div>
 </template>
 
@@ -30,8 +104,52 @@
             route: `/teacher/activity/${route.params.id}`
         },
         {
-            label: "Rancangan Anggaran Biaya",
+            label: "Rencana Anggaran Biaya",
             route: `/teacher/activity/${route.params.id}/budget`
         }
     ])
+
+    const tableHeader = ref([
+        "",
+        "Nama Alat/Bahan",
+        "Satuan",
+        "Jumlah",
+        "Harga Satuan (Rp)",
+        "Subtotal (Rp)",
+        ""
+    ])
+
+    const budgetingItems = ref<Budget[]>([
+        {
+            name: "",
+            unit: "",
+            count: 0,
+            pricePerUnit: 0,
+            subtotal: 0
+        }
+    ])
+
+    watch(
+      budgetingItems,
+      (items) => items.forEach((item) => item.subtotal = item.count * item.pricePerUnit),
+      { deep: true }
+    )
+
+    const addItem = () => {
+        budgetingItems.value.push({
+            name: "",
+            unit: "",
+            count: 0,
+            pricePerUnit: 0,
+            subtotal: 0
+        })
+    }
+
+    const deleteItem = (index: number) => {
+        budgetingItems.value.splice(index, 1)
+    }
+
+    const budgetTotal = computed(() => budgetingItems.value.reduce(((acc, curr) => acc + curr.subtotal), 0))
+
+    const save = async () => {}
 </script>
