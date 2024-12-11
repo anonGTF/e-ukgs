@@ -1,7 +1,8 @@
 export type BudgetPlan = {
     id: string,
     items: Budget[],
-    total: number
+    total: number,
+    createdAt?: Date
 }
 
 export type Budget = {

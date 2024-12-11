@@ -58,6 +58,16 @@ export const formatPrice = (price: number) => {
     return numberFormatter.format(price)
 }
 
+export const getActivityTimeFormatted = (activity: Activity) => {
+    const start = useDateFormat(activity.startTime, "DD MMM YYYY HH:mm", { locales: "id-ID" })
+    const end = useDateFormat(
+        activity.endTime, 
+        (activity.startTime.getDate() == activity.endTime.getDate() && activity.startTime.getMonth() == activity.endTime.getMonth() && activity.startTime.getFullYear() == activity.endTime.getFullYear()) ? "HH:mm" : "DD MMM YYYY HH:mm", 
+        { locales: "id-ID" }
+    )
+    return `${start.value} - ${end.value}`
+}
+
 export const multipleChoiceLabel = [
     {
         label: "A",

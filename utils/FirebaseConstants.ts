@@ -34,6 +34,22 @@ export const ACTIVITY_CONSTANTS = {
     picIdAttr: 'picId'
 }
 
+export const UPDATE_CONSTANTS = {
+    collectionName: 'updates',
+    budgetPlanAttr: 'budgetPlan',
+    startDataAttr: 'startData',
+    completionDataAttr: 'completionData',
+    itemsAttr: 'items',
+    totalAttr: 'total',
+    createdAtAttr: 'createdAt',
+    plannedStartTimeAttr: 'plannedStartTime',
+    actualStartTimeAttr: 'actualStartTime',
+    isDoneAttr: 'isDone',
+    blockerAttr: 'blocker',
+    descriptionAttr: 'description',
+    evidencesAttr: 'evidences'
+}
+
 export const MEDIA_CONSTANTS = {
     videoCollectionName: 'videos',
     ebookCollectionName: 'ebooks',

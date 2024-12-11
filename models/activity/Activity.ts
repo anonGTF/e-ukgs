@@ -8,7 +8,7 @@ export type Activity = {
     picId: string
 }
 
-export enum ActivityStatus { TODO, READY_TO_START, ONPROGRESS, DONE, DROPPED }
+export enum ActivityStatus { TODO, READY, ONPROGRESS, DONE, DROPPED }
 
 export type ActivityWithPic = {
     activity: Activity,

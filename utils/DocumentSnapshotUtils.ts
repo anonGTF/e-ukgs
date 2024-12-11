@@ -89,6 +89,40 @@ function toActivity(this: DocumentSnapshot): Activity {
     } satisfies Activity
 }
 
+function toBudgetPlan(this: DocumentSnapshot): BudgetPlan {
+    const data = this.data()
+    if (data == undefined) throw Error("Document not found")
+    return {
+        id: this.id,
+        items: data[UPDATE_CONSTANTS.itemsAttr],
+        total: data[UPDATE_CONSTANTS.totalAttr],
+        createdAt: parseToDate(data[UPDATE_CONSTANTS.createdAtAttr])
+    } satisfies BudgetPlan
+}
+
+function toStartData(this: DocumentSnapshot): StartData {
+    const data = this.data()
+    if (data == undefined) throw Error("Document not found")
+    return {
+        id: this.id,
+        plannedStartTime: parseToDate(data[UPDATE_CONSTANTS.plannedStartTimeAttr]),
+        actualStartTime: parseToDate(data[UPDATE_CONSTANTS.actualStartTimeAttr])
+    } satisfies StartData
+}
+
+function toCompletionData(this: DocumentSnapshot): CompletionData {
+    const data = this.data()
+    if (data == undefined) throw Error("Document not found")
+    return {
+        id: this.id,
+        isDone: data[UPDATE_CONSTANTS.isDoneAttr],
+        blocker: data[UPDATE_CONSTANTS.blockerAttr],
+        description: data[UPDATE_CONSTANTS.descriptionAttr],
+        evidences: data[UPDATE_CONSTANTS.evidencesAttr],
+        createdAt: parseToDate(data[UPDATE_CONSTANTS.createdAtAttr])
+    } satisfies CompletionData
+}
+
 declare module "firebase/firestore" {
     interface DocumentSnapshot {
         toUser(): User
@@ -98,6 +132,9 @@ declare module "firebase/firestore" {
         toQuestionnarie(): Questionnarie
         toToothHealth(): ToothHealth
         toActivity(): Activity
+        toBudgetPlan(): BudgetPlan
+        toStartData(): StartData
+        toCompletionData(): CompletionData
     }
 }
 
@@ -109,4 +146,7 @@ export const setupDocumentSnapshotUtil = () => {
     DocumentSnapshot.prototype.toQuestionnarie = toQuestionnarie
     DocumentSnapshot.prototype.toToothHealth = toToothHealth
     DocumentSnapshot.prototype.toActivity = toActivity
+    DocumentSnapshot.prototype.toBudgetPlan = toBudgetPlan
+    DocumentSnapshot.prototype.toStartData = toStartData
+    DocumentSnapshot.prototype.toCompletionData = toCompletionData
 }

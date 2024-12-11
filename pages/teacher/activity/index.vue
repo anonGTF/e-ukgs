@@ -6,12 +6,7 @@
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
             <div class="flex flex-row justify-between">
-                <TextField
-                    v-model="searchQuery"
-                    :placeholder="isSmall(activeBreakpoint) ? 'Cari nama kegiatan' : 'Cari nama kegiatan'"
-                    leading-icon="mdi:magnify"
-                    class="me-1 w-52 sm:w-[16.7rem]"
-                />
+                <Text :typography="Typography.H2">Daftar Kegiatan Aktif</Text>
                 <Button class="hidden sm:block" to="/teacher/activity/add">
                     Tambah Kegiatan
                 </Button>
@@ -25,9 +20,9 @@
             <Spacer class="h-6"/>
             <DataTable
                 :headers="tableHeader"
-                :is-empty="filteredTableData.length == 0"
+                :is-empty="activeTableData.length == 0"
             >
-                <tr v-for="(data, index) in filteredTableData">
+                <tr v-for="(data, index) in activeTableData">
                     <th>
                         <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
                     </th>
@@ -35,10 +30,10 @@
                         <Text :typography="Typography.Body2">{{ data.activity.title }}</Text>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ useDateFormat(data.activity.startTime, "DD MMM YYYY HH:mm", { locales: "id-ID" }) }} - {{ useDateFormat(data.activity.endTime, getEndTimeFormat(data.activity), { locales: "id-ID" }) }}</Text>
+                        <Text :typography="Typography.Body2">{{ getActivityTimeFormatted(data.activity) }}</Text>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.activity.status }}</Text>
+                        <ActivityStatusCard :status="data.activity.status"/>
                     </td>
                     <td>
                         <Text :typography="Typography.Body2">{{ data.pic?.name }}</Text>
@@ -53,11 +48,71 @@
                         </Button>
                         <template v-if="data.activity.status == ActivityStatus.TODO">
                             <Button
+                                dense
+                                :to="`/teacher/activity/${data.activity.id}/budget`"
+                            >
+                                Buat RAB
+                            </Button>
+                        </template>
+                        <template v-if="data.activity.status == ActivityStatus.READY">
+                            <Button
+                                dense
+                                @click="startActivity(data.activity)"
+                            >
+                                Mulai
+                            </Button>
+                        </template>
+                    </td>
+                </tr>
+            </DataTable>
+        </div>
+        <Spacer class="h-6"/>
+        <div class="bg-white border border-border-primary rounded-2xl p-6">
+            <Text :typography="Typography.H2">Riwayat Kegiatan</Text>
+            <Spacer class="h-6"/>
+            <DataTable
+                :headers="tableHeader"
+                :is-empty="historyTableData.length == 0"
+            >
+                <tr v-for="(data, index) in historyTableData">
+                    <th>
+                        <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
+                    </th>
+                    <td>
+                        <Text :typography="Typography.Body2">{{ data.activity.title }}</Text>
+                    </td>
+                    <td>
+                        <Text :typography="Typography.Body2">{{ getActivityTimeFormatted(data.activity) }}</Text>
+                    </td>
+                    <td>
+                        <ActivityStatusCard :status="data.activity.status"/>
+                    </td>
+                    <td>
+                        <Text :typography="Typography.Body2">{{ data.pic?.name }}</Text>
+                    </td>
+                    <td class="flex justify-end gap-2">
+                        <Button 
+                            :type="ButtonType.Outlined" 
                             dense
-                            :to="`/teacher/activity/${data.activity.id}/budget`"
+                            :to="`/teacher/activity/${data.activity.id}`"
                         >
-                            Buat RAB
+                            Detail
                         </Button>
+                        <template v-if="data.activity.status == ActivityStatus.TODO">
+                            <Button
+                                dense
+                                :to="`/teacher/activity/${data.activity.id}/budget`"
+                            >
+                                Buat RAB
+                            </Button>
+                        </template>
+                        <template v-if="data.activity.status == ActivityStatus.READY">
+                            <Button
+                                dense
+                                @click="startActivity(data.activity)"
+                            >
+                                Mulai
+                            </Button>
                         </template>
                     </td>
                 </tr>
@@ -67,13 +122,12 @@
 </template>
 
 <script setup lang="ts">
-    import { useDateFormat } from '@vueuse/core';
-
     definePageMeta({
         layout: 'teacher'
     })
 
     const userStore = useUserStore()
+    const uiStore = useUiStore()
 
     const breadcrumbs = ref<BreadcrumbArgs[]>([
         {
@@ -102,15 +156,38 @@
         pic: users.value.find((user) => user.id == activity.picId)
     })))
 
-    const activeBreakpoint = ref("")
-    const searchQuery = ref("")
-    const filteredTableData = computed(() => tableData.value.filter((data) => data.activity.title.toLowerCase().includes(searchQuery.value.toLowerCase())))
-    const getEndTimeFormat = (activity: Activity): string => 
-        (activity.startTime.getDate() == activity.endTime.getDate() && 
-        activity.startTime.getMonth() == activity.endTime.getMonth() &&
-        activity.startTime.getFullYear() == activity.endTime.getFullYear()) ? "HH:mm" : "DD MMM YYYY HH:mm"
+    const activeTableData = computed(() => tableData.value
+        .filter(item => item.activity.status !== ActivityStatus.DONE && item.activity.status !== ActivityStatus.DROPPED)
+        .sort((curr, next) => next.activity.startTime.getTime() - curr.activity.startTime.getTime())
+    )
 
-    useEventListener("resize", () => {
-        activeBreakpoint.value = getActiveBreakpoint()
-    })
+    const historyTableData = computed(() => tableData.value
+        .filter(item => item.activity.status === ActivityStatus.DONE || item.activity.status === ActivityStatus.DROPPED)
+        .sort((curr, next) => next.activity.startTime.getTime() - curr.activity.startTime.getTime())
+    )
+
+    const startActivity = (activity: Activity) => {
+        uiStore.confirm(
+            "Anda yakin ingin memulai kegiatan?",
+            `Kegiatan ${activity.title} akan dimulai. Tidak bisa membatalkan kegiatan yang sudah dimulai`,
+            ConfirmationType.INFO,
+            async () => {
+                uiStore.hideConfirmationModal()
+                const updateResult = await useAddStartData(userStore.school?.id ?? "", activity.id, {
+                    id: UPDATE_CONSTANTS.startDataAttr,
+                    plannedStartTime: activity.startTime,
+                    actualStartTime: new Date() 
+                })
+
+                if (isLeft(updateResult)) {
+                    uiStore.showToast(unwrapEither(updateResult), ToastType.ERROR)
+                    return
+                }
+                await useUpdateActivityStatus(userStore.school?.id ?? "", activity.id, ActivityStatus.ONPROGRESS)
+            },
+            () => {
+                uiStore.hideConfirmationModal()
+            }
+        )
+    }
 </script>
