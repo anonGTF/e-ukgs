@@ -67,12 +67,12 @@
             data: userData.value?.gender
         },
         {
-            label: "Role",
-            data: userData.value?.role
+            label: "Tugas",
+            data: userData.value?.role == "admin" ? "Petugas Puskesmas" : "Guru Pelaksana UKGS"
         },
         {
-            label: "Sekolah",
-            data: schoolData.value?.name ?? "-"
+            label: "Instansi",
+            data: schoolData.value?.name ?? userData.value?.instansi
         }
     ])
 

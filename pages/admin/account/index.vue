@@ -40,10 +40,10 @@
                         <Text :typography="Typography.Body2">{{ data.user.gender }}</Text>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.user.role }}</Text>
+                        <RoleStatusCard :role="data.user.role"/>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.school?.name ?? "-" }}</Text>
+                        <Text :typography="Typography.Body2">{{ data.school?.name ?? data.user.instansi }}</Text>
                     </td>
                     <td class="flex justify-end">
                         <Button 
@@ -82,7 +82,7 @@
         "ID Akun",
         "Jenis Kelamin",
         "Tugas",
-        "Sekolah",
+        "Instansi",
         ""
     ])
 

@@ -35,7 +35,16 @@
                     :selected="wrapSchoolWithDropdownOption(userData.schoolId)"
                     :options="schoolDropdownOptions"
                     class="w-full"
-                    @change="data => onSchoolChanged(data as unknown as string)"
+                    @change="data => onSchoolChanged(data.data as unknown as string)"
+                />
+            </template>
+            <template v-else>
+                <Spacer height="h-4" />
+                <TextField
+                    v-model="userData.instansi"
+                    type="text"
+                    placeholder="Masukkan nama instansi (Puskesmas)"
+                    label="Instansi/Puskesmas"
                 />
             </template>
             <Spacer height="h-4" />

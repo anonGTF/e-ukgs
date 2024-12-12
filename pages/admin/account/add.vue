@@ -37,6 +37,15 @@
                     @change="data => selectedSchool = data.data"
                 />
             </template>
+            <template v-else>
+                <Spacer height="h-4" />
+                <TextField
+                    v-model="instansi"
+                    type="text"
+                    placeholder="Masukkan nama instansi (Puskesmas)"
+                    label="Instansi/Puskesmas"
+                />
+            </template>
             <Spacer height="h-4" />
             <TextField
                 v-model="id"
@@ -99,6 +108,7 @@
             data: "admin"
         }
     ])
+    const instansi = ref('')
     const schools = useGetAllSchools()
     const schoolDropdownOptions = computed(() => schools.value.map((school) => ({
         label: school.name,
@@ -128,6 +138,7 @@
             name.value, 
             gender.value,
             selectedSchool.value?.id ?? null,
+            instansi.value,
             id.value,
             password.value
         )

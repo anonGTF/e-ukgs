@@ -4,5 +4,6 @@ export type User = {
     name: string,
     gender: string,
     userId: string,
+    instansi: string,
     schoolId?: string
 }

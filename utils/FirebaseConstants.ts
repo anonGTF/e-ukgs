@@ -5,6 +5,7 @@ export const USER_CONSTANTS = {
     nameAttr: 'name',
     userIdAttr: 'userId',
     genderAttr: 'gender',
+    instansiAttr: 'instansi'
 }
 
 export const STUDENT_CONSTANTS = {

@@ -10,7 +10,8 @@ function toUser(this: DocumentSnapshot): User {
         name: data[USER_CONSTANTS.nameAttr] ?? "",
         gender: data[USER_CONSTANTS.genderAttr] ?? "",
         userId: data[USER_CONSTANTS.userIdAttr] ?? "",
-        schoolId: role == "teacher" ? data[USER_CONSTANTS.schoolIdAttr] : null
+        schoolId: role == "teacher" ? data[USER_CONSTANTS.schoolIdAttr] : null,
+        instansi: data[USER_CONSTANTS.instansiAttr] ?? ""
     } satisfies User
 }
 

@@ -2,7 +2,7 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Pemeriksaan Kesehatan Gigi</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Form Pemeriksaan Gigi</Text>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
             <CustomDropdownSelector

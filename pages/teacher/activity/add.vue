@@ -91,6 +91,7 @@
         ACTIVITY_TYPE.studentForm,
         ACTIVITY_TYPE.parentForm,
         ACTIVITY_TYPE.toothHealthCheck,
+        ACTIVITY_TYPE.evaluation,
         ACTIVITY_TYPE.other
     ]
     const activityType = ref("")

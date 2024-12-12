@@ -19,6 +19,7 @@ exports.addUser = onCall(
     const name = request.data.name
     const gender = request.data.gender
     const schoolId = request.data.schoolId
+    const instansi = request.data.instansi
     const userId = request.data.userId
     const password = request.data.password
     const email = `${userId}@e-ukgs.web.app`
@@ -34,7 +35,7 @@ exports.addUser = onCall(
       (!(typeof userId === "string") || userId.length === 0) ||
       (!(typeof password === "string") || password.length === 0)
     ) {
-      throw new HttpsError("invalid-argument", "The function must contains name, gender, groupId, userId, and password.");
+      throw new HttpsError("invalid-argument", "The function not contains all mandatory data");
     }
 
     if (role == "admin" && (!(typeof schoolId === "string") || schoolId.length === 0)) {
@@ -51,9 +52,11 @@ exports.addUser = onCall(
       }
 
       // validate school exist
-      const schoolResponse = await db.doc(`/schools/${schoolId}`).get()
-      if (!schoolResponse.exists || schoolResponse.data() == undefined) {
-        throw new HttpsError("failed-precondition", "School cannot be found") 
+      if (role == "teacher") {
+        const schoolResponse = await db.doc(`/schools/${schoolId}`).get()
+        if (!schoolResponse.exists || schoolResponse.data() == undefined) {
+          throw new HttpsError("failed-precondition", "School cannot be found") 
+        }
       }
 
       // create authentication user
@@ -66,7 +69,8 @@ exports.addUser = onCall(
         name,
         gender,
         userId,
-        schoolId
+        schoolId,
+        instansi
       })
 
       logger.info("Akun berhasil ditambahkan")

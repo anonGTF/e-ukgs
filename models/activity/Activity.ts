@@ -19,6 +19,7 @@ export const ACTIVITY_TYPE = {
     studentForm: "Pengisian Kuesioner Perilaku Siswa",
     parentForm: "Pengisian Kuesioner Peran Orang Tua",
     toothHealthCheck: "Kegiatan Pemeriksaan Gigi",
+    evaluation: "Evaluasi Kegiatan UKGS",
     other: "Lainnya (isi judul kegiatan sendiri)"
 }
 

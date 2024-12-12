@@ -83,10 +83,16 @@
             route: "/teacher/parent-questionnarie"
         },
         {
-            label: "Penilaian Kesehatan Gigi Siswa",
+            label: "Pemeriksaan Gigi Siswa",
             route: "/teacher/student-health",
             icon: "mdi:tooth-outline" ,
             selectedIcon: "mdi:tooth" 
+        },
+        {
+            label: "Evaluasi Kegiatan UKGS",
+            route: "/teacher/evaluation",
+            icon: "mdi:clipboard-text-search-outline" ,
+            selectedIcon: "mdi:clipboard-text-search" 
         }
     ])
 
