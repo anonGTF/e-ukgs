@@ -99,8 +99,4 @@
     useEventListener("resize", () => {
         activeBreakpoint.value = getActiveBreakpoint()
     })
-
-    onMounted(() => {
-        console.log(useGetAllSchools())
-    })
 </script>

@@ -90,13 +90,11 @@
 
     const create = async () => {
         if (name.value == "" || age.value == 0 || grade.value == "" || gender.value == "" || parentPhoneNumber.value == "") {
-            console.log("lengkap")
             uiStore.showToast("Data harus lengkap!", ToastType.ERROR)
             return
         }
 
         if (!parentPhoneNumber.value.startsWith("62")) {
-            console.log("coba")
             uiStore.showToast("Nomor HP harus dengan format 62xxxx", ToastType.ERROR)
             return
         }

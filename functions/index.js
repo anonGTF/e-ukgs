@@ -38,7 +38,7 @@ exports.addUser = onCall(
       throw new HttpsError("invalid-argument", "The function not contains all mandatory data");
     }
 
-    if (role == "admin" && (!(typeof schoolId === "string") || schoolId.length === 0)) {
+    if (role == "teacher" && (!(typeof schoolId === "string") || schoolId.length === 0)) {
       throw new HttpsError("invalid-argument", "The function must contains schoolId if user role requested is teacher");
     }
 
