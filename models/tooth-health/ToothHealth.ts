@@ -1,14 +1,32 @@
 export type ToothHealth = {
     id: string,
     studentId: string,
-    schoolId: string,
     ohis: Ohis,
     dmft: Dmft,
     gums: Gums,
-    referral?: Referral
+    referral?: Referral,
+    createdAt?: Date
 }
 
-export type Ohis = {}
+export type Ohis = {
+    debris: {
+        16: number,
+        11: number,
+        26: number,
+        46: number,
+        31: number,
+        36: number
+    },
+    kalkulus: {
+        16: number,
+        11: number,
+        26: number,
+        46: number,
+        31: number,
+        36: number
+    },
+    totalScore: number
+}
 
 export type Dmft = {
     cavity: number,
@@ -18,6 +36,11 @@ export type Dmft = {
     totalScore: number
 }
 
-export type Gums  = {}
+export type Gums  = {
+    score: number
+}
 
-export type Referral = {}
+export type Referral = {
+    evidences: string[],
+    treatment: string[]
+}

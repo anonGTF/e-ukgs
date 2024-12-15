@@ -68,11 +68,11 @@ function toToothHealth(this: DocumentSnapshot): ToothHealth {
     return {
         id: this.id,
         studentId: data[TOOTH_HEALTH_CONSTANTS.studentIdAttr],
-        schoolId: data[TOOTH_HEALTH_CONSTANTS.schoolIdAttr],
         gums: data[TOOTH_HEALTH_CONSTANTS.gumsAttr],
         ohis: data[TOOTH_HEALTH_CONSTANTS.ohisAttr],
         dmft: data[TOOTH_HEALTH_CONSTANTS.dmftAttr],
-        referral: data[TOOTH_HEALTH_CONSTANTS.referralAttr]
+        referral: data[TOOTH_HEALTH_CONSTANTS.referralAttr],
+        createdAt: parseToDate(data[TOOTH_HEALTH_CONSTANTS.createdAtAttr])
     } satisfies ToothHealth
 }
 
@@ -85,6 +85,7 @@ function toActivity(this: DocumentSnapshot): Activity {
         startTime: parseToDate(data[ACTIVITY_CONSTANTS.startTimeAttr]),
         endTime: parseToDate(data[ACTIVITY_CONSTANTS.endTimeAttr]),
         status: data[ACTIVITY_CONSTANTS.statusAttr],
+        type: data[ACTIVITY_CONSTANTS.typeAttr],
         place: data[ACTIVITY_CONSTANTS.placeAttr],
         picId: data[ACTIVITY_CONSTANTS.picIdAttr]
     } satisfies Activity

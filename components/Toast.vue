@@ -73,7 +73,7 @@
     const position = computed(() => isSmall(activeBreakpoint.value) ? 'toast-center ' : 'toast-top toast-end me-4 ')
 
     const constructedClass = computed(() => {
-        let className = `toast min-w-80 rounded-lg my-4 flex flex-row gap-2 items-center `
+        let className = `toast z-[1000] min-w-80 rounded-lg my-4 flex flex-row gap-2 items-center `
         className += position.value
         className += backgroundColor.value
         return className

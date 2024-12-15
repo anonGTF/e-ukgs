@@ -27,7 +27,7 @@
           </template>
           <template v-else>
             <input 
-              v-model="numberModel"
+              v-model.number="numberModel"
               :type="type" 
               :placeholder="placeholder" 
               :disabled="!enabled"

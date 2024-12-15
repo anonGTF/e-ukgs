@@ -5,14 +5,16 @@
         <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Buat Kegiatan UKGS</Text>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
-            <DropdownSelector
-                v-model="activityType"
+            <CustomDropdownSelector
+                :selected="wrapWithDropdownOption(selectedType)"
                 label="Tipe Kegiatan"
                 placeholder="Pilih tipe kegiatan"
-                :options="typeSelection"
+                :options="typeOptions"
+                @change="data => selectedType = data.data"
+                class="w-full"
             />
             <Spacer height="h-4"/>
-            <template v-if="activityType == ACTIVITY_TYPE.other">
+            <template v-if="selectedType == ActivityType.OTHER">
                 <TextField
                     v-model="customTitle"
                     type="text"
@@ -66,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ACTIVITY_TYPE, ActivityStatus, type Activity } from '~/models/activity/Activity';
+    import { ACTIVITY_TYPE_LABEL, ActivityStatus, ActivityType, type Activity } from '~/models/activity/Activity';
 
     definePageMeta({
         layout: 'teacher'
@@ -87,14 +89,30 @@
         }
     ])
 
-    const typeSelection = [
-        ACTIVITY_TYPE.studentForm,
-        ACTIVITY_TYPE.parentForm,
-        ACTIVITY_TYPE.toothHealthCheck,
-        ACTIVITY_TYPE.evaluation,
-        ACTIVITY_TYPE.other
-    ]
-    const activityType = ref("")
+    const typeOptions = ref<CustomDropdownOption<ActivityType>[]>([
+        {
+            label: ACTIVITY_TYPE_LABEL.studentForm,
+            data: ActivityType.STUDENT_FORM
+        },
+        {
+            label: ACTIVITY_TYPE_LABEL.parentForm,
+            data: ActivityType.PARENT_FORM
+        },
+        {
+            label: ACTIVITY_TYPE_LABEL.toothHealthCheck,
+            data: ActivityType.TOOTH_HEALTH
+        },
+        {
+            label: ACTIVITY_TYPE_LABEL.evaluation,
+            data: ActivityType.EVALUATION
+        },
+        {
+            label: ACTIVITY_TYPE_LABEL.other,
+            data: ActivityType.OTHER
+        }
+    ])
+    const selectedType = ref<ActivityType | null>(null)
+    const wrapWithDropdownOption = (data: ActivityType | null) => typeOptions.value.find((option) => option.data == data)
     const customTitle = ref("")
     const startDateTime = ref(new Date())
     const endDateTime = ref(new Date())
@@ -106,6 +124,7 @@
 
     const create = async () => {
         isLoading.value = true
+        const selectedTypeOption = typeOptions.value.find((option) => option.data == selectedType.value)
         const result = await useAddActivity(userStore.school?.id ?? "", {
             id: "",
             startTime: startDateTime.value,
@@ -113,7 +132,8 @@
             status: ActivityStatus.TODO,
             place: place.value,
             picId: userStore.user?.id ?? "",
-            title: activityType.value == ACTIVITY_TYPE.other ? customTitle.value : activityType.value
+            title: selectedTypeOption?.data == ActivityType.OTHER ? customTitle.value : (selectedTypeOption?.label ?? ""),
+            type: selectedType.value ?? ActivityType.OTHER
         } satisfies Activity)
 
         if (isLeft(result)) {

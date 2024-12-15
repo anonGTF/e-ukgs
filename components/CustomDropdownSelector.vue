@@ -1,11 +1,11 @@
 <template>
     <div class="dropdown" :class="{'w-full': fullWidth}">
         <div v-if="label !== ''">
-          <Text :typography="Typography.Body2">{{ label }}</Text>
+          <Text :typography="labelTypography" :class="labelClass">{{ label }}</Text>
           <Spacer height="h-1" />
         </div>
         <div tabindex="0" role="button" class="border border-border-primary rounded-lg px-4 py-3 flex items-center">
-            <Text :typography="Typography.Body2" class="flex-1">
+            <Text :typography="Typography.Body2" class="flex-1" :class="placeholderOverflow == PlaceholderOverflowType.ELLIPSIS ? 'truncate' : ''">
                 {{ safePlaceholder }}
             </Text>
             <Icon name="mdi:chevron-down" class="text-2xl"/>
@@ -17,7 +17,7 @@
         >
             {{ errorMessage }}
         </Text>
-        <div tabindex="0" ref="dropdown" class="dropdown-content mt-2 w-full h-64 z-[1] overflow-y-scroll shadow bg-base-100 rounded-box border border-border-primary [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+        <div tabindex="0" ref="dropdown" class="dropdown-content mt-2 w-full h-64 z-[1] overflow-y-scroll shadow-xl bg-base-100 rounded-box border border-border-primary [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
             <TextField
                 v-if="searchPlaceholder != ''"
                 v-model="query"
@@ -73,6 +73,18 @@
         selected: {
             type: Object as PropType<CustomDropdownOption<any>>,
             default: null
+        },
+        labelClass: {
+            type: String,
+            default: ''
+        },
+        labelTypography: {
+            type: String as PropType<Typography>,
+            default: Typography.Body2
+        },
+        placeholderOverflow: {
+            type: Number as PropType<PlaceholderOverflowType>,
+            default: PlaceholderOverflowType.SHOW
         }
     })
 

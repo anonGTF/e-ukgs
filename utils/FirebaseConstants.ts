@@ -31,6 +31,7 @@ export const ACTIVITY_CONSTANTS = {
     startTimeAttr: 'startTime',
     endTimeAttr: 'endTime',
     statusAttr: 'status',
+    typeAttr: 'type',
     placeAttr: 'place',
     picIdAttr: 'picId'
 }
@@ -70,10 +71,9 @@ export const QUESTIONNARIE_CONSTANTS = {
 export const TOOTH_HEALTH_CONSTANTS = {
     collectionName: 'tooth-health',
     studentIdAttr: 'studentId',
-    schoolIdAttr: 'groupId',
-    periodIdAttr: 'periodId',
     ohisAttr: 'ohis',
     dmftAttr: 'dmft',
     gumsAttr: 'gums',
-    referralAttr: 'referral'
+    referralAttr: 'referral',
+    createdAtAttr: 'createdAt'
 }
