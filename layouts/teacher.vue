@@ -1,8 +1,8 @@
 <template>
     <div class="drawer lg:drawer-open">
         <input v-model="isDrawerOpen" id="teacher-drawer" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content bg-background-blue-light z-[100]">
-            <div class="navbar bg-white h-[7vh] sticky top-0 border-b border-border-divider">
+        <div class="drawer-content bg-background-blue-light">
+            <div class="navbar bg-white h-[7vh] z-[100] sticky top-0 border-b border-border-divider">
                 <div class="flex-none">
                     <label for="teacher-drawer" class="drawer-button btn btn-square lg:hidden">
                         <Icon name="mdi:menu" size="24px"/>
@@ -27,9 +27,9 @@
                 <slot />
             </div>
         </div>
-        <div class="drawer-side border-e border-border-divider">
+        <div class="drawer-side border-e border-border-divider z-[100]">
             <label for="teacher-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-            <div class="w-full p-6 h-[7vh] border-b border-border-divider">
+            <div class="hidden lg:block w-full p-6 h-[7vh] border-b border-border-divider">
                 <Text :typography="Typography.Label" class="text-center font-bold" color="text-black">Dashboard Guru | E-UKGS</Text>
             </div>
             <ul class="menu bg-white h-svh lg:h-auto w-80 pt-4 gap-4 px-4">
