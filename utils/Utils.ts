@@ -24,6 +24,17 @@ import {
     ImageToolbar,
     ImageUpload,
     Base64UploadAdapter,
+    Autoformat,
+    CloudServices,
+    MediaEmbed,
+    Mention,
+    PasteFromOffice,
+    PictureEditing,
+    Table,
+    TableColumnResize,
+    TableToolbar,
+    Plugin,
+    type HeadingOption
 } from 'ckeditor5';
 
 export const getMediaCollectionName = (type: MediaType): string => {
@@ -116,7 +127,16 @@ export const defaultCkEditorConfig = {
         Paragraph,
         TextTransformation,
         Indent,
-        IndentBlock
+        IndentBlock,
+        Autoformat,
+        CloudServices,
+        MediaEmbed,
+        Mention,
+        PasteFromOffice,
+        PictureEditing,
+        Table,
+        TableColumnResize,
+        TableToolbar
     ],
     toolbar: [
         'heading', '|',
@@ -129,6 +149,14 @@ export const defaultCkEditorConfig = {
         'uploadImage', 'insertTable', '|',
         'undo', 'redo','|',
     ],
+    heading: {
+        options: [
+            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+            { model: 'heading1', view: 'h2', title: 'Heading 1', class: 'ck-heading_heading1' },
+            { model: 'heading2', view: 'h3', title: 'Heading 2', class: 'ck-heading_heading2' },
+            { model: 'heading3', view: 'h4', title: 'Heading 3', class: 'ck-heading_heading3' }
+        ] as HeadingOption[]
+    },
     image: {
         resizeOptions: [
             {
@@ -153,4 +181,21 @@ export const defaultCkEditorConfig = {
             'resizeImage',
         ]
     },
+    link: {
+        addTargetToExternalLinks: true,
+        defaultProtocol: 'https://'
+    },
+    table: {
+        contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+    },
+    placeholder: "Masukkan konten artikel",
+    ui: {
+        poweredBy: {
+            label: null,
+            position: "border" as const,
+            side: "right" as const,
+            horizontalOffset: 0,
+            verticalOffset: 0
+        }
+    }
 }

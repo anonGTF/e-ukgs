@@ -308,11 +308,14 @@
                 @change="saveArticleThumbnail"
             />
             <Spacer height="h-4" />
-            <ckeditor
-                v-model="articleContent"
-                :editor="ClassicEditor"
-                :config="defaultCkEditorConfig"
-            />
+            <div class="prose min-w-full overflow-visible">
+                <ckeditor
+                    v-model="articleContent"
+                    :editor="ClassicEditor"
+                    :config="defaultCkEditorConfig"
+                    class="flex-1"
+                />
+            </div>
             <Spacer height="h-6" />
             <div class="flex flex-row gap-2 w-full">
                 <Button 
@@ -336,8 +339,8 @@
 </template>
 
 <script setup lang="ts">
-    import { ClassicEditor } from 'ckeditor5';
     import 'ckeditor5/ckeditor5.css';
+    import { ClassicEditor } from 'ckeditor5';
 
     definePageMeta({
         layout: 'admin'
@@ -383,7 +386,7 @@
     const articleThumbnail = ref<File | null | undefined>(null)
     const articleThumbnailPreview = ref("")
     const selectedArticle = ref<Media | null>(null)
-    const articleContent = ref('<p>Masukkan konten artikel di sini</p>')
+    const articleContent = ref('')
 
     const isLoading = ref(false)
 
@@ -657,5 +660,10 @@
         width: 80vw;
         max-width: none;
     }
+}
+
+.ck-editor__editable_inline:not(.ck-comment__input *) {
+    min-height: 300px;
+    overflow-y: auto;
 }
 </style>
