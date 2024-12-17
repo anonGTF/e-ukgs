@@ -16,3 +16,5 @@ export const QuestionType = {
     EvaluasiEUkgs: "evaluasi-e-ukgs",
     KualitasManajemenUkgs: "kualitas-manajemen-ukgs"
 } as const;
+
+export const enum FormState { IDENTITY, NEW, EXIST }

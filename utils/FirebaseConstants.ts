@@ -63,6 +63,7 @@ export const MEDIA_CONSTANTS = {
 
 export const QUESTIONNARIE_CONSTANTS = {
     collectionName: 'questionnaire',
+    entriesCollectionName: 'entries',
     titleAttr: 'title',
     typeAttr: 'type',
     sectionsAttr: 'sections'

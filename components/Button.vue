@@ -73,7 +73,7 @@ const buttonSizes = reactive<{
 const constructedClass = computed(() => {
   let className = `btn flex-nowrap min-h-0 h-fit ${props.class} ${buttonTypes[props.type]} `
   className += props.dense ? buttonSizes.Dense : buttonSizes.Default
-  className += props.enabled ? "" : "btn-disabled "
+  className += props.enabled ? "" : "btn-disabled cursor-not-allowed "
   className += props.fullWidth ? "w-full " : ""
   className += props.error ? "btn-error " : ""
   className += props.underlined ? "font-bold underline text-content-primary " : ""
