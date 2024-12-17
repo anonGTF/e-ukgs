@@ -58,7 +58,8 @@ function toQuestionnarie(this: DocumentSnapshot): Questionnarie {
         id: this.id,
         title: data[QUESTIONNARIE_CONSTANTS.titleAttr],
         type: data[QUESTIONNARIE_CONSTANTS.typeAttr],
-        sections: data[QUESTIONNARIE_CONSTANTS.sectionsAttr]
+        sections: data[QUESTIONNARIE_CONSTANTS.sectionsAttr],
+        parentData: data[QUESTIONNARIE_CONSTANTS.parentDataAttr]
     } satisfies Questionnarie
 }
 

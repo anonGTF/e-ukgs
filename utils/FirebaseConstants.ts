@@ -66,7 +66,8 @@ export const QUESTIONNARIE_CONSTANTS = {
     entriesCollectionName: 'entries',
     titleAttr: 'title',
     typeAttr: 'type',
-    sectionsAttr: 'sections'
+    sectionsAttr: 'sections',
+    parentDataAttr: 'parentData'
 }
 
 export const TOOTH_HEALTH_CONSTANTS = {

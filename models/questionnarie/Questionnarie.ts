@@ -4,7 +4,13 @@ export type Questionnarie = {
     id: string,
     title: string,
     type: QuestionnarieType,
-    sections: Section[]
+    sections: Section[],
+    parentData?: ParentData 
+}
+
+export type ParentData = {
+    name: string,
+    relation: string
 }
 
 export type QuestionnarieType = typeof QuestionType[keyof typeof QuestionType]

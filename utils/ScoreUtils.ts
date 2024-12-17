@@ -78,3 +78,24 @@ export const gumScoreRule = [
         backgroundColor: "bg-error"
     }
 ]
+
+export const parentScoreRule = [
+    {
+        min: 0,
+        max: 59,
+        label: "Kurang",
+        backgroundColor: "bg-error"
+    },
+    {
+        min: 60,
+        max: 79,
+        label: "Cukup",
+        backgroundColor: "bg-warning"
+    },
+    {
+        min: 80,
+        max: 100,
+        label: "Baik",
+        backgroundColor: "bg-success"
+    }
+]

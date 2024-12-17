@@ -160,7 +160,15 @@
         isLoading.value = true
         const result = await useAddEntry(selectedSchool.value.id, activeActivity.value.id, {
             ...entryData.value,
-            id: selectedStudent.value.id
+            id: selectedStudent.value.id,
+            parentData: {
+                name: name.value,
+                relation: relation.value
+            },
+            sections: [{
+                ...entryData.value.sections[0],
+                score: getScore(entryData.value.sections[0])
+            }]
         })
 
         if (isLeft(result)) {
@@ -170,6 +178,12 @@
             uiStore.showToast("Jawaban Berhasil Disimpan!", ToastType.SUCCESS)
             router.back()
         }
+    }
+
+    const getScore = (section: Section): number => {
+        const scoreList = section.questions.map((question) => question.selectedAnswer?.point ?? 0)
+        const totalScore = scoreList.reduce((acc, curr) => acc + curr, 0)
+        return totalScore / scoreList.length * 100
     }
 
     watch(selectedSchool, async () => {
