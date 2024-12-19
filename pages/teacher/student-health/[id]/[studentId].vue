@@ -84,27 +84,27 @@
                 <Spacer height="h-4"/>
                 <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
                     <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor OHIS</Text>
-                    <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ toothHealthData.ohis.totalScore }}</Text>
+                    <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(toothHealthData.ohis.totalScore) }}</Text>
                     <ScoreStatusCard :value="toothHealthData.ohis.totalScore" :rules="ohisScoreRule"/>
                 </div>
                 <div class="flex flex-row justify-between items-center border-b border-border-divider ms-4 mt-2">
                     <Text :typography="Typography.Body1" color="text-white">Debris</Text>
-                    <Text :typography="Typography.H3" color="text-white" class="font-semibold">{{ debrisScore }}</Text>
+                    <Text :typography="Typography.H3" color="text-white" class="font-semibold">{{ roundScore(debrisScore) }}</Text>
                 </div>
                 <div class="flex flex-row justify-between items-center border-b border-border-divider ms-4 mt-2">
                     <Text :typography="Typography.Body1" color="text-white">Kalkulus</Text>
-                    <Text :typography="Typography.H3" color="text-white" class="font-semibold">{{ kalkulusScore }}</Text>
+                    <Text :typography="Typography.H3" color="text-white" class="font-semibold">{{ roundScore(kalkulusScore) }}</Text>
                 </div>
                 <br/>
                 <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
                     <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor DMFT</Text>
-                    <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ toothHealthData.dmft.totalScore }}</Text>
+                    <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(toothHealthData.dmft.totalScore) }}</Text>
                     <ScoreStatusCard :value="toothHealthData.dmft.totalScore" :rules="dmftScoreRule"/>
                 </div>
                 <br/>
                 <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
                     <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor Gusi</Text>
-                    <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ toothHealthData.gums.score }}</Text>
+                    <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(toothHealthData.gums.score) }}</Text>
                     <ScoreStatusCard :value="toothHealthData.gums.score" :rules="gumScoreRule"/>
                 </div>
             </div>
@@ -115,6 +115,21 @@
                 <Spacer height="h-8"/>
                 <Text :typography="Typography.H2">Foto Kondisi Gigi</Text>
                 <Spacer height="h-4"/>
+                <DataTable
+                    :headers="referralTableHeader"
+                >
+                <tr v-for="(data, index) in toothHealthData.referral?.evidences">
+                        <th>
+                            <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
+                        </th>
+                        <td>
+                            <img :src="data" class="w-full h-auto max-w-96 rounded-lg"/>
+                        </td>
+                        <td>
+                            <Text :typography="Typography.Body2">{{ toothHealthData.referral?.treatment[index] ?? "-" }}</Text>
+                        </td>
+                    </tr>
+                </DataTable>
             </template>
         </div>
     </div>
@@ -175,6 +190,11 @@
         const scoreList = Object.values(toothHealthData.value?.ohis.kalkulus)
         return scoreList.reduce((sum, value) => sum + value, 0) / scoreList.length
     })
+    const referralTableHeader = ref([
+        "",
+        "Foto",
+        "Penanganan"
+    ])
 
     onMounted(async () => {
         const result = await useGetToothHealthById(userStore.school?.id as string, route.params.id as string, route.params.studentId as string)

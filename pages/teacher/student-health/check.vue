@@ -192,27 +192,27 @@
                         <Spacer height="h-4"/>
                         <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
                             <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor OHIS</Text>
-                            <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ ohisScore }}</Text>
+                            <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(ohisScore) }}</Text>
                             <ScoreStatusCard :value="ohisScore" :rules="ohisScoreRule"/>
                         </div>
                         <div class="flex flex-row justify-between items-center border-b border-border-divider ms-4 mt-2">
                             <Text :typography="Typography.Body1" color="text-white">Debris</Text>
-                            <Text :typography="Typography.H3" color="text-white" class="font-semibold">{{ debrisScore }}</Text>
+                            <Text :typography="Typography.H3" color="text-white" class="font-semibold">{{ roundScore(debrisScore) }}</Text>
                         </div>
                         <div class="flex flex-row justify-between items-center border-b border-border-divider ms-4 mt-2">
                             <Text :typography="Typography.Body1" color="text-white">Kalkulus</Text>
-                            <Text :typography="Typography.H3" color="text-white" class="font-semibold">{{ kalkulusScore }}</Text>
+                            <Text :typography="Typography.H3" color="text-white" class="font-semibold">{{ roundScore(kalkulusScore) }}</Text>
                         </div>
                         <br/>
                         <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
                             <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor DMFT</Text>
-                            <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ dmftScore }}</Text>
+                            <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(dmftScore) }}</Text>
                             <ScoreStatusCard :value="dmftScore" :rules="dmftScoreRule"/>
                         </div>
                         <br/>
                         <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
                             <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor Gusi</Text>
-                            <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ gum }}</Text>
+                            <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(gum) }}</Text>
                             <ScoreStatusCard :value="gum" :rules="gumScoreRule"/>
                         </div>
                     </div>
@@ -230,6 +230,7 @@
                     label=""
                     file-type="image/*"
                     button-text="Pilih satu atau beberapa foto"
+                    multiple
                     @multiple-change="files => evidences = files"
                 />
                 <Spacer class="h-12"/>

@@ -57,7 +57,7 @@
         if (props.multiple) {
             if (payload.files == null) return
             const files = Array.from(payload.files)
-            selectedFileName.value = files.map((file) => file.name).reduce((acc, curr) => acc + ", " + curr, "")
+            selectedFileName.value = files.map((file) => file.name).reduce((acc, curr) => acc + curr + ", ", "")
             emit("multipleChange", files)
         } else {
             const file = payload.files?.item(0)

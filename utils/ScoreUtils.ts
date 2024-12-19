@@ -99,3 +99,5 @@ export const parentScoreRule = [
         backgroundColor: "bg-success"
     }
 ]
+
+export const roundScore = (score: number) => parseFloat(score.toFixed(2)) === score ? score : parseFloat(score.toFixed(2))

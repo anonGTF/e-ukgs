@@ -4,7 +4,7 @@ export const useGetToothHealthById = async (schoolId: string, activityId: string
     const db = useFirestore()
     const collectionRef = collection(db, SCHOOL_CONSTANTS.collectionName, schoolId, ACTIVITY_CONSTANTS.collectionName, activityId, TOOTH_HEALTH_CONSTANTS.collectionName)
     const queryRef = query(collectionRef, where(TOOTH_HEALTH_CONSTANTS.studentIdAttr, "==", studentId), limit(1))
-    return getDocs(collectionRef)
+    return getDocs(queryRef)
     .then((snapshot) => {
         if (snapshot.empty) {
             return makeLeft('Kelompok tidak ditemukan')
