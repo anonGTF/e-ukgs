@@ -25,7 +25,7 @@
             <Spacer height="h-4"/>
             <Text :typography="Typography.Body1">Skor</Text>
             <Spacer class="h-0.5"/>
-            <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.sections[0].score?.toFixed(2) ?? 0 }}</Text>
+            <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ roundScore(entryData.sections[0].score ?? 0) }}</Text>
             <Spacer height="h-4"/>
             <Text :typography="Typography.Body1">Kategori Skor</Text>
             <Spacer class="h-0.5"/>

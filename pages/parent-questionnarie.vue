@@ -158,18 +158,22 @@
         if (selectedSchool.value == null || selectedStudent.value == null || activeActivity.value == null || entryData.value == null) return
 
         isLoading.value = true
-        const result = await useAddEntry(selectedSchool.value.id, activeActivity.value.id, {
-            ...entryData.value,
-            id: selectedStudent.value.id,
-            parentData: {
+        const result = await useAddEntry(
+            selectedSchool.value.id,
+            activeActivity.value.id, 
+            {
+                ...entryData.value,
+                id: selectedStudent.value.id,
+                sections: [{
+                    ...entryData.value.sections[0],
+                    score: getScore(entryData.value.sections[0])
+                }]
+            },
+            {
                 name: name.value,
                 relation: relation.value
-            },
-            sections: [{
-                ...entryData.value.sections[0],
-                score: getScore(entryData.value.sections[0])
-            }]
-        })
+            }
+        )
 
         if (isLeft(result)) {
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)

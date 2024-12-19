@@ -2,7 +2,7 @@
     <div class="my-6 min-h-dvh">
         <Text :typography="Typography.H1" class="text-center">Form Kuesioner Peran Guru</Text>
         <Spacer height="h-6"/>
-        <template v-if="questionnarie" v-for="section in questionnarie.sections">
+        <template v-if="entryData" v-for="section in entryData.sections">
             <div class="bg-white rounded-2xl px-6 py-4">
                 <Text 
                     v-if="section.title != ''"
@@ -43,6 +43,7 @@
         </template>
         <Button
             full-width
+            :loading="isLoading"
             @click="submit"
         >
             Submit
@@ -51,13 +52,40 @@
 </template>
 
 <script setup lang="ts">
+    const route = useRoute()
     const router = useRouter()
     const uiStore = useUiStore()
+    const userStore = useUserStore()
 
-    const questionnarie = ref<Questionnarie | null>(null)
+    const entryData = ref<Questionnarie | null>(null)
+    const isLoading = ref(false)
 
-    const submit = () => {
-        console.log(questionnarie.value)
+    const submit = async () => {
+        if (entryData.value == null) return
+
+        isLoading.value = true
+        const result = await useAddEntry(userStore.school?.id ?? "-", route.params.id as string, {
+            ...entryData.value,
+            id: userStore.user?.id ?? "-",
+            sections: [{
+                ...entryData.value.sections[0],
+                score: getScore(entryData.value.sections[0])
+            }]
+        })
+
+        if (isLeft(result)) {
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
+            isLoading.value = false
+        } else {
+            uiStore.showToast("Jawaban Berhasil Disimpan!", ToastType.SUCCESS)
+            router.back()
+        }
+    }
+
+    const getScore = (section: Section): number => {
+        const scoreList = section.questions.map((question) => question.selectedAnswer?.point ?? 0)
+        const totalScore = scoreList.reduce((acc, curr) => acc + curr, 0)
+        return totalScore / scoreList.length * 100
     }
 
     onMounted(async () => {
@@ -66,7 +94,7 @@
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
             router.back()
         } else {
-            questionnarie.value = unwrapEither(result)
+            entryData.value = unwrapEither(result)
         }
     })
 </script>
