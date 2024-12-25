@@ -10,11 +10,11 @@
                 :is-empty="tableData.length == 0"
             >
                 <tr v-for="(data, index) in tableData">
-                    <th>
-                        <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
-                    </th>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.title }}</Text>
+                        <div class="flex flex-row gap-2">
+                            <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}.</Text>
+                            <Text :typography="Typography.Body2">{{ data.title }}</Text>
+                        </div>
                     </td>
                     <td class="flex justify-end">
                         <Button 
@@ -48,7 +48,6 @@
     ])
 
     const tableHeader = ref([
-        "",
         "",
         ""
     ])

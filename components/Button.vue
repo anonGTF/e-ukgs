@@ -48,6 +48,10 @@ const props = defineProps({
   to: {
     type: String,
     default: ''
+  },
+  external: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -82,7 +86,12 @@ const constructedClass = computed(() => {
 
 const handleClick = () => {
   if (props.to != "") {
-    navigateTo(props.to)
+    const naviagtionOption = props.external ? {
+      external: true,
+      open: { target: '_blank' }
+    } : undefined
+
+    navigateTo(props.to, naviagtionOption)
   } else {
     emit("click")
   }

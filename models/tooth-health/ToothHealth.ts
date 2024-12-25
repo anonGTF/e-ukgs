@@ -42,5 +42,6 @@ export type Gums  = {
 
 export type Referral = {
     evidences: string[],
-    treatment: string[]
+    treatment: string[],
+    letterLink?: string
 }

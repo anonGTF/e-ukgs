@@ -89,6 +89,33 @@
                 </ol>
             </div>
         </template>
+        <Spacer height="h-6"/>
+        <div class="bg-white border border-border-primary rounded-2xl p-6">
+            <Text :typography="Typography.H3" class="font-semibold">Daftar Riwayat Kegiatan Perilaku Kesehatan Gigi Siswa</Text>
+            <Spacer height="h-4"/>
+            <DataTable
+                :headers="doneTableHeader"
+                :is-empty="doneActivities.length == 0"
+            >
+                <tr v-for="(data, index) in doneActivities">
+                    <td>
+                        <div class="flex flex-row gap-2">
+                            <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}.</Text>
+                            <Text :typography="Typography.Body2">{{ getActivityTimeFormatted(data) }}</Text>
+                        </div>
+                    </td>
+                    <td class="flex justify-end gap-2">
+                        <Button 
+                            :type="ButtonType.Outlined" 
+                            dense
+                            :to="`/teacher/activity/${data.id}`"
+                        >
+                            Lihat Detail
+                        </Button>
+                    </td>
+                </tr>
+            </DataTable>
+        </div>
     </div>
 </template>
 
@@ -138,6 +165,9 @@
             .sort((curr, next) => curr.result === undefined ? -1 : next.result === undefined ? 1 : 0)
     })
     const filteredStudentResultData = computed(() => studentResultData.value.filter((data) => data.student.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
+    const doneActivities = useGetDoneActivitiesByType(userStore.school?.id as string, ActivityType.STUDENT_FORM)
+    const doneTableHeader = ["", ""]
+
 
     useEventListener("resize", () => {
         activeBreakpoint.value = getActiveBreakpoint()

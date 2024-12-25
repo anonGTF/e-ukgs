@@ -100,4 +100,25 @@ export const parentScoreRule = [
     }
 ]
 
+export const debrisLabel = [
+    "Tidak ada debris atau stain",
+    "Kurang dari 1/3 permukaan gigi tertutupi Debris atau terdapat stain menutupi permukaan gigi",
+    "1/3 sampai 2/3 permukaan gigi tertutupi Debris",
+    "lebih dari 2/3 permukaan gigi tertutupi Debris"
+]
+
+export const kalkulusLabel = [
+    "Tidak ada kalkulus",
+    "Kurang dari 1/3 permukaan gigi tertutupi Supragingival kalkulus pada mahkota gigi",
+    "1/3 sampai 2/3 tertutupi Supragingival kalkulus atau ada bintik kalkulus subgingiva",
+    "Lebih dari 2/3 tertutupi Supragingival kalkulus atau ada kalkulus yang melingkari subgingiva"
+]
+
+export const gumsLabel = [
+    "Normal",
+    "Ada sedikit perubahan warna, bengkak, namun tidak ada pendarahan",
+    "Warna kemerahan, bengkak, pendarahan saat diperiksa",
+    "Warna merah terang atau merah menyala, luka, pendarahan spontan"
+]
+
 export const roundScore = (score: number) => parseFloat(score.toFixed(2)) === score ? score : parseFloat(score.toFixed(2))

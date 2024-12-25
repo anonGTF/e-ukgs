@@ -17,51 +17,20 @@
             <Spacer class="h-0.5"/>
             <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ pic?.name }}</Text>
             <template v-if="updateList.length > 0">
-                <Spacer height="h-8"/>
-                <div class="w-full border border-border-divider border-dashed"/>
-                <Spacer height="h-6"/>
-                <Text :typography="Typography.H2">Update Kegiatan</Text>
-                <Spacer height="h-6"/>
-                <ActivityUpdateItem
-                    v-for="(update, index) in updateList"
-                    :order-no="index + 1"
-                    :update-data="wrapWithUpdateItem(update)"
-                    :show-decoration="index != updateList.length - 1"
+                <Spacer height="h-4"/>
+                <Toggle
+                    v-model="showUpdate"
+                    label="Tampilkan Update Kegiatan"
                 />
-            </template>
-            <template v-if="activity?.status != ActivityStatus.DROPPED && activity?.status != ActivityStatus.DONE">
-                <Spacer height="h-6"/>
-                <div  class="flex flex-row gap-2">
-                    <Button
-                        v-if="activity?.status != ActivityStatus.ONPROGRESS"
-                        :type="ButtonType.Outlined"
-                        class="btn-danger flex-1"
-                        :to="`/teacher/activity/${activity?.id}/completion?isDone=false`"
-                    >
-                        Batalkan
-                    </Button>
-                    <Button
-                        v-if="activity?.status == ActivityStatus.TODO"
-                        class="flex-1"
-                        :to="`/teacher/activity/${activity.id}/budget`"
-                    >
-                        Buat RAB
-                    </Button>
-                    <Button
-                        v-if="activity?.status == ActivityStatus.READY"
-                        class="flex-1"
-                        @click="startActivity"
-                    >
-                        Mulai Kegiatan
-                    </Button>
-                    <Button
-                        v-if="activity?.status == ActivityStatus.ONPROGRESS"
-                        class="flex-1"
-                        :to="`/teacher/activity/${activity.id}/completion?isDone=true`"
-                    >
-                        Selesaikan Kegiatan
-                    </Button>
-                </div>
+                <template v-if="showUpdate">
+                    <Spacer height="h-4"/>
+                    <ActivityUpdateItem
+                        v-for="(update, index) in updateList"
+                        :order-no="index + 1"
+                        :update-data="wrapWithUpdateItem(update)"
+                        :show-decoration="index != updateList.length - 1"
+                    />
+                </template>
             </template>
         </div>
         <Spacer class="h-6"/>
@@ -114,7 +83,7 @@
                                 v-if="data.result"
                                 :type="ButtonType.Outlined" 
                                 dense
-                                :to="`/teacher/student-assignment/${activity.id}/${data.student.id}`"
+                                :to="`/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/student-assignment?id=${data.result.id}`"
                             >
                                 Lihat Detail
                             </Button>
@@ -163,7 +132,7 @@
                                 v-if="data.result"
                                 :type="ButtonType.Outlined" 
                                 dense
-                                :to="`/teacher/parent-questionnarie/${activity.id}/${data.student.id}`"
+                                :to="`/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/parent-questionnarie?id=${data.result.id}`"
                             >
                                 Lihat Detail
                             </Button>
@@ -175,23 +144,12 @@
                 </DataTable>
             </template>
             <template v-if="activity.type == ActivityType.TOOTH_HEALTH">
-                <div class="flex flex-row justify-between">
-                    <TextField
-                        v-model="searchQuery"
-                        placeholder="Cari siswa dgn nama"
-                        leading-icon="mdi:magnify"
-                        class="me-1 w-52 sm:w-[16.7rem]"
-                    />
-                    <Button class="hidden sm:block" to="/teacher/student-health/check">
-                        Lakukan Pemeriksaan
-                    </Button>
-                    <div 
-                        class="drawer-button btn btn-square flex justify-center sm:hidden bg-primary text-white"
-                        @click="navigateTo('/teacher/student-health/check')"
-                    >
-                        <Icon name="mdi:doctor" size="24px"/>
-                    </div>
-                </div>
+                <TextField
+                    v-model="searchQuery"
+                    placeholder="Cari siswa dgn nama"
+                    leading-icon="mdi:magnify"
+                    class="me-1 w-52 sm:w-[16.7rem]"
+                />
                 <Spacer class="h-6"/>
                 <DataTable
                     :headers="healthTableHeader"
@@ -233,12 +191,16 @@
                         </td>
                         <td class="flex justify-end">
                             <Button 
-                                :type="data.result == undefined ? ButtonType.Primary : ButtonType.Outlined" 
+                                v-if="data.result"
+                                :type="ButtonType.Outlined" 
                                 dense
-                                @click="getAction(data)"
+                                :to="`/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/student-health?id=${data.result.studentId}`"
                             >
-                                {{ data.result == undefined ? "Periksa" : "Lihat Detail" }}
+                                Lihat Detail
                             </Button>
+                            <div v-else class="px-4 py-2">
+                                <Text>Pemeriksaan belum dilakukan</Text>
+                            </div>
                         </td>
                     </tr>
                 </DataTable>
@@ -252,7 +214,7 @@
 
 <script setup lang="ts">
     definePageMeta({
-        layout: 'teacher'
+        layout: 'admin'
     })
 
     const route = useRoute()
@@ -263,29 +225,34 @@
     const breadcrumbs = ref<BreadcrumbArgs[]>([
         {
             label: "Beranda",
-            route: "/teacher/home"
+            route: "/admin/home"
         },
         {
-            label: "Kelola Kegiatan UKGS",
-            route: "/teacher/activity"
+            label: "Data Kegiatan UKGS",
+            route: "/admin/ukgs"
+        },
+        {
+            label: "Sekolah",
+            route: `/admin/ukgs/${route.params.schoolId}`
         },
         {
             label: "Detail Kegiatan",
-            route: `/teacher/activity/${route.params.id}`
+            route: `/admin/ukgs/${route.params.schoolId}/${route.params.activityId}`
         }
     ])
 
     const activity = ref<Activity | null>(null)
     const pic = ref<User | null>(null)
-    const updates = useGetAllUpdates(userStore.school?.id ?? "", route.params.id as string)
+    const updates = useGetAllUpdates(route.params.schoolId as string, route.params.activityId as string)
     const updateList = computed(() => [
         updates.budgetPlan.value,
         updates.startData.value,
         updates.completionData.value
     ].filter((data) => data != undefined))
-    const students = useGetAllStudents(userStore.school?.id ?? "")
-    const entries = useGetAllEntries(userStore.school?.id ?? "", route.params.id as string)
-    const toothHealthData = useGetAllToothHealth(userStore.school?.id ?? "", route.params.id as string)
+    const showUpdate = ref(false)
+    const students = useGetAllStudents(route.params.schoolId as string)
+    const entries = useGetAllEntries(route.params.schoolId as string, route.params.activityId as string)
+    const toothHealthData = useGetAllToothHealth(route.params.schoolId as string, route.params.activityId as string)
     const searchQuery = ref("")
 
     const studentResultData = computed(() => students.value.map((student) => ({
@@ -361,7 +328,7 @@
     }
 
     onMounted(async () => {
-        const result = await useGetActivityById(userStore.school?.id ?? "", route.params.id as string)
+        const result = await useGetActivityById(route.params.schoolId as string, route.params.activityId as string)
         if (isLeft(result)) {
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
             router.back()
@@ -377,35 +344,4 @@
         }
         pic.value = unwrapEither(picResult)
     })
-
-    const startActivity = () => {
-        if (activity.value == undefined) return
-        uiStore.confirm(
-            "Anda yakin ingin memulai kegiatan?",
-            `Kegiatan ${activity.value.title} akan dimulai. Tidak bisa membatalkan kegiatan yang sudah dimulai`,
-            ConfirmationType.INFO,
-            async () => {
-                uiStore.hideConfirmationModal()
-                const updateResult = await useAddStartData(userStore.school?.id ?? "", activity.value?.id ?? "", {
-                    id: UPDATE_CONSTANTS.startDataAttr,
-                    plannedStartTime: activity.value?.startTime ?? new Date(),
-                    actualStartTime: new Date() 
-                })
-
-                if (isLeft(updateResult)) {
-                    uiStore.showToast(unwrapEither(updateResult), ToastType.ERROR)
-                    return
-                }
-                await useUpdateActivityStatus(userStore.school?.id ?? "", activity.value?.id ?? "", ActivityStatus.ONPROGRESS)
-            },
-            () => {
-                uiStore.hideConfirmationModal()
-            }
-        )
-    }
-
-    const getAction = (data: { student: Student, result?: ToothHealth}) => {
-        const link = data.result == undefined ? `/teacher/student-health/check?id=${data.student.id}` : `/teacher/student-health/${activity.value?.id ?? '-'}/${data.student.id}`
-        navigateTo(link)
-    }
 </script>

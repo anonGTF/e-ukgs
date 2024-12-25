@@ -439,7 +439,7 @@
             },
             referral: {
                 evidences: evidencesLink,
-                treatment: []
+                treatment: evidencesLink.map(() => "")
             }
         })
 

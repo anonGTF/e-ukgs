@@ -150,34 +150,89 @@
                         Kirim ke Orang Tua
                     </Button>
                 </div>
+                <Button
+                    v-else
+                    full-width
+                    @click="openModal"
+                >
+                    Buat Surat Rujukan
+                </Button>
             </template>
         </div>
     </div>
+
+    <dialog
+        class="modal modal-bottom sm:modal-middle"
+        :class="{ 'modal-open': showReferralModal }"
+    >
+        <div class="rounded-2xl bg-white p-4 w-full lg:w-[50%] min-h-[50%] lg:min-h-[60%] flex flex-col">
+            <div class="flex flex-row justify-between items-center mb-2">
+                <Text :typography="Typography.Label" class="font-semibold">Buat Surat Rujukan</Text>
+                <btn 
+                    class="btn btn-square flex justify-center bg-transparent text-content-non-essential"
+                    @click="closeModal"
+                >
+                    <Icon name="mdi:close"/>
+                </btn>
+            </div>
+            <DataTable v-if="tempReferralData" :headers="referralTableHeader">
+                <tr v-for="(data, index) in tempReferralData.evidences">
+                    <th>
+                        <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
+                    </th>
+                    <td>
+                        <img :src="data" class="w-full h-auto max-w-96 rounded-lg"/>
+                    </td>
+                    <td>
+                        <TextArea
+                            v-model="tempReferralData.treatment[index]"
+                            placeholder="Masukkan Perawatan"
+                            :rows="7"
+                        />
+                    </td>
+                </tr>
+            </DataTable>
+            <Spacer height="h-6"/>
+            <Button
+                :loading="isLoading"
+                @click="saveReferral"
+            >
+                Buat Rujukan
+            </Button>
+        </div>
+    </dialog>
 </template>
 
 <script setup lang="ts">
     definePageMeta({
-        layout: 'teacher'
+        layout: 'admin'
     })
 
     const route = useRoute()
     const router = useRouter()
-    const userStore = useUserStore()
     const uiStore = useUiStore()
 
     const breadcrumbs = ref<BreadcrumbArgs[]>([
-        {
+    {
             label: "Beranda",
-            route: "/teacher/home"
+            route: "/admin/home"
         },
         {
-            label: "Kesehatan Gigi Siswa",
-            route: "/teacher/student-health"
+            label: "Data Kegiatan UKGS",
+            route: "/admin/ukgs"
+        },
+        {
+            label: "Sekolah",
+            route: `/admin/ukgs/${route.params.schoolId}`
+        },
+        {
+            label: "Detail Kegiatan",
+            route: `/admin/ukgs/${route.params.schoolId}/${route.params.activityId}`
         },
         {
             label: "Detail Hasil",
-            route: `/teacher/student-health/${route.params.id}`
-        },
+            route: `/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/student-health?id=${route.query.id}`
+        }
     ])
 
     const studentData = ref<Student | null>(null)
@@ -197,9 +252,70 @@
         "Foto",
         "Penanganan"
     ])
+    const showReferralModal = ref(false)
+    const tempReferralData = ref<Referral | null>(null)
+    const isLoading = ref(false)
+
+    const openModal = () => {
+        tempReferralData.value = toothHealthData.value?.referral ?? {
+            evidences: [],
+            treatment: [],
+            letterLink: undefined
+        }
+        showReferralModal.value = true
+    }
+
+    const closeModal = () => {
+        showReferralModal.value = false
+        tempReferralData.value = null
+    }
+
+    const saveReferral = async () => {
+        if (toothHealthData.value == null || tempReferralData.value == null || studentData.value == null) return
+
+        isLoading.value = true
+
+        const schoolResult = await useGetSchoolById(route.params.schoolId as string)
+        if (isLeft(schoolResult)) {
+            uiStore.showToast(unwrapEither(schoolResult), ToastType.ERROR)
+            isLoading.value = false
+            return
+        }
+
+        const school = unwrapEither(schoolResult)
+
+        const referralResult = await useUploadReferral(school, route.params.activityId as string, studentData.value, tempReferralData.value)
+        if (isLeft(referralResult)) {
+            uiStore.showToast(unwrapEither(referralResult), ToastType.ERROR)
+            isLoading.value = false
+            return
+        }
+
+        const result = await useSaveToothHealth(route.params.schoolId as string, route.params.activityId as string, {
+            ...toothHealthData.value,
+            referral: {
+                ...tempReferralData.value,
+                letterLink: unwrapEither(referralResult)
+            }
+        })
+
+        if (isLeft(result)) {
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
+            isLoading.value = false
+        } else {
+            uiStore.showToast("Surat Rujukan Berhasil Dibuat", ToastType.SUCCESS)
+            router.back()
+        }
+    }
+    
+    useEventListener("keyup", (event: Event) => {
+        if ((event as KeyboardEvent).code == "Escape") {
+            closeModal()
+        }
+    })
 
     onMounted(async () => {
-        const result = await useGetToothHealthById(userStore.school?.id as string, route.params.id as string, route.params.studentId as string)
+        const result = await useGetToothHealthById(route.params.schoolId as string, route.params.activityId as string, route.query.id as string)
         if (isLeft(result)) {
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
             router.back()
@@ -207,7 +323,7 @@
             toothHealthData.value = unwrapEither(result)
         }
 
-        const studentResult = await useGetStudentById(route.params.studentId as string, userStore.school?.id as string)
+        const studentResult = await useGetStudentById(route.query.id as string, route.params.schoolId as string)
         if (isLeft(studentResult)) {
             uiStore.showToast(unwrapEither(studentResult), ToastType.ERROR)
             router.back()
