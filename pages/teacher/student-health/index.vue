@@ -58,7 +58,7 @@
                             <ScoreStatusCard
                                 v-if="data.result?.gums != undefined"
                                 :rules="gumScoreRule"
-                                :value="data.result?.gums.score ?? 999"
+                                :value="data.result?.gums.score.averageScore ?? 999"
                             />
                             <Text v-else :typography="Typography.Body2">-</Text>
                         </td>
@@ -88,7 +88,7 @@
                         <Text>Arahkan cursor ke sebelah kiri (apabila menggunakan tablet/handphone, klik tombol garis tiga di sebelah pojok kiri atas) ke bagian <span class="font-bold">MENU</span></Text>
                     </li>
                     <li>
-                        <Text>Pilih menu <span class="font-bold">Kelola Kegiatan UKGS</span></Text>
+                        <Text>Pilih menu <span class="font-bold">Manajemen Kegiatan UKGS</span></Text>
                     </li>
                     <li>
                         <Text>Klik tombol <span class="font-bold">Tambah Kegiatan</span></Text>

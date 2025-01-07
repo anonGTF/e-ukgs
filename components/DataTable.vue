@@ -1,10 +1,13 @@
 <template>
-    <div class="overflow-x-auto">
-        <table class="table table-zebra">
+    <div class="overflow-x-auto overflow-y-visible">
+        <table class="table" :class="{'table-zebra': !plain}">
             <thead>
                 <tr>
                     <th v-for="header in headers">
-                        <Text :typography="Typography.Body2" class="font-semibold">{{ header }}</Text>
+                        <Text 
+                            :typography="Typography.Body2" 
+                            :class="`font-semibold ${centeredHeader ? 'text-center' : ''}`"
+                        >{{ header }}</Text>
                     </th>
                 </tr>
             </thead>
@@ -32,6 +35,14 @@
             default: []
         },
         isEmpty: {
+            type: Boolean,
+            default: false
+        },
+        plain: {
+            type: Boolean,
+            default: false
+        },
+        centeredHeader: {
             type: Boolean,
             default: false
         }

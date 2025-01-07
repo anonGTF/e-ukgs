@@ -37,7 +37,28 @@ export type Dmft = {
 }
 
 export type Gums  = {
-    score: number
+    data: GumDataRecord,
+    score: GumScore
+}
+
+export type GumData = {
+    mesial: number | null,
+    bucal: number | null,
+    labial: number | null,
+    distal: number | null,
+    palatal: number | null,
+    lingual: number | null
+}
+
+export type GumDataRecord = {
+    [key: number]: GumData
+}
+
+export type GumScore = {
+    [key: number]: number
+    totalScore: number,
+    totalSide: number,
+    averageScore: number
 }
 
 export type Referral = {

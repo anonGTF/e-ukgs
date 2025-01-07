@@ -66,7 +66,7 @@
             selectedIcon: "mdi:school" 
         },
         {
-            label: "Kelola Kegiatan UKGS",
+            label: "Manajemen Kegiatan UKGS",
             route: "/teacher/activity" ,
             icon: "mdi:hospital-building" 
         },

@@ -25,6 +25,7 @@
                 </div>
             </template>
             <template v-else>
+
                 <!-- PEMERIKSAAN DEBRIS OHIS -->
     
                 <div class="flex flex-row justify-between items-center">
@@ -61,7 +62,8 @@
                 <Spacer height="h-12"/>
                 <div class="w-full border border-border-divider border-dashed"/>
                 <Spacer height="h-8"/>
-                <!-- PEMERIKSAAN Kalkulus OHIS -->
+
+                <!-- PEMERIKSAAN KALKULUS OHIS -->
     
                 <div class="flex flex-row justify-between items-center">
                     <Text :typography="Typography.H2">Pemeriksaan Kalkulus OHIS</Text>
@@ -176,16 +178,58 @@
                     </div>
                 </template>
                 <Spacer height="h-4"/>
-                <CustomDropdownSelector
-                    class="w-full"
-                    label="Kondisi Gusi"
-                    placeholder="Pilih kondisi gusi"
-                    :placeholder-overflow="PlaceholderOverflowType.ELLIPSIS"
-                    :selected="wrapWithDropdownOption(gum, gumScoreOptions)"
-                    :options="gumScoreOptions"
-                    @change="data => gum = data.data"
-                />
-                <template v-if="ohisScore >= 0 && typeof(dmftScore) === 'number' && dmftScore >= 0 && gum >= 0">
+                <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
+                    <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Nilai Kondisi Gusi</Text>
+                    <Spacer height="h-2"/>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <span class="w-4 font-bold">0</span>
+                            <span class="w-4 text-center">:</span>
+                            <span class="flex-1">Normal.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="w-4 font-bold">1</span>
+                            <span class="w-4 text-center">:</span>
+                            <span class="flex-1">Ada sedikit perubahan warna, bengkak, namun tidak ada pendarahan.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="w-4 font-bold">2</span>
+                            <span class="w-4 text-center">:</span>
+                            <span class="flex-1">Warna kemerahan, bengkak, pendarahan saat diperiksa.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="w-4 font-bold">3</span>
+                            <span class="w-4 text-center">:</span>
+                            <span class="flex-1">Warna merah terang atau merah menyala, luka, pendarahan spontan.</span>
+                        </div>
+                    </div>
+                </div>
+                <Spacer height="h-6"/>
+                <div class="px-4 grid grid-cols-[1fr,2fr,2fr,2fr,2fr,2fr,2fr,1fr] gap-6 w-full items-center">
+                    <Text 
+                        v-for="header in gumTableHeaders"
+                        :typography="Typography.Body2" 
+                        class="font-semibold text-center flex-1 -mx-6 py-4 border-b border-border-divider"
+                    >{{ header }}</Text>
+                    <template v-for="(tooth, toothIndex) in gumData">
+                        <Text :typography="Typography.Body2" class="font-semibold text-content-primary text-center flex-1">{{ toothIndex }}</Text>
+                        <template v-for="(side, sideIndex) in tooth">
+                            <CustomDropdownSelector
+                                v-if="side != null"
+                                class="flex-1"
+                                placeholder="Pilih kondisi gusi"
+                                :placeholder-overflow="PlaceholderOverflowType.ELLIPSIS"
+                                :selected="wrapWithDropdownOption(side, gumScoreOptions)"
+                                :options="gumScoreOptions"
+                                @change="data => gumData[toothIndex][sideIndex] = data.data"
+                            />
+                            <Text v-else :typography="Typography.Body2" color="text-content-secondary" class="text-center flex-1">Tidak Tersedia</Text>
+                        </template>
+                        <Text :typography="Typography.Body2" class="text-center flex-1">{{ gumScore[toothIndex] }}</Text>
+                    </template>
+                </div>
+
+                <template v-if="ohisScore >= 0 && typeof(dmftScore) === 'number' && dmftScore >= 0 && gumFilled">
                     <Spacer class="h-12"/>
                     <div class="w-full bg-primary p-4 rounded-lg">
                         <Text :typography="Typography.H2" color="text-white">Hasil Pemeriksaan</Text>
@@ -212,8 +256,8 @@
                         <br/>
                         <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
                             <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor Gusi</Text>
-                            <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(gum) }}</Text>
-                            <ScoreStatusCard :value="gum" :rules="gumScoreRule"/>
+                            <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(gumScore.averageScore) }}</Text>
+                            <ScoreStatusCard :value="gumScore.averageScore" :rules="gumScoreRule"/>
                         </div>
                     </div>
                 </template>
@@ -313,10 +357,14 @@
         {
             label: "lebih dari 2/3 permukaan gigi tertutupi Debris (3)",
             data: 3
+        },
+        {
+            label: "Tidak tersedia",
+            data: -2
         }
     ])
     const debrisScore = computed(() => {
-        const scoreList = Object.values(debris.value)
+        const scoreList = Object.values(debris.value).filter((value) => value != -2)
         return scoreList.reduce((sum, value) => sum + value, 0) / scoreList.length
     })
 
@@ -345,34 +393,137 @@
         {
             label: "Lebih dari 2/3 tertutupi Supragingival kalkulus atau ada kalkulus yang melingkari subgingiva (3)",
             data: 3
+        },
+        {
+            label: "Tidak tersedia",
+            data: -2
         }
     ])
     const kalkulusScore = computed(() => {
-        const scoreList = Object.values(kalkulus.value)
+        const scoreList = Object.values(kalkulus.value).filter((value) => value != -2)
         return scoreList.reduce((sum, value) => sum + value, 0) / scoreList.length
     })
     const ohisScore = computed(() => debrisScore.value + kalkulusScore.value)
 
     const showGumInstruction = ref(false)
-    const gum = ref(-1)
     const gumScoreOptions = ref<CustomDropdownOption<number>[]>([
         {
-            label: "Normal (0)",
+            label: "0",
             data: 0
         },
         {
-            label: "Ada sedikit perubahan warna, bengkak, namun tidak ada pendarahan (1)",
+            label: "1",
             data: 1
         },
         {
-            label: "Warna kemerahan, bengkak, pendarahan saat diperiksa (2)",
+            label: "2",
             data: 2
         },
         {
-            label: "Warna merah terang atau merah menyala, luka, pendarahan spontan (3)",
+            label: "3",
             data: 3
+        },
+        {
+            label: "Tidak tersedia",
+            data: -2
         }
     ])
+
+    const gumTableHeaders = [
+        "Index Gigi",
+        "Mesial",
+        "Bucal",
+        "Labial",
+        "Distal",
+        "Palatal",
+        "Lingual",
+        "TOTAL"
+    ]
+    const gumData = ref({
+        16: {
+            mesial: -1,
+            bucal: -1,
+            labial: null,
+            distal: -1,
+            palatal: -1,
+            lingual: null
+        },
+        21: {
+            mesial: -1,
+            bucal: null,
+            labial: -1,
+            distal: -1,
+            palatal: -1,
+            lingual: null
+        },
+        24: {
+            mesial: -1,
+            bucal: -1,
+            labial: null,
+            distal: -1,
+            palatal: -1,
+            lingual: null
+        },
+        36: {
+            mesial: -1,
+            bucal: -1,
+            labial: null,
+            distal: -1,
+            palatal: null,
+            lingual: -1
+        },
+        41: {
+            mesial: -1,
+            bucal: null,
+            labial: -1,
+            distal: -1,
+            palatal: null,
+            lingual: -1
+        },
+        44: {
+            mesial: -1,
+            bucal: -1,
+            labial: null,
+            distal: -1,
+            palatal: null,
+            lingual: -1
+        }
+    })
+
+    const gumScore = ref<GumScore>({ 
+        16: 0,
+        21: 0,
+        24: 0,
+        36: 0,
+        41: 0,
+        44: 0,
+        totalScore: 0, 
+        totalSide: 0, 
+        averageScore: 0 
+    })
+
+    const gumFilled = computed(() => {
+        const filledStatus = []
+        for (const [_, side] of Object.entries(gumData.value)) {
+            const sideList = Object.values(side)
+            filledStatus.push(sideList.every((score) => score != -1))
+        }
+
+        return filledStatus.every((status) => status)
+    })
+
+    watch(gumData, () => {
+        const updated: GumScore = { totalScore: 0, totalSide: 0, averageScore: 0 }
+        for (const [key, side] of Object.entries(gumData.value)) {
+            const sideList = Object.values(side)
+            const toothScore = sideList.reduce((sum, score) => (sum ?? 0) + ((score == null || score < 0) ? 0 : score), 0)
+            updated[key as unknown as number] = toothScore ?? 0
+            updated.totalScore += toothScore ?? 0
+            updated.totalSide += sideList.filter((score) => score != -2 || score != null).length
+        }
+        updated.averageScore = updated.totalScore / updated.totalSide
+        gumScore.value = updated
+    }, { deep: true })
 
     const wrapWithDropdownOption = (data: number, options: CustomDropdownOption<number>[]): CustomDropdownOption<number> | undefined => 
         options.find((option) => option.data == data)
@@ -435,7 +586,8 @@
                 totalScore: dmftScore.value
             },
             gums: {
-                score: gum.value
+                data: gumData.value,
+                score: gumScore.value
             },
             referral: {
                 evidences: evidencesLink,

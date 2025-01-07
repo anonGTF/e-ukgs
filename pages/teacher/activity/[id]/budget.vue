@@ -119,7 +119,7 @@
             route: "/teacher/home"
         },
         {
-            label: "Kelola Kegiatan UKGS",
+            label: "Manajemen Kegiatan UKGS",
             route: "/teacher/activity"
         },
         {
