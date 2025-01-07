@@ -85,6 +85,12 @@
             icon: "mdi:account-group-outline" ,
             selectedIcon: "mdi:account-group"
         },
+        {
+            label: "Panduan Pengguna",
+            route: "/admin/help",
+            icon: "mdi:help-circle-outline" ,
+            selectedIcon: "mdi:help-circle" 
+        }
     ])
 
     const isDrawerOpen = ref(false)

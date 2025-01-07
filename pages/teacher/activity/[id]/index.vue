@@ -227,7 +227,7 @@
                             <ScoreStatusCard
                                 v-if="data.result?.gums != undefined"
                                 :rules="gumScoreRule"
-                                :value="data.result?.gums.score ?? 999"
+                                :value="data.result?.gums.score.averageScore ?? 999"
                             />
                             <Text v-else :typography="Typography.Body2">-</Text>
                         </td>

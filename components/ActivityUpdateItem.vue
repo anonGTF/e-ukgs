@@ -90,12 +90,12 @@
                 <Text :typography="Typography.Body1">Detail Kegiatan</Text>
                 <Spacer class="h-0.5"/>
                 <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ updateData.completionData.description }}</Text>
-                <template v-if="updateData.completionData.evidences">
+                <template v-if="updateData.completionData.documentations?.length ?? 0 > 0">
                     <Spacer height="h-4"/>
                     <Text>Foto Kegiatan</Text>
                     <Spacer height="h-2"/>
-                    <div v-for="evidence in updateData.completionData.evidences" class="flex flex-row gap-2 flex-wrap">
-                        <img :src="evidence"/>
+                    <div class="flex flex-row gap-2 flex-wrap">
+                        <img v-for="evidence in updateData.completionData.documentations" :src="evidence" class="w-full h-auto max-w-96 rounded-lg"/>
                     </div>
                 </template>
             </template>

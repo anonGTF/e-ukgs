@@ -93,6 +93,12 @@
             route: "/teacher/evaluation",
             icon: "mdi:clipboard-text-search-outline" ,
             selectedIcon: "mdi:clipboard-text-search" 
+        },
+        {
+            label: "Panduan Pengguna",
+            route: "/teacher/help",
+            icon: "mdi:help-circle-outline" ,
+            selectedIcon: "mdi:help-circle" 
         }
     ])
 

@@ -49,7 +49,7 @@ export const UPDATE_CONSTANTS = {
     isDoneAttr: 'isDone',
     blockerAttr: 'blocker',
     descriptionAttr: 'description',
-    evidencesAttr: 'evidences'
+    documentationsAttr: 'documentations'
 }
 
 export const MEDIA_CONSTANTS = {

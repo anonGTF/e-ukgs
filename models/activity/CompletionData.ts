@@ -3,6 +3,6 @@ export type CompletionData = {
     isDone: boolean,
     blocker: string,
     description: string,
-    evidences?: string[],
+    documentations?: string[],
     createdAt?: Date
 }

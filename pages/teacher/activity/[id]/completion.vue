@@ -31,6 +31,17 @@
                 :placeholder="route.query.isDone ? 'Masukkan deskripsi singkat hasil kegiatan yang dilaksanakan' : 'Masukkan alasan singkat pembatalan kegiatan'"
             />
             <Spacer height="h-6"/>
+            <!-- UPLOAD Foto -->
+            <Text>Upload Dokumentasi</Text>
+            <Spacer height="h-1"/>
+            <FileInput
+                label=""
+                file-type="image/*"
+                button-text="Pilih satu atau beberapa foto"
+                multiple
+                @multiple-change="files => documentations = files"
+            />
+            <Spacer class="h-12"/>
             <Button
                 full-width
                 @click="save"
@@ -76,6 +87,7 @@
     const pic = ref<User | null>(null)
     const blocker = ref("")
     const description = ref("")
+    const documentations = ref<File[]>([])
     const isLoading= ref(false)
 
     onMounted(async () => {
@@ -98,6 +110,18 @@
 
     const save = async () => {
         isLoading.value = true
+        let docsLink: string[] = []
+        if (documentations.value.length > 0) {
+            const uplaodJob = documentations.value.map((doc) => useUploadFile(doc, `${userStore.school?.id ?? '-'}/${activity.value?.id ?? '-'}`))
+            const uploadResults = await Promise.all(uplaodJob)
+            if (uploadResults.some((result) => isLeft(result))) {
+                uiStore.showToast("Upload Foto gagal", ToastType.ERROR)
+                isLoading.value = false
+                return
+            }
+            docsLink = uploadResults.map((result) => unwrapEither(result))
+        }
+
         const result = await useAddCompletionData(
             userStore.school?.id ?? "", 
             route.params.id as string,
@@ -105,7 +129,8 @@
                 id: UPDATE_CONSTANTS.completionDataAttr,
                 isDone: isDone.value,
                 blocker: blocker.value,
-                description: description.value
+                description: description.value,
+                documentations: docsLink
             }
         )
 

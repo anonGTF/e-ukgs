@@ -121,7 +121,7 @@ function toCompletionData(this: DocumentSnapshot): CompletionData {
         isDone: data[UPDATE_CONSTANTS.isDoneAttr],
         blocker: data[UPDATE_CONSTANTS.blockerAttr],
         description: data[UPDATE_CONSTANTS.descriptionAttr],
-        evidences: data[UPDATE_CONSTANTS.evidencesAttr],
+        documentations: data[UPDATE_CONSTANTS.documentationsAttr],
         createdAt: parseToDate(data[UPDATE_CONSTANTS.createdAtAttr])
     } satisfies CompletionData
 }
