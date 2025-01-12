@@ -28,10 +28,15 @@
     default: false
   })
 
+  const emit = defineEmits<{
+    change: [data: boolean]
+  }>()
+
   const backgroundColor = computed(() => model.value ? "[--tglbg:#415BE7]" : "[--tglbg:#D2D2D2]")
   const borderColor = computed(() => model.value ? "border-primary" : "border-[#D2D2D2]")
 
   const toggle = () => {
     model.value = !model.value
+    emit('change', model.value)
   }
 </script>

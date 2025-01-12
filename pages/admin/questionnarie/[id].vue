@@ -62,12 +62,20 @@
                                         <Text class="rounded-e-lg border border-border-primary p-2">{{ option.point }}</Text>
                                     </div>
                                 </div>
-                                <div v-if="section.answerType == AnswerType.RATING" class="flex flex-row gap-4">
-                                    <div v-for="option in question.answerOption" class="flex flex-row">
-                                        <Text class="rounded-s-lg border border-border-primary p-2 min-w-14">{{ option.text }}</Text>
-                                        <Text class="rounded-e-lg border border-border-primary p-2">{{ option.point }}</Text>
+                                <template v-if="section.answerType == AnswerType.RATING">
+                                    <Toggle 
+                                        v-model="question.isPositive"
+                                        label="Pertanyaan positif"
+                                        @change="data => toggleRatingOption(data, questionIndex, sectionIndex)"
+                                    />
+                                    <Spacer height="h-4"/>
+                                    <div class="flex flex-row gap-4">
+                                        <div v-for="option in question.answerOption" class="flex flex-row">
+                                            <Text class="rounded-s-lg border border-border-primary p-2 min-w-14">{{ option.text }}</Text>
+                                            <Text class="rounded-e-lg border border-border-primary p-2">{{ option.point }}</Text>
+                                        </div>
                                     </div>
-                                </div>
+                                </template>
                                 <div v-if="section.answerType == AnswerType.MULTIPLE_CHOICE">
                                     <div v-for="(option, index) in question.answerOption" class="flex flex-row gap-2 mb-4 items-center">
                                         <SelectionButton
@@ -191,12 +199,12 @@
             ...selectedSection,
             answerType: selected.data as AnswerType,
             questions: selectedSection.questions.map((question) => {
-            const updatedAnswerList = getDefaultAnswerOptions(selected.data)
-            return {
-                ...question,
-                answerOption: updatedAnswerList
-            }
-        })
+                const updatedAnswerList = getDefaultAnswerOptions(selected.data, question.isPositive)
+                return {
+                    ...question,
+                    answerOption: updatedAnswerList
+                }
+            })
         }
     }
 
@@ -217,6 +225,20 @@
             )
         }
     }
+
+    const toggleRatingOption = (
+        isPositive: boolean,
+        questionIndex: number, 
+        sectionIndex: number
+    ) => {
+        if (data.value == null) return
+
+        const selectedQuestion = data.value.sections[sectionIndex].questions[questionIndex]
+        data.value.sections[sectionIndex].questions[questionIndex] = {
+            ...selectedQuestion,
+            answerOption: getDefaultAnswerOptions(AnswerType.RATING, isPositive)
+        }
+    }
         
     const addQuestion = (sectionIndex: number) => {
         if (data.value == null) {
@@ -227,7 +249,8 @@
         data.value.sections[sectionIndex].questions.push({
             orderNo: 0,
             question: "",
-            answerOption: getDefaultAnswerOptions(selectedSection.answerType)
+            isPositive: true,
+            answerOption: getDefaultAnswerOptions(selectedSection.answerType, true)
         })
     }
 
@@ -262,6 +285,7 @@
     const save = async () => {
         isLoading.value = true
         if (data.value != null) {
+            setParentDataNull()
             const result = await useSaveQuestionnarie(data.value)
             if (isLeft(result)) {
                 uiStore.showToast(unwrapEither(result), ToastType.ERROR)
@@ -273,17 +297,22 @@
         }
     }
 
-    const getDefaultAnswerOptions = (type: AnswerType): Answer[] => {
+    const setParentDataNull = () => {
+        if (data.value == null) return
+
+        data.value = {
+            ...data.value,
+            parentData: null
+        }
+    }
+
+    const getDefaultAnswerOptions = (type: AnswerType, isPositive: boolean): Answer[] => {
         switch (type) {
             case AnswerType.MULTIPLE_CHOICE:
                 return [
                     {
                         text: "",
                         point: 1
-                    },
-                    {
-                        text: "",
-                        point: 0
                     },
                     {
                         text: "",
@@ -320,7 +349,7 @@
                 ]
             
             case AnswerType.RATING:
-                return [
+                return isPositive ? [
                     {
                         text: "Sangat Tidak Setuju",
                         point: 1
@@ -336,6 +365,23 @@
                     {
                         text: "Sangat Setuju",
                         point: 4
+                    }
+                ] : [
+                    {
+                        text: "Sangat Tidak Setuju",
+                        point: 4
+                    },
+                    {
+                        text: "Tidak Setuju",
+                        point: 3
+                    },
+                    {
+                        text: "Setuju",
+                        point: 2
+                    },
+                    {
+                        text: "Sangat Setuju",
+                        point: 1
                     }
                 ]
         

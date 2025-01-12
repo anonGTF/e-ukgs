@@ -5,7 +5,7 @@ export type Questionnarie = {
     title: string,
     type: QuestionnarieType,
     sections: Section[],
-    parentData?: ParentData 
+    parentData: ParentData | null
 }
 
 export type ParentData = {
