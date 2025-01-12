@@ -55,6 +55,15 @@
                 placeholder="Masukkan tempat kegiatan UKGS"
                 label="Tempat Kegiatan UKGS"
             />
+            <Spacer height="h-4"/>
+            <CustomDropdownSelector
+                :selected="wrapPicWithDropdownOption(selectedPic)"
+                label="Penanggung Jawab"
+                placeholder="Pilih penanggung jawab"
+                :options="picOptions"
+                @change="data => selectedPic = data.data"
+                class="w-full"
+            />
             <Spacer height="h-12" />
             <Button 
                 full-width
@@ -73,6 +82,10 @@
     definePageMeta({
         layout: 'teacher'
     })
+
+    const uiStore = useUiStore()
+    const userStore = useUserStore()
+    const router = useRouter()
 
     const breadcrumbs = ref<BreadcrumbArgs[]>([
         {
@@ -117,12 +130,29 @@
     const startDateTime = ref(new Date())
     const endDateTime = ref(new Date())
     const place = ref("")
+    const pic = asyncComputed(async () => {
+        const result = await useGetAllUsersBySchoolId(userStore.school?.id ?? "")
+        if (isLeft(result)) {
+            return []
+        } else {
+            return unwrapEither(result) as User[]
+        }
+    })
+    const picOptions = computed(() => pic.value?.map((user) => ({
+        data: user,
+        label: user.name
+    } satisfies CustomDropdownOption<User>)) ?? [])
+    const selectedPic = ref<User | null>(null)
+    const wrapPicWithDropdownOption = (data: User | null) => picOptions.value?.find((option) => option.data == data)
+
     const isLoading = ref(false)
-    const uiStore = useUiStore()
-    const userStore = useUserStore()
-    const router = useRouter()
 
     const create = async () => {
+        if (place.value == "" || selectedType.value == null || selectedPic.value == null) {
+            uiStore.showToast("Isi semua data", ToastType.ERROR)
+            return
+        }
+
         isLoading.value = true
         const selectedTypeOption = typeOptions.value.find((option) => option.data == selectedType.value)
         const result = await useAddActivity(userStore.school?.id ?? "", {
@@ -131,7 +161,7 @@
             endTime: endDateTime.value,
             status: ActivityStatus.TODO,
             place: place.value,
-            picId: userStore.user?.id ?? "",
+            picId: selectedPic.value?.id ?? userStore.user?.id ?? "",
             title: selectedTypeOption?.data == ActivityType.OTHER ? customTitle.value : (selectedTypeOption?.label ?? ""),
             type: selectedType.value ?? ActivityType.OTHER
         } satisfies Activity)
