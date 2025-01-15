@@ -6,7 +6,9 @@
             class="radio checked:bg-primary" 
             :value="value"
             :checked="selected.text == value.text" 
-            @change="$emit('change', value)"
+            :disabled="!enabled"
+            @change="enabled ? $emit('change', value) : ''"
+            style="opacity: 100%"
         />
         <Text>{{ value.text }}</Text>
   </label>
@@ -15,7 +17,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
 
-    defineProps({
+    const props = defineProps({
         value: {
             type: Object as PropType<Answer>,
             default: ""
@@ -27,6 +29,10 @@ import type { PropType } from 'vue';
         selected: {
             type: Object as PropType<Answer>,
             default: false
+        },
+        enabled: {
+            type: Boolean,
+            default: true
         }
     })
 

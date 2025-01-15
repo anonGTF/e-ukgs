@@ -58,6 +58,7 @@
                             :value="option"
                             :selected="question.selectedAnswer"
                             :group="`${section.title}-${question.question}`"
+                            :enabled="false"
                         />
                         <Spacer height="h-4"/>
                     </template>

@@ -36,7 +36,8 @@
   const borderColor = computed(() => model.value ? "border-primary" : "border-[#D2D2D2]")
 
   const toggle = () => {
-    model.value = !model.value
-    emit('change', model.value)
+    const newValue = !model.value
+    model.value = newValue
+    emit('change', newValue)
   }
 </script>
