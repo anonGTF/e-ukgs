@@ -19,6 +19,9 @@ export const ohisScoreRule = [
     }
 ]
 
+export const ohisColor = ['#EE3D30', '#FFBE00', '#2DC653']
+export const ohisLabels = ['Buruk', 'Cukup', 'Baik']
+
 export const dmftScoreRule = [
     {
         min: 0,
@@ -52,6 +55,9 @@ export const dmftScoreRule = [
     }
 ]
 
+export const dmftColor = ['#EE3D30', '#E9580E', '#FFBE00', '#34D399', '#2DC653']
+export const dmftLabels = ['Sangat Tinggi', 'Tinggi', 'Sedang', 'Rendah', 'Sangat Rendah']
+
 export const gumScoreRule = [
     {
         min: 0,
@@ -78,6 +84,9 @@ export const gumScoreRule = [
         backgroundColor: "bg-error"
     }
 ]
+
+export const gumColor = ['#EE3D30', '#FFBE00', '#34D399', '#2DC653']
+export const gumLabels = ['Radang Berat', 'Radang sedang', 'Radang ringan', 'Sehat']
 
 export const parentScoreRule = [
     {

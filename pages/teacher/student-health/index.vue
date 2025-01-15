@@ -6,6 +6,43 @@
         <Spacer class="h-6"/>
         <template v-if="activeActivity != null">
             <div class="bg-white border border-border-primary rounded-2xl p-6">
+                <Text :typography="Typography.H3" class="font-semibold">Kegiatan Pemeriksaan Gigi yang Berjalan</Text>
+                <Spacer height="h-6"/>
+                <div class="flex flex-row gap-4">
+                    <BarCard
+                        :labels="ohisLabels"
+                        :background-colors="ohisColor"
+                        :data="[40, 20, 12]"
+                        class="flex-1"
+                        max-height="h-72"
+                        title="Hasil OHIS"
+                    />
+                    <BarCard 
+                        :labels="dmftLabels"
+                        :background-colors="dmftColor"
+                        :data="[40, 20, 12, 39, 10]"
+                        class="flex-1"
+                        max-height="h-72"
+                        title="Hasil DMFT"
+                    />
+                    <BarCard 
+                        :labels="gumLabels"
+                        :background-colors="gumColor"
+                        :data="[40, 20, 12, 39]"
+                        class="flex-1"
+                        max-height="h-72"
+                        title="Kondisi Gusi"
+                    />
+                    <ProgressChart 
+                        title="Progress Pemeriksaan"
+                        :positive="30"
+                        positive-label="Sudah diperiksa"
+                        :negative="12"
+                        negative-label="Belum diperiksa"
+                        description="Kegiatan pemeriksaan sudah mencapai:"
+                    />
+                </div>
+                <Spacer height="h-12"/>
                 <div class="flex flex-row justify-between">
                     <TextField
                         v-model="searchQuery"
@@ -114,6 +151,15 @@
                             <Text :typography="Typography.Body2">{{ getActivityTimeFormatted(data) }}</Text>
                         </div>
                     </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
                     <td class="flex justify-end gap-2">
                         <Button 
                             :type="ButtonType.Outlined" 
@@ -177,7 +223,7 @@
     })
     const filteredStudentResultData = computed(() => studentResultData.value.filter((data) => data.student.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
     const doneActivities = useGetDoneActivitiesByType(userStore.school?.id as string, ActivityType.TOOTH_HEALTH)
-    const doneTableHeader = ["", ""]
+    const doneTableHeader = ["", "Rata-rata OHIS", "Rata-rata DMFT", "Rata-rata Gusi", ""]
 
     const getAction = (data: StudentResult) => {
         const link = data.result == undefined ? `/teacher/student-health/check?id=${data.student.id}` : `/teacher/student-health/${activeActivity.value?.id ?? '-'}/${data.student.id}`
