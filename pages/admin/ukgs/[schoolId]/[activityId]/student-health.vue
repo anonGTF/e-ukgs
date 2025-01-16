@@ -75,9 +75,50 @@
             <!-- PEMERIKSAAN GUSI -->
             <Text :typography="Typography.H2">Hasil Pemeriksaan Gusi</Text>
             <Spacer height="h-4"/>
-            <Text :typography="Typography.H3" class="font-semibold">Kondisi Gusi</Text>
-            <Spacer height="h-1"/>
-            <Text :typography="Typography.Body1">{{ gumsLabel[toothHealthData.gums.score] }}</Text>
+            <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
+                <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Nilai Kondisi Gusi</Text>
+                <Spacer height="h-2"/>
+                <div class="space-y-3">
+                    <div class="flex items-start">
+                        <span class="w-4 font-bold">0</span>
+                        <span class="w-4 text-center">:</span>
+                        <span class="flex-1">Normal.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="w-4 font-bold">1</span>
+                        <span class="w-4 text-center">:</span>
+                        <span class="flex-1">Ada sedikit perubahan warna, bengkak, namun tidak ada pendarahan.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="w-4 font-bold">2</span>
+                        <span class="w-4 text-center">:</span>
+                        <span class="flex-1">Warna kemerahan, bengkak, pendarahan saat diperiksa.</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="w-4 font-bold">3</span>
+                        <span class="w-4 text-center">:</span>
+                        <span class="flex-1">Warna merah terang atau merah menyala, luka, pendarahan spontan.</span>
+                    </div>
+                </div>
+            </div>
+            <Spacer height="h-6"/>
+            <div class="px-4 grid grid-cols-[1fr,2fr,2fr,2fr,2fr,2fr,2fr,1fr] gap-x-6 gap-y-10 w-full items-center">
+                <Text 
+                    v-for="header in gumTableHeaders"
+                    :typography="Typography.Body2" 
+                    class="font-semibold text-center flex-1 -mx-6 py-4 border-b border-border-divider"
+                >{{ header }}</Text>
+                <template v-for="(tooth, toothIndex) in toothHealthData.gums.data">
+                    <Text :typography="Typography.Body2" class="font-semibold text-content-primary text-center flex-1">{{ toothIndex }}</Text>
+                    <template v-for="(sideIndex, index) in gumTableHeaders.slice(1, -1)" :key="index">
+                        <Text v-if="toothHealthData.gums.data[toothIndex][sideIndex.toLocaleLowerCase()] != null" class="text-center flex-1">
+                            {{ toothHealthData.gums.data[toothIndex][sideIndex.toLocaleLowerCase()] }}
+                        </Text>
+                        <Text v-else :typography="Typography.Body2" color="text-content-secondary" class="text-center flex-1">Tidak Tersedia</Text>
+                    </template>
+                    <Text :typography="Typography.Body2" class="text-center flex-1 font-semibold">{{ toothHealthData.gums.score[toothIndex] }}</Text>
+                </template>
+            </div>
             <Spacer class="h-12"/>
             <div class="w-full bg-primary p-4 rounded-lg">
                 <Text :typography="Typography.H2" color="text-white">Hasil Pemeriksaan</Text>
@@ -104,8 +145,8 @@
                 <br/>
                 <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
                     <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor Gusi</Text>
-                    <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(toothHealthData.gums.score) }}</Text>
-                    <ScoreStatusCard :value="toothHealthData.gums.score" :rules="gumScoreRule"/>
+                    <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(toothHealthData.gums.score.averageScore) }}</Text>
+                    <ScoreStatusCard :value="toothHealthData.gums.score.averageScore" :rules="gumScoreRule"/>
                 </div>
             </div>
 
@@ -247,6 +288,16 @@
         const scoreList = Object.values(toothHealthData.value?.ohis.kalkulus)
         return scoreList.reduce((sum, value) => sum + value, 0) / scoreList.length
     })
+    const gumTableHeaders = [
+        "Index Gigi",
+        "Mesial",
+        "Bucal",
+        "Labial",
+        "Distal",
+        "Palatal",
+        "Lingual",
+        "TOTAL"
+    ]
     const referralTableHeader = ref([
         "",
         "Foto",

@@ -47,7 +47,7 @@
                         <Text><span class="font-bold">{{ index + 1 }}.</span> {{ question.question }}</Text>
                         <Spacer height="h-2"/>
                         <template v-if="section.answerType == AnswerType.MULTIPLE_CHOICE" v-for="(option, optionIndex) in question.answerOption">
-                            <div class="flex flex-row gap-2 items-center cursor-pointer" @click="question.selectedAnswer = option">
+                            <div class="flex flex-row gap-2 items-center cursor-pointer">
                                 <SelectionButton
                                     :selected="question.selectedAnswer?.text == option.text"
                                     :icon="multipleChoiceLabel[optionIndex].icon"
@@ -62,6 +62,7 @@
                                 :value="option"
                                 :selected="question.selectedAnswer"
                                 :group="`${section.title}-${question.question}`"
+                                :enabled="false"
                             />
                         </template>
                         <template v-if="section.answerType == AnswerType.RATING" v-for="option in question.answerOption">
@@ -69,6 +70,7 @@
                                 :value="option"
                                 :selected="question.selectedAnswer"
                                 :group="`${section.title}-${question.question}`"
+                                :enabled="false"
                             />
                         </template>
                         <Spacer height="h-4"/>
