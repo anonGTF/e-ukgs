@@ -12,32 +12,32 @@
                     <BarCard
                         :labels="ohisLabels"
                         :background-colors="ohisColor"
-                        :data="[40, 20, 12]"
+                        :data="ohisChartData"
                         class="flex-1"
                         max-height="h-72"
-                        title="Hasil OHIS"
+                        title="OHIS"
                     />
                     <BarCard 
                         :labels="dmftLabels"
                         :background-colors="dmftColor"
-                        :data="[40, 20, 12, 39, 10]"
+                        :data="dmftChartData"
                         class="flex-1"
                         max-height="h-72"
-                        title="Hasil DMFT"
+                        title="DMFT"
                     />
                     <BarCard 
                         :labels="gumLabels"
                         :background-colors="gumColor"
-                        :data="[40, 20, 12, 39]"
+                        :data="gumsChartData"
                         class="flex-1"
                         max-height="h-72"
                         title="Kondisi Gusi"
                     />
                     <ProgressChart 
                         title="Progress Pemeriksaan"
-                        :positive="30"
+                        :positive="positiveDataCount"
                         positive-label="Sudah diperiksa"
-                        :negative="12"
+                        :negative="negativeDataCount"
                         negative-label="Belum diperiksa"
                         description="Kegiatan pemeriksaan sudah mencapai:"
                     />
@@ -151,15 +151,6 @@
                             <Text :typography="Typography.Body2">{{ getActivityTimeFormatted(data) }}</Text>
                         </div>
                     </td>
-                    <td>
-                        
-                    </td>
-                    <td>
-                        
-                    </td>
-                    <td>
-                        
-                    </td>
                     <td class="flex justify-end gap-2">
                         <Button 
                             :type="ButtonType.Outlined" 
@@ -200,9 +191,9 @@
         "",
         "Nama Siswa",
         "Jenis Kelamin",
-        "Hasil OHIS",
-        "Hasil DMFT",
-        "Hasil Gusi",
+        "OHIS",
+        "DMFT",
+        "Kondisi Gusi",
         ""
     ])
 
@@ -212,6 +203,7 @@
     const activeActivity = ref<Activity | null>(null)
     const studentData = useGetAllStudents(userStore.school?.id)
     const healthData = computed(() => useGetAllToothHealth(userStore.school?.id ?? "", activeActivity.value?.id ?? "-"))
+
     const studentResultData = computed(() => {
         return studentData.value
             .sort((curr, next) => curr.name.localeCompare(next.name))
@@ -222,8 +214,30 @@
             .sort((curr, next) => curr.result === undefined ? -1 : next.result === undefined ? 1 : 0)
     })
     const filteredStudentResultData = computed(() => studentResultData.value.filter((data) => data.student.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
+
+    const ohisChartData = computed(() => {
+        const scoreList = healthData.value.value.map((data) => findRule(ohisScoreRule, data.ohis.totalScore)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, ohisLabels)
+    })
+
+    const dmftChartData = computed(() => {
+        const scoreList = healthData.value.value.map((data) => findRule(dmftScoreRule, data.dmft.totalScore)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, dmftLabels)
+    })
+
+    const gumsChartData = computed(() => {
+        const scoreList = healthData.value.value.map((data) => findRule(gumScoreRule, data.gums.score.averageScore)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, gumLabels)
+    })
+
+    const positiveDataCount = computed(() => studentResultData.value.reduce((acc, data) => acc + ((data.result != undefined) ? 1 : 0), 0))
+    const negativeDataCount = computed(() => studentResultData.value.length - positiveDataCount.value)
+
     const doneActivities = useGetDoneActivitiesByType(userStore.school?.id as string, ActivityType.TOOTH_HEALTH)
-    const doneTableHeader = ["", "Rata-rata OHIS", "Rata-rata DMFT", "Rata-rata Gusi", ""]
+    const doneTableHeader = ["", ""]
 
     const getAction = (data: StudentResult) => {
         const link = data.result == undefined ? `/teacher/student-health/check?id=${data.student.id}` : `/teacher/student-health/${activeActivity.value?.id ?? '-'}/${data.student.id}`

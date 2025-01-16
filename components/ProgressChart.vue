@@ -28,7 +28,7 @@
         <Spacer height="h-6"/>
         <Text class="text-center" :typography="Typography.Body2">{{ description }}</Text>
         <Spacer height="h-2"/>
-        <Text class="text-center font-semibold" color="text-black" :typography="Typography.Label">{{ percentage.toFixed(2) }}%</Text>
+        <Text class="text-center font-semibold" color="text-black" :typography="Typography.Label">{{ percentage.toFixed() }}%</Text>
     </div>
 </template>
   
@@ -64,13 +64,13 @@
     const negativeDastArray = computed(() => 240 - positiveDashArray.value)
     const negativeDashOffset = computed(() => positiveDashArray.value * (-1) - 15)
   
-    const positiveStyle = reactive({
+    const positiveStyle = computed(() => ({
         'stroke-dasharray': `${positiveDashArray.value} 999`
-    })
-    const negativeStyle = reactive({
+    }))
+    const negativeStyle = computed(() => ({
         'stroke-dasharray': `${negativeDastArray.value} 999`,
         'stroke-dashoffset': `${negativeDashOffset.value}`
-    })
+    }))
 
     const percentage = computed(() => props.positive / (props.positive + props.negative) * 100)
 </script>

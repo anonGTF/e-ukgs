@@ -163,10 +163,15 @@
         if (selectedSchool.value == null || selectedStudent.value == null || activeActivity.value == null || entryData.value == null) return
 
         isLoading.value = true
-        const result = await useAddEntry(selectedSchool.value.id, activeActivity.value.id, {
-            ...entryData.value,
-            id: selectedStudent.value.id
-        })
+        const result = await useAddEntry(
+            selectedSchool.value.id, 
+            activeActivity.value.id, 
+            {
+                ...entryData.value,
+                id: selectedStudent.value.id,
+                sections: getScore()
+            }
+        )
 
         if (isLeft(result)) {
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
@@ -175,6 +180,34 @@
             uiStore.showToast("Jawaban Berhasil Disimpan!", ToastType.SUCCESS)
             router.back()
         }
+    }
+
+    const getScore = () => {
+        if (entryData.value == null) return []
+
+        const educationSection = entryData.value.sections[0]
+        const educationScore = educationSection.questions.reduce((acc, question) => acc + (question.selectedAnswer?.point ?? 0), 0) / educationSection.questions.length * 100
+
+        const attitudeSection = entryData.value.sections[1]
+        const attitudeScore = attitudeSection.questions.reduce((acc, question) => acc + (question.selectedAnswer?.point ?? 0), 0)
+
+        const actionSection = entryData.value.sections[2]
+        const actionScore = actionSection.questions.reduce((acc, question) => acc + (question.selectedAnswer?.point ?? 0), 0) / actionSection.questions.length * 100
+
+        return [
+            {
+                ...educationSection,
+                score: educationScore
+            },
+            {
+                ...attitudeSection,
+                score: attitudeScore
+            },
+            {
+                ...actionSection,
+                score: actionScore
+            }
+        ]
     }
 
     watch(selectedSchool, async () => {

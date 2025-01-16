@@ -109,6 +109,9 @@ export const parentScoreRule = [
     }
 ]
 
+export const parentColor = ['#EE3D30', '#FFBE00', '#2DC653']
+export const parentLabels = ["Kurang", "Cukup", "Baik"]
+
 export const debrisLabel = {
     0: "Tidak ada debris atau stain",
     1: "Kurang dari 1/3 permukaan gigi tertutupi Debris atau terdapat stain menutupi permukaan gigi",
@@ -134,3 +137,58 @@ export const gumsLabel = {
 }
 
 export const roundScore = (score: number) => parseFloat(score.toFixed(2)) === score ? score : parseFloat(score.toFixed(2))
+
+export const educationActionScoreRule = [
+    {
+        min: 76,
+        max: 100,
+        label: "Baik",
+        backgroundColor: "bg-success"
+    },
+    {
+        min: 56,
+        max: 75,
+        label: "Cukup",
+        backgroundColor: "bg-warning"
+    },
+    {
+        min: 0,
+        max: 55,
+        label: "Kurang",
+        backgroundColor: "bg-error"
+    }
+]
+
+export const educationActionColor = ['#EE3D30', '#FFBE00', '#2DC653']
+export const educationActionLabels = ['Kurang', 'Cukup', 'Baik']
+
+export const attitudeScoreRule = [
+    {
+        min: 30,
+        max: 40,
+        label: "Baik",
+        backgroundColor: "bg-success"
+    },
+    {
+        min: 19,
+        max: 29,
+        label: "Cukup",
+        backgroundColor: "bg-warning"
+    },
+    {
+        min: 0,
+        max: 18,
+        label: "Kurang",
+        backgroundColor: "bg-error"
+    }
+]
+
+export const attitudeColor = ['#EE3D30', '#FFBE00', '#2DC653']
+export const attitudeLabels = ['Kurang', 'Cukup', 'Baik']
+
+export const findRule = (rules: ScoreStatusRule[], value: number) => rules.find((rule) => value >= rule.min && value <= rule.max)
+export const countByLabel = (scoreRules: ScoreStatusRule[]): Record<string, number> => scoreRules.reduce((acc, rule) => {
+    acc[rule.label] = (acc[rule.label] || 0) + 1
+    return acc
+}, {} as Record<string, number>)
+export const getCountsInOrder = (counts: Record<string, number>, orderedLabels: string[]): number[] => orderedLabels.map((label) => counts[label] || 0)

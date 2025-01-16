@@ -2,10 +2,47 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Kuesioner Perilaku Kesehatan Gigi Siswa {{ userStore.school?.name }}</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Penilaian Perilaku Kesehatan Gigi Siswa {{ userStore.school?.name }}</Text>
         <Spacer class="h-6"/>
         <template v-if="activeActivity != null">
             <div class="bg-white border border-border-primary rounded-2xl p-6">
+                <Text :typography="Typography.H3" class="font-semibold">Kegiatan Penilaian Perilaku Kesehatan Gigi yang Berjalan</Text>
+                <Spacer height="h-6"/>
+                <div class="flex flex-row gap-4">
+                    <BarCard
+                        :labels="educationActionLabels"
+                        :background-colors="educationActionColor"
+                        :data="educationChartData"
+                        class="flex-1"
+                        max-height="h-72"
+                        title="Skor Pengetahuan"
+                    />
+                    <BarCard 
+                        :labels="attitudeLabels"
+                        :background-colors="attitudeColor"
+                        :data="attitudeChartData"
+                        class="flex-1"
+                        max-height="h-72"
+                        title="Skor Sikap"
+                    />
+                    <BarCard 
+                        :labels="educationActionLabels"
+                        :background-colors="educationActionColor"
+                        :data="actionChartData"
+                        class="flex-1"
+                        max-height="h-72"
+                        title="Skor Tindakan"
+                    />
+                    <ProgressChart 
+                        title="Progress Penilaian"
+                        :positive="positiveDataCount"
+                        positive-label="Sudah mengisi"
+                        :negative="negativeDataCount"
+                        negative-label="Belum mengisi"
+                        description="Kegiatan penilaian sudah mencapai:"
+                    />
+                </div>
+                <Spacer height="h-12"/>
                 <TextField
                     v-model="searchQuery"
                     :placeholder="isSmall(activeBreakpoint) ? 'Cari siswa dgn nama' : 'Cari siswa berdasarkan nama'"
@@ -25,28 +62,28 @@
                             <Text :typography="Typography.Body2">{{ data.student.name }}</Text>
                         </td>
                         <td>
-                            <!-- <ScoreStatusCard
-                                v-if="data.result?.ohis != undefined"
-                                :rules="ohisScoreRule"
-                                :value="data.result?.ohis.totalScore ?? 999"
+                            <ScoreStatusCard
+                                v-if="data.result?.sections[0].score != null"
+                                :rules="educationActionScoreRule"
+                                :value="data.result?.sections[0].score ?? 999"
                             />
-                            <Text v-else :typography="Typography.Body2">-</Text> -->
+                            <Text v-else :typography="Typography.Body2">-</Text>
                         </td>
                         <td>
-                            <!-- <ScoreStatusCard
-                                v-if="data.result?.dmft != undefined"
-                                :rules="dmftScoreRule"
-                                :value="data.result?.dmft.totalScore ?? 999"
+                            <ScoreStatusCard
+                                v-if="data.result?.sections[1].score != null"
+                                :rules="attitudeScoreRule"
+                                :value="data.result?.sections[1].score ?? 999"
                             />
-                            <Text v-else :typography="Typography.Body2">-</Text> -->
+                            <Text v-else :typography="Typography.Body2">-</Text>
                         </td>
                         <td>
-                            <!-- <ScoreStatusCard
-                                v-if="data.result?.gums != undefined"
-                                :rules="gumScoreRule"
-                                :value="data.result?.gums.score ?? 999"
+                            <ScoreStatusCard
+                                v-if="data.result?.sections[2].score != null"
+                                :rules="educationActionScoreRule"
+                                :value="data.result?.sections[2].score ?? 999"
                             />
-                            <Text v-else :typography="Typography.Body2">-</Text> -->
+                            <Text v-else :typography="Typography.Body2">-</Text>
                         </td>
                         <td class="flex justify-end">
                             <Button 
@@ -165,6 +202,28 @@
             .sort((curr, next) => curr.result === undefined ? -1 : next.result === undefined ? 1 : 0)
     })
     const filteredStudentResultData = computed(() => studentResultData.value.filter((data) => data.student.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
+
+    const educationChartData = computed(() => {
+        const scoreList = entries.value.value.map((data) => findRule(educationActionScoreRule, data.sections[0].score ?? 0)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, educationActionLabels)
+    })
+
+    const attitudeChartData = computed(() => {
+        const scoreList = entries.value.value.map((data) => findRule(attitudeScoreRule, data.sections[1].score ?? 0)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, attitudeLabels)
+    })
+
+    const actionChartData = computed(() => {
+        const scoreList = entries.value.value.map((data) => findRule(educationActionScoreRule, data.sections[2].score ?? 0)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, educationActionLabels)
+    })
+
+    const positiveDataCount = computed(() => studentResultData.value.reduce((acc, data) => acc + ((data.result != undefined) ? 1 : 0), 0))
+    const negativeDataCount = computed(() => studentResultData.value.length - positiveDataCount.value)
+
     const doneActivities = useGetDoneActivitiesByType(userStore.school?.id as string, ActivityType.STUDENT_FORM)
     const doneTableHeader = ["", ""]
 

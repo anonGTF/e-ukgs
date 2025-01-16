@@ -2,7 +2,7 @@
     <div class="m-2 sm:m-8">
        <Breadcrumb :items="breadcrumbs"/>
        <Spacer class="h-6"/>
-       <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Detail Hasil Pemeriksaan Gigi</Text>
+       <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Detail Hasil Penilaian Perilaku Kesehatan Gigi</Text>
        <Spacer class="h-6"/>
        <div v-if="studentData != null && entryData != null" class="bg-white border border-border-primary rounded-2xl p-6">
            <Text :typography="Typography.H2">Identitas Diri</Text>
@@ -15,17 +15,17 @@
            <Spacer class="h-0.5"/>
            <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ studentData.grade }}</Text>
            <Spacer height="h-4"/>
-           <Text :typography="Typography.Body1">Skor OHIS</Text>
+           <Text :typography="Typography.Body1">Skor Pengetahuan</Text>
            <Spacer class="h-0.5"/>
-           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.parentData?.name }}</Text>
+           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.sections[0].score?.toFixed(0) ?? 0 }}</Text>
            <Spacer height="h-4"/>
-           <Text :typography="Typography.Body1">Skor DMFT</Text>
+           <Text :typography="Typography.Body1">Skor Sikap</Text>
            <Spacer class="h-0.5"/>
-           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.parentData?.relation }}</Text>
+           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.sections[1].score?.toFixed(0) ?? 0 }}</Text>
            <Spacer height="h-4"/>
-           <Text :typography="Typography.Body1">Skor Gusi</Text>
+           <Text :typography="Typography.Body1">Skor Tindakan</Text>
            <Spacer class="h-0.5"/>
-           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.sections[0].score?.toFixed(2) ?? 0 }}</Text>
+           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.sections[2].score?.toFixed(0) ?? 0 }}</Text>
            <Spacer height="h-12"/>
            <div class="w-full border border-border-divider border-dashed"/>
            <Spacer height="h-8"/>

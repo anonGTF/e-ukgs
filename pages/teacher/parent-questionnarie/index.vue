@@ -2,10 +2,31 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Kuesioner Peran Orang Tua Siswa {{ userStore.school?.name }}</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Penilaian Peran Orang Tua Siswa {{ userStore.school?.name }}</Text>
         <Spacer class="h-6"/>
         <template v-if="activeActivity != null">
             <div class="bg-white border border-border-primary rounded-2xl p-6">
+                <Text :typography="Typography.H3" class="font-semibold">Kegiatan Penilaian Peran Orang Tua yang Berjalan</Text>
+                <Spacer height="h-6"/>
+                <div class="flex flex-row gap-4">
+                    <BarCard
+                        :labels="parentLabels"
+                        :background-colors="parentColor"
+                        :data="parentChartData"
+                        class="flex-1"
+                        max-height="h-72"
+                        title="Hasil"
+                    />
+                    <ProgressChart 
+                        title="Progress Penilaian"
+                        :positive="positiveDataCount"
+                        positive-label="Sudah mengisi"
+                        :negative="negativeDataCount"
+                        negative-label="Belum mengisi"
+                        description="Kegiatan penilaian sudah mencapai:"
+                    />
+                </div>
+                <Spacer height="h-12"/>
                 <TextField
                     v-model="searchQuery"
                     :placeholder="isSmall(activeBreakpoint) ? 'Cari siswa dgn nama' : 'Cari siswa berdasarkan nama'"
@@ -155,6 +176,16 @@
             .sort((curr, next) => curr.result === undefined ? -1 : next.result === undefined ? 1 : 0)
     })
     const filteredStudentResultData = computed(() => studentResultData.value.filter((data) => data.student.name.toLowerCase().includes(searchQuery.value.toLowerCase())))
+
+    const parentChartData = computed(() => {
+        const scoreList = entries.value.value.map((data) => findRule(parentScoreRule, data.sections[0].score ?? 0)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, parentLabels)
+    })
+
+    const positiveDataCount = computed(() => studentResultData.value.reduce((acc, data) => acc + ((data.result != undefined) ? 1 : 0), 0))
+    const negativeDataCount = computed(() => studentResultData.value.length - positiveDataCount.value)
+
     const doneActivities = useGetDoneActivitiesByType(userStore.school?.id as string, ActivityType.PARENT_FORM)
     const doneTableHeader = ["", ""]
 
