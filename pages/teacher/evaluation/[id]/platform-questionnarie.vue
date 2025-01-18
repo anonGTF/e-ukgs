@@ -1,133 +1,100 @@
 <template>
     <div class="my-6 min-h-dvh">
-        <Text :typography="Typography.H1" class="text-center">Form Kuesioner Perilaku Kesehatan Gigi Siswa</Text>
+        <Text :typography="Typography.H1" class="text-center">Form Kuesioner Peran Guru</Text>
         <Spacer height="h-6"/>
-        <div v-if="!questionMode" class="bg-white rounded-2xl p-6">
-            <CustomDropdownSelector
-                :selected="wrapSchoolWithDropdownOption(selectedSchool)"
-                label="Sekolah Asal"
-                placeholder="Pilih sekolah asal kamu"
-                search-placeholder="Cari Sekolah"
-                :options="schoolDropdownOptions"
-                class="w-full"
-                @change="data => selectedSchool = data.data"
-            />
-            <Spacer height="h-4"/>
-            <CustomDropdownSelector
-                v-if="selectedSchool"
-                :selected="wrapStudentWithDropdownOption(selectedStudent)"
-                label="Nama"
-                placeholder="Pilih siswa"
-                search-placeholder="Cari sesuai nama"
-                :options="studentDropdownOptions"
-                class="w-full"
-                @change="data => selectedStudent = data.data"
-            />
-            <Spacer height="h-6"/>
-            <Text>Pastiin sekolah dan nama siswa yang kamu pilih udah sesuai ya~</Text>
-            <Spacer height="h-4"/>
-            <Button
-                full-width
-                @click="goToQuestionMode"
-            >
-                Selanjutnya
-            </Button>
-        </div>
-        <template v-if="questionMode">
-            <div class="bg-primary rounded-2xl px-6 py-4">
-                <Text :typography="Typography.Label" color="text-white" class="font-semibold">Halo, {{ selectedStudent?.name }}</Text>
-                <Text color="text-gray-100">Pastiin semua soal udah terjawab sebelum submit ya. Jawab dengan jujur <span class="text-xl">😉</span></Text>
+        <template v-if="entryData" v-for="section in entryData.sections">
+            <div class="bg-white rounded-2xl px-6 py-4">
+                <Text 
+                    v-if="section.title != ''"
+                    :typography="Typography.Label"
+                    color="text-black"
+                    class="font-semibold"
+                >
+                    {{ section.title }}
+                </Text>
+                <Spacer height="h-4"/>
+                <template v-for="(question, index) in section.questions">
+                    <Text><span class="font-bold">{{ index + 1 }}.</span> {{ question.question }}</Text>
+                    <Spacer height="h-2"/>
+                    <template v-if="section.answerType == AnswerType.MULTIPLE_CHOICE" v-for="(option, optionIndex) in question.answerOption">
+                        <div class="flex flex-row gap-2 items-center cursor-pointer" @click="question.selectedAnswer = option">
+                            <SelectionButton
+                                :selected="question.selectedAnswer?.text == option.text"
+                                :icon="multipleChoiceLabel[optionIndex].icon"
+                                :selected-icon="multipleChoiceLabel[optionIndex].selectedIcon"
+                                dense
+                                @select="question.selectedAnswer = option"
+                            />
+                            <Text>{{ option.text }}</Text>
+                        </div>
+                    </template>
+                    <template v-if="section.answerType == AnswerType.BINARY_OPTION" v-for="option in question.answerOption">
+                        <Radio
+                            :value="option"
+                            :selected="question.selectedAnswer"
+                            :group="`${section.title}-${question.question}`"
+                            @change="data => question.selectedAnswer = data"
+                        />
+                    </template>
+                    <Spacer height="h-4"/>
+                </template>
             </div>
             <Spacer height="h-6"/>
-            <template v-if="questionnarie" v-for="section in questionnarie.sections">
-                <div class="bg-white rounded-2xl px-6 py-4">
-                    <Text 
-                        v-if="section.title != ''"
-                        :typography="Typography.Label"
-                        color="text-black"
-                        class="font-semibold"
-                    >
-                        {{ section.title }}
-                    </Text>
-                    <Spacer height="h-4"/>
-                    <template v-for="(question, index) in section.questions">
-                        <Text><span class="font-bold">{{ index + 1 }}.</span> {{ question.question }}</Text>
-                        <Spacer height="h-2"/>
-                        <template v-if="section.answerType == AnswerType.MULTIPLE_CHOICE" v-for="(option, optionIndex) in question.answerOption">
-                            <div class="flex flex-row gap-2 items-center cursor-pointer" @click="question.selectedAnswer = option">
-                                <SelectionButton
-                                    :selected="question.selectedAnswer?.text == option.text"
-                                    :icon="multipleChoiceLabel[optionIndex].icon"
-                                    :selected-icon="multipleChoiceLabel[optionIndex].selectedIcon"
-                                    dense
-                                    @select="question.selectedAnswer = option"
-                                />
-                                <Text>{{ option.text }}</Text>
-                            </div>
-                        </template>
-                        <template v-if="section.answerType == AnswerType.BINARY_OPTION" v-for="option in question.answerOption">
-                            <Radio
-                                :value="option"
-                                :selected="question.selectedAnswer"
-                                :group="`${section.title}-${question.question}`"
-                                @change="data => question.selectedAnswer = data"
-                            />
-                        </template>
-                        <Spacer height="h-4"/>
-                    </template>
-                </div>
-                <Spacer height="h-6"/>
-            </template>
-            <Button
-                full-width
-                @click="submit"
-            >
-                Submit
-            </Button>
         </template>
+        <Button
+            full-width
+            :loading="isLoading"
+            @click="submit"
+        >
+            Submit
+        </Button>
     </div>
 </template>
 
 <script setup lang="ts">
+    const route = useRoute()
     const router = useRouter()
     const uiStore = useUiStore()
+    const userStore = useUserStore()
 
-    const schools = useGetAllSchools()
-    const selectedSchool = ref<School | null>(null)
-    const schoolDropdownOptions = computed(() => schools.value.map((school) => ({
-        label: school.name,
-        data: school
-    })))
-    const wrapSchoolWithDropdownOption = (data: School | null): CustomDropdownOption<School> | undefined => 
-        schoolDropdownOptions.value.find((option) => option.data == data)
+    const entryData = ref<Questionnarie | null>(null)
+    const isLoading = ref(false)
 
-    const students = computed(() => useGetAllStudents(selectedSchool.value?.id))
-    const selectedStudent = ref<Student | null>(null)
-    const studentDropdownOptions = computed(() => students.value.value.map((student) => ({
-        label: student.name,
-        data: student
-    })))
-    const wrapStudentWithDropdownOption = (data: Student | null): CustomDropdownOption<Student> | undefined => 
-        studentDropdownOptions.value.find((option) => option.data == data)
-    
-    const questionMode = ref(false)
-    const questionnarie = ref<Questionnarie | null>(null)
+    const submit = async () => {
+        if (entryData.value == null) return
 
-    const goToQuestionMode = () => {
-        questionMode.value = true
+        isLoading.value = true
+        const result = await useAddEntry(userStore.school?.id ?? "-", route.params.id as string, {
+            ...entryData.value,
+            id: userStore.user?.id ?? "-",
+            sections: [{
+                ...entryData.value.sections[0],
+                score: getScore(entryData.value.sections[0])
+            }]
+        })
+
+        if (isLeft(result)) {
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
+            isLoading.value = false
+        } else {
+            uiStore.showToast("Jawaban Berhasil Disimpan!", ToastType.SUCCESS)
+            router.back()
+        }
     }
 
-    const submit = () => {
-        console.log(questionnarie.value)
+    const getScore = (section: Section): number => {
+        const scoreList = section.questions.map((question) => question.selectedAnswer?.point ?? 0)
+        const totalScore = scoreList.reduce((acc, curr) => acc + curr, 0)
+        return totalScore / scoreList.length * 100
     }
 
     onMounted(async () => {
-        const result = await useGetQuestionnarieByType(QuestionType.SoalPerilaku)
+        const result = await useGetQuestionnarieByType(QuestionType.EvaluasiEUkgs)
         if (isLeft(result)) {
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
             router.back()
         } else {
-            questionnarie.value = unwrapEither(result)
+            entryData.value = unwrapEither(result)
         }
     })
 </script>

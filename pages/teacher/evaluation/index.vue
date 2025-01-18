@@ -8,17 +8,17 @@
             <div class="bg-white border border-border-primary rounded-2xl p-6">
                 <div class="flex flex-row justify-between items-center">
                     <Text :typography="Typography.Label" class="font-semibold">1. Evaluasi Peran Guru</Text>
-                    <Button dense :to="`/teacher/evaluation/${activeActivity.id}/teacher-questionnarie`">
+                    <Button v-if="!(currentTeacherData?.peranGuru ?? false)" dense :to="`/teacher/evaluation/${activeActivity.id}/teacher-questionnarie`">
                         Isi Kuesioner
                     </Button>
                 </div>
-                <!-- <Spacer height="h-6"/>
-                <div class="flex flex-row gap-2 items-center">
-                    <Text :typography="Typography.Label" class="font-semibold">Evaluasi Penggunaan Platform E-UKGS</Text>
-                    <Button dense to="/teacher/evaluation/teacher-questionnarie">
+                <Spacer height="h-6"/>
+                <div class="flex flex-row justify-between items-center">
+                    <Text :typography="Typography.Label" class="font-semibold">2. Evaluasi E-UKGS</Text>
+                    <Button v-if="!(currentTeacherData?.evaluation ?? false)" dense :to="`/teacher/evaluation/${activeActivity.id}/platform-questionnarie`">
                         Isi Kuesioner
                     </Button>
-                </div> -->
+                </div>
             </div>
             <Spacer class="h-6"/>
             <div class="bg-white border border-border-primary rounded-2xl p-6">
@@ -27,13 +27,36 @@
                 >
                     <tr v-for="(data, index) in teacherWithEntryData">
                         <th>
-                            <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
+                            <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}.</Text>
                         </th>
                         <td>
-                            <Text :typography="Typography.Body2">{{ data.teacher.name }}</Text>
+                            <Text :typography="Typography.Body2">{{ data.user.name }}</Text>
                         </td>
                         <td>
-                            <Text :typography="Typography.Body2">{{ data.isPeranGuruDone ? "Sudah Mengisi" : "Belum Mengisi" }}</Text>
+                            <Text :typography="Typography.Body2">{{ data.user.role }}</Text>
+                        </td>
+                        <td>
+                            <Text :typography="Typography.Body2">
+                                {{ data.peranGuru ? "Sudah Mengisi" : "Belum Mengisi" }}
+                            </Text>
+                        </td>
+                        <td>
+                            <Text :typography="Typography.Body2">
+                                {{ data.evaluation ? "Sudah Mengisi" : "Belum Mengisi" }}
+                            </Text>
+                        </td>
+                        <td class="flex justify-end">
+                            <Button
+                                v-if="data.peranGuru != null || data.evaluation != null"
+                                :type="ButtonType.Outlined" 
+                                dense
+                                :to="`/teacher/evaluation/${activeActivity.id}`"
+                            >
+                                Lihat Detail
+                            </Button>
+                            <div v-else class="p-2">
+                                <Text>Belum Mengisi</Text>
+                            </div>
                         </td>
                     </tr>
                 </DataTable>
@@ -84,27 +107,38 @@
 
     const userStore = useUserStore()
     const activeActivity = ref<Activity | null>(null)
-    const teachers = ref<User[]>([])
+    const users = useGetAllUsers()
+    const filteredUsers = computed(() => users.value
+        .filter((user) => user.role == "admin" || user.schoolId == userStore.school?.id)
+        .sort((a, b) => {
+            if (a.role === b.role) return 0
+            if (a.role === "teacher") return -1
+            if (b.role === "teacher") return 1
+            if (a.role === "admin") return -1
+            if (b.role === "admin") return 1
+            return 0
+        })
+    )
     const entries = computed(() => useGetAllEntries(userStore.school?.id ?? "", activeActivity.value?.id ?? "-"))
-    const teacherWithEntryData = computed(() => teachers.value.map((teacher) => ({
-        teacher,
-        isPeranGuruDone: entries.value.value.find((entry) => entry.id == teacher.id && entry.type == QuestionType.PeranGuru)
+    const teacherWithEntryData = computed(() => filteredUsers.value.map((user) => ({
+        user,
+        peranGuru: entries.value.value.find((entry) => entry.id == user.id && entry.type == QuestionType.PeranGuru),
+        evaluation: entries.value.value.find((entry) => entry.id == user.id && entry.type == QuestionType.EvaluasiEUkgs)
     })))
+    const currentTeacherData = computed(() => teacherWithEntryData.value.find((data) => data.user.id == userStore.user?.id))
     const teacherTableHeaders = ref([
         "",
-        "Nama Guru",
-        "Pengisian Peran Guru"
+        "Nama",
+        "Tugas",
+        "Peran Guru",
+        "Evaluasi",
+        ""
     ])
 
     onMounted(async () => {
         const result = await useGetActiveActivityByType(userStore.school?.id as string, ActivityType.EVALUATION)
         if (isRight(result)) {
             activeActivity.value = unwrapEither(result)
-        }
-
-        const teacherResult = await useGetAllUsersBySchoolId(userStore.school?.id ?? "")
-        if (isRight(result)) {
-            teachers.value = unwrapEither(teacherResult) as User[]
         }
     })
 </script>
