@@ -430,6 +430,130 @@
                     </div>
                 </div>
             </div>
+
+            <div v-if="activity.type == ActivityType.EVALUATION" class="bg-white border border-border-primary rounded-2xl p-6">
+                <Text :typography="Typography.H2">Outcome Kegiatan Evaluasi</Text>
+                <Spacer height="h-8"/>
+                <Text :typography="Typography.H3" class="font-semibold">Peran Guru</Text>
+                <Spacer height="h-3"/>
+                <div class="flex flex-row gap-4">
+                    <BarCard
+                        :labels="teacherLabels"
+                        :background-colors="teacherColor"
+                        :data="teacherChartData"
+                        class="flex-1"
+                        max-height="h-96"
+                        title="Skor Peran Guru"
+                    />
+                    <div class="bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Kriteria Skor Peran Guru</Text>
+                        <Spacer height="h-2"/>
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <span class="font-bold">80 - 100</span>
+                                <span class="w-4 text-center">:</span>
+                                <span class="flex-1">Baik</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="font-bold">60 - 79</span>
+                                <span class="w-4 text-center">:</span>
+                                <span class="flex-1">Cukup</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="font-bold">0 - 59</span>
+                                <span class="w-4 text-center">:</span>
+                                <span class="flex-1">Kurang</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <Spacer height="h-8"/>
+                <Text>
+                    Berdasarkan hasil pengisian kuisioner peran guru pada tanggal:<span class="font-semibold">{{ getActivityTimeFormatted(activity) }}</span><br><br>
+                    dari <span class="font-semibold">{{ totalTeacherSubmitted }}</span> guru yang mengisi kuisioner, didapatkan kesimpulan bahwa. Pada <span class="font-semibold">peran guru</span> berikut 5 pertanyaan dengan jumlah jawaban "Tidak" terbanyak: 
+                </Text>
+                <Spacer height="h-4"/>
+                <div v-for="(totalWrong, question) in top5TeacherQuestionFalse" class="flex flex-row gap-2 mb-4 items-center">
+                    <div class="w-8 h-8 bg-primary p-4 rounded-full flex justify-center items-center">
+                        <Text color="text-white" class="font-semibold">{{ totalWrong }}</Text>
+                    </div>
+                    <Text :typography="Typography.Label">{{ question }}</Text>
+                </div>
+
+                <Spacer height="h-8"/>
+                <Text :typography="Typography.H3" class="font-semibold">Evaluasi E-UKGS</Text>
+                <Spacer height="h-3"/>
+                <div class="flex flex-row gap-4">
+                    <BarCard
+                        :labels="evalLabels"
+                        :background-colors="evalColor"
+                        :data="evalChartData"
+                        class="flex-1"
+                        max-height="h-96"
+                        title="Skor Evaluasi E-UKGS"
+                    />
+                    <div class="bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Kriteria Skor Evaluasi</Text>
+                        <Spacer height="h-2"/>
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <span class="font-bold">80 - 100</span>
+                                <span class="w-4 text-center">:</span>
+                                <span class="flex-1">Baik</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="font-bold">60 - 79</span>
+                                <span class="w-4 text-center">:</span>
+                                <span class="flex-1">Cukup</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="font-bold">0 - 59</span>
+                                <span class="w-4 text-center">:</span>
+                                <span class="flex-1">Kurang</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <template v-if="evalChartData[2] > 0">
+                    <Spacer height="h-4"/>
+                    <Text :typography="Typography.Label" class="font-semibold" color="text-black">Mutu Manajemen Kategori Baik</Text>
+                    <Spacer height="h-2"/>
+                    <Text>Terdapat {{ evalChartData[2] }} guru/perawat yang menilai mutu manajemen termasuk kategori baik. Berikut adalah hal yang dapat dilakukan untuk mempertahankan kategori baik sehingga UKGS dapat berjalan dengan optimal:</Text>
+                    <Spacer height="h-4"/>
+                    <div v-for="(evalActivity, index) in evalBaikActivity" class="flex flex-row gap-2 mb-4 items-center">
+                        <div class="w-8 h-8 bg-success p-4 rounded-full flex justify-center items-center">
+                            <Text color="text-white" class="font-semibold">{{ index + 1 }}</Text>
+                        </div>
+                        <Text :typography="Typography.Label">{{ evalActivity }}</Text>
+                    </div>
+                </template>
+                <template v-if="evalChartData[1] > 0">
+                    <Spacer height="h-4"/>
+                    <Text :typography="Typography.Label" class="font-semibold" color="text-black">Mutu Manajemen Kategori Cukup</Text>
+                    <Spacer height="h-2"/>
+                    <Text>Terdapat {{ evalChartData[1] }} guru/perawat yang menilai mutu manajemen termasuk kategori cukup. Berikut adalah hal yang dapat dilakukan untuk meningkatkan mutu manajemen UKGS menjadi kategori baik sehingga UKGS dapat berjalan dengan optimal:</Text>
+                    <Spacer height="h-4"/>
+                    <div v-for="(evalActivity, index) in evalCukupActivity" class="flex flex-row gap-2 mb-4 items-center">
+                        <div class="w-8 h-8 bg-warning p-4 rounded-full flex justify-center items-center">
+                            <Text color="text-white" class="font-semibold">{{ index + 1 }}</Text>
+                        </div>
+                        <Text :typography="Typography.Label">{{ evalActivity }}</Text>
+                    </div>
+                </template>
+                <template v-if="evalChartData[0] > 0">
+                    <Spacer height="h-4"/>
+                    <Text :typography="Typography.Label" class="font-semibold" color="text-black">Mutu Manajemen Kategori Kurang</Text>
+                    <Spacer height="h-2"/>
+                    <Text>Terdapat {{ evalChartData[0] }} guru/perawat yang menilai mutu manajemen termasuk kategori kurang. Berikut adalah hal yang dapat dilakukan untuk meningkatkan mutu manajemen UKGS menjadi kategori baik sehingga UKGS dapat berjalan dengan optimal:</Text>
+                    <Spacer height="h-4"/>
+                    <div v-for="(evalActivity, index) in evalKurangActivity" class="flex flex-row gap-2 mb-4 items-center">
+                        <div class="w-8 h-8 bg-error p-4 rounded-full flex justify-center items-center">
+                            <Text color="text-white" class="font-semibold">{{ index + 1 }}</Text>
+                        </div>
+                        <Text :typography="Typography.Label">{{ evalActivity }}</Text>
+                    </div>
+                </template>
+            </div>
         </template>
 
         <Spacer class="h-6"/>
@@ -603,7 +727,51 @@
                 </DataTable>
             </template>
             <template v-if="activity.type == ActivityType.EVALUATION">
-
+                <DataTable
+                    :headers="evalTableHeaders"
+                >
+                    <tr v-for="(data, index) in evalEntryData">
+                        <th>
+                            <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}.</Text>
+                        </th>
+                        <td>
+                            <Text :typography="Typography.Body2">{{ data.user.name }}</Text>
+                        </td>
+                        <td>
+                            <Text :typography="Typography.Body2">{{ data.user.role == 'teacher' ? 'Guru' : 'Perawat' }}</Text>
+                        </td>
+                        <td>
+                            <ScoreStatusCard
+                                v-if="data.peranGuru?.sections[0].score != undefined"
+                                :rules="teachertScoreRule"
+                                :value="data.peranGuru?.sections[0].score ?? 0"
+                            />
+                            <Text v-else-if="data.user.role == 'teacher'" :typography="Typography.Body2">-</Text>
+                            <Text v-else>Tidak tersedia</Text>
+                        </td>
+                        <td>
+                            <ScoreStatusCard
+                                v-if="data.evalTotalScore != undefined"
+                                :rules="evalScoreRule"
+                                :value="data.evalTotalScore"
+                            />
+                            <Text v-else :typography="Typography.Body2">-</Text>
+                        </td>
+                        <td class="flex justify-end">
+                            <Button
+                                v-if="data.peranGuru != null || data.evaluation != null"
+                                :type="ButtonType.Outlined" 
+                                dense
+                                :to="`/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/evaluation?id=${data.user.id}`"
+                            >
+                                Lihat Detail
+                            </Button>
+                            <div v-else class="p-2">
+                                <Text>Belum Mengisi</Text>
+                            </div>
+                        </td>
+                    </tr>
+                </DataTable>
             </template>
         </div>
     </div>
@@ -702,6 +870,69 @@
         ""
     ])
 
+    const evalTableHeaders = ref([
+        "",
+        "Nama",
+        "Tugas",
+        "Peran Guru",
+        "Evaluasi",
+        ""
+    ])
+
+    const allUsers = useGetAllUsers()
+    const filteredUsers = computed(() => allUsers.value
+        .filter((user) => user.role == "admin" || user.schoolId == route.params.schoolId as string)
+        .sort((a, b) => {
+            if (a.role === b.role) return 0
+            if (a.role === "teacher") return -1
+            if (b.role === "teacher") return 1
+            if (a.role === "admin") return -1
+            if (b.role === "admin") return 1
+            return 0
+        })
+    )
+    const evalEntries = computed(() => useGetAllEntries(route.params.schoolId as string, route.params.activityId as string))
+    const evalEntryData = computed(() => filteredUsers.value.map((user) => {
+        const evaluation = evalEntries.value.value.find((entry) => entry.id == `${user.id}-eval` && entry.type == QuestionType.EvaluasiEUkgs)
+        return {
+            user,
+            evaluation,
+            evalTotalScore: getEvalTotalScore(evaluation),
+            peranGuru: evalEntries.value.value.find((entry) => entry.id == `${user.id}-teacher` && entry.type == QuestionType.PeranGuru)
+        }
+    }))
+
+    const teacherChartData = computed(() => {
+        const scoreList = evalEntryData.value.map((data) => findRule(teachertScoreRule, data.peranGuru?.sections[0].score ?? -1)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, teacherLabels)
+    })
+
+    const evalChartData = computed(() => {
+        const scoreList = evalEntryData.value.map((data) => findRule(evalScoreRule, data.evalTotalScore ?? -1)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, evalLabels)
+    })
+
+    const totalTeacherSubmitted = computed(() => evalEntryData.value.reduce((acc, data) => acc + (data.peranGuru ? 1 : 0), 0))
+
+    const top5TeacherQuestionFalse = computed(() => {
+        if (activity.value == null || activity.value.type != ActivityType.EVALUATION) return []
+
+        const falseQuestions = evalEntryData.value
+            .map((data) => data.peranGuru?.sections[0].questions.filter((question) => question.selectedAnswer?.point == 0))
+            .flat()
+            .filter((data) => data != undefined)
+        const falseQuestionMap = falseQuestions.reduce((acc, question) => {
+            acc[question.question] = (acc[question.question] || 0) + 1
+            return acc
+        }, {} as Record<string, number>)
+        const top5FalseQuestions = Object.entries(falseQuestionMap)
+            .sort(([, currValue], [, nextValue]) => nextValue - currValue)
+            .slice(0, 5)
+        return Object.fromEntries(top5FalseQuestions)
+    })
+
     const educationChartData = computed(() => {
         const scoreList = entries.value.map((data) => findRule(educationActionScoreRule, data.sections[0].score ?? 0)).filter((data) => data != undefined)
         const scoreLabel = countByLabel(scoreList)
@@ -781,102 +1012,6 @@
         const scoreLabel = countByLabel(scoreList)
         return getCountsInOrder(scoreLabel, gumLabels)
     })
-
-    const ohisBaikActivity = [
-        "Memberikan informasi tentang cara mempertahankan kebersihan mulut yang baik.",
-        "Menginformasikan orang tua tentang pentingnya perawatan gigi dan kebersihan mulut.",
-        "Mengembangkan program lanjutan untuk siswa yang sudah memiliki kebersihan mulut yang baik, seperti pelatihan lanjutan tentang kesehatan gigi.",
-        "Mengajak siswa untuk menjadi duta kesehatan gigi di sekolah, sehingga mereka dapat berbagi pengetahuan dengan teman-teman mereka.",
-        "Melakukan pemeriksaan berkala untuk memastikan bahwa kebersihan mulut tetap terjaga."
-    ]
-
-    const ohisCukupActivity = [
-        "Melanjutkan edukasi tentang kebersihan mulut, tetapi dengan fokus pada teknik yang lebih mendalam.",
-        "Mengadakan workshop atau seminar tentang diet sehat dan dampaknya terhadap kesehatan gigi.",
-        "Melakukan pemeriksaan gigi secara berkala untuk memantau perkembangan kebersihan mulut.",
-        "Mengadakan kompetisi kebersihan gigi antar kelas untuk meningkatkan motivasi.",
-        "Mengajak orang tua untuk terlibat dalam program kesehatan gigi dan memberikan informasi tentang cara mendukung anak di rumah."
-    ]
-
-    const ohisBurukActivity = [
-        "Melanjutkan edukasi tentang kebersihan mulut, tetapi dengan fokus pada teknik yang lebih mendalam terutama mengenai teknik menggosok gigi dan makanan yang baik untuk gigi",
-        "Menyediakan materi edukasi yang menarik dan mudah dipahami oleh siswa",
-        "Mengadakan program fluoride varnish untuk mencegah kerusakan gigi",
-        "Melakukan pemeriksaan gigi secara berkala untuk memantau perkembangan kebersihan mulut",
-        "Mengedukasi siswa tentang pentingnya kunjungan rutin ke dokter gigi",
-        "Mengajak orang tua untuk berpartisipasi dalam program kesehatan gigi di sekolah",
-        "Menginformasikan orang tua tentang pentingnya perawatan gigi dan kebersihan mulut",
-        "Mengembangkan program berkelanjutan yang mencakup kegiatan rutin untuk meningkatkan kesadaran akan kesehatan gigi"
-    ]
-
-    const dmftSangatRendahActivity = [
-        "Memberikan edukasi tentang pentingnya menjaga kesehatan gigi dan mulut, mencegah gigi berlubang",
-        "Mengajarkan teknik menggosok gigi yang benar dan penggunaan benang gigi",
-        "Mengatur pemeriksaan gigi secara berkala untuk memastikan kesehatan gigi tetap terjaga",
-        "Menginformasikan orang tua tentang cara mendukung anak dalam menjaga kebersihan mulut di rumah",
-        "Memberikan penghargaan bagi siswa yang menjaga kesehatan gigi dengan baik"
-    ]
-
-    const dmftRendahActivity = [
-        "Melanjutkan edukasi tentang kebersihan mulut dengan fokus pada konsumsi makanan sehat dan dampaknya terhadap kesehatan gigi",
-        "Mengajarkan teknik menggosok gigi yang benar dan penggunaan benang gigi",
-        "Mengatur pemeriksaan gigi secara berkala untuk memastikan kesehatan gigi tetap terjaga",
-        "Menginformasikan orang tua tentang cara mendukung anak dalam menjaga kebersihan mulut di rumah",
-        "Memberikan penghargaan bagi siswa yang menjaga kesehatan gigi dengan baik"
-    ]
-
-    const dmftSedangActivity = [
-        "Mengadakan program perawatan gigi, seperti aplikasi fluoride atau sealant untuk mencegah kerusakan lebih lanjut",
-        "Mengadakan edukasi tentang kebersihan mulut dan konsumsi makanan sehat",
-        "Melakukan evaluasi berkala untuk memantau perkembangan dan memberikan umpan balik",
-        "Mengajak orang tua untuk berpartisipasi dalam program kesehatan gigi dan memberikan informasi tentang cara mendukung anak di rumah"
-    ]
-
-    const dmftTinggiActivity = [
-        "Mengarahkan siswa untuk mendapatkan perawatan gigi yang diperlukan, seperti tambalan atau pencabutan gigi",
-        "Mengadakan program edukasi yang lebih mendalam tentang kebersihan mulut dan dampak kerusakan gigi",
-        "Melakukan pemeriksaan gigi secara berkala untuk memantau kondisi gigi dan memberikan umpan balik",
-        "Mengadakan pertemuan dengan orang tua untuk membahas pentingnya perawatan gigi dan cara mendukung anak"
-    ]
-
-    const dmftSangatTinggiActivity = [
-        "Mengarahkan siswa untuk mendapatkan perawatan gigi segera, termasuk perawatan restoratif dan pencabutan gigi jika diperlukan",
-        "Mengadakan program edukasi yang intensif dan berkelanjutan tentang kebersihan mulut dan konsumsi makanan sehat",
-        "Melibatkan dokter gigi, tenaga kesehatan, dan psikolog jika diperlukan untuk menangani masalah kesehatan gigi secara menyeluruh",
-        "Melakukan evaluasi berkala dan memberikan umpan balik yang jelas kepada siswa dan orang tua tentang kemajuan dan langkah-langkah yang perlu diambil",
-        "Mengajak orang tua untuk terlibat aktif dalam perawatan gigi anak dan memberikan dukungan di rumah"
-    ]
-
-    const gusiSehatActivity = [
-        "Memberikan edukasi tentang pentingnya menjaga kesehatan gusi dan cara perawatan gigi yang baik",
-        "Mengajarkan teknik menyikat gigi yang benar dan penggunaan benang gigi",
-        "Mengatur pemeriksaan gigi secara berkala untuk memastikan kesehatan gusi tetap terjaga",
-        "Mendorong siswa untuk menjaga pola makan sehat dan menghindari makanan manis yang dapat mempengaruhi kesehatan gusi"
-    ]
-
-    const gusiRinganActivity = [
-        "Mengadakan sesi edukasi tentang penyebab peradangan gusi dan cara mencegahnya",
-        "Mendorong siswa untuk meningkatkan kebersihan mulut dengan menyikat gigi dua kali sehari dan menggunakan benang gigi",
-        "Melakukan pemeriksaan gigi secara berkala untuk memantau kondisi gusi dan memberikan umpan balik",
-        "Menginformasikan orang tua tentang pentingnya perawatan gusi dan cara mendukung anak di rumah"
-    ]
-
-    const gusiSedangActivity = [
-        "Mengarahkan siswa untuk mendapatkan perawatan gigi yang diperlukan, seperti pembersihan gigi profesional (scaling) untuk menghilangkan plak dan karang gigi",
-        "Mengajarkan siswa mengenai teknik menggosok gigi yang tepat dalam kondisi gusi meradang",
-        "Mengadakan edukasi kesehatan gigi tentang kebersihan mulut dan dampak peradangan gusi terhadap kesehatan secara keseluruhan",
-        "Melakukan evaluasi berkala untuk memantau perkembangan dan memberikan umpan balik",
-        "Mengajak orang tua untuk berpartisipasi dalam program kesehatan gigi dan memberikan informasi tentang cara mendukung anak di rumah"
-    ]
-
-    const gusiBeratActivtiy = [
-        "Mengarahkan siswa untuk mendapatkan perawatan gigi segera, termasuk pembersihan gigi profesional dan perawatan lanjutan jika diperlukan termasuk mendapat resep obat untuk mengatasi peradangan berat pada gusi",
-        "Mengarahkan siswa untuk mendapatkan perawatan gigi yang diperlukan, seperti pembersihan gigi profesional (scaling) untuk menghilangkan plak dan karang gigi",
-        "Mengadakan program edukasi yang lebih mendalam tentang peradangan gusi, penyebabnya, dan dampaknya terhadap kesehatan gigi dan mulut",
-        "Melibatkan dokter gigi, tenaga kesehatan, dan jika perlu, spesialis untuk menangani masalah kesehatan gusi secara menyeluruh",
-        "Melakukan evaluasi berkala dan memberikan umpan balik yang jelas kepada siswa dan orang tua tentang kemajuan dan langkah-langkah yang perlu diambil",
-        "Mengajak orang tua untuk terlibat aktif dalam perawatan gusi anak dan memberikan dukungan di rumah"
-    ]
 
     const parentChartData = computed(() => {
         const scoreList = entries.value.map((data) => findRule(parentScoreRule, data.sections[0].score ?? 0)).filter((data) => data != undefined)

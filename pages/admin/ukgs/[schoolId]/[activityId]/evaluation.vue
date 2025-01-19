@@ -1,10 +1,10 @@
 <template>
     <div class="m-2 sm:m-8">
-        <Breadcrumb :items="breadcrumbs"/>
-        <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Detail Hasil Evaluasi</Text>
-        <Spacer class="h-6"/>
-        <div v-if="userData != null && teacherEntryData != null" class="bg-white border border-border-primary rounded-2xl p-6">
+       <Breadcrumb :items="breadcrumbs"/>
+       <Spacer class="h-6"/>
+       <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Detail Hasil Evaluasi</Text>
+       <Spacer class="h-6"/>
+       <div v-if="userData != null && teacherEntryData != null" class="bg-white border border-border-primary rounded-2xl p-6">
             <Text :typography="Typography.H2">Identitas Diri</Text>
             <Spacer height="h-4"/>
             <Text :typography="Typography.Body1">Nama</Text>
@@ -121,27 +121,34 @@
 </template>
 
 <script setup lang="ts">
-    definePageMeta({
-        layout: 'teacher'
-    })
+   definePageMeta({
+       layout: 'admin'
+   })
 
-    const route = useRoute()
-    const router = useRouter()
-    const userStore = useUserStore()
-    const uiStore = useUiStore()
+   const route = useRoute()
+   const router = useRouter()
+   const uiStore = useUiStore()
 
-    const breadcrumbs = ref<BreadcrumbArgs[]>([
-            {
-                label: "Beranda",
-                route: "/teacher/home"
-            },
-            {
-                label: "Evaluasi Kegiatan UKGS",
-                route: "/teacher/evaluation"
-            },
-            {
-            label: "Detail",
-            route: `/teacher/evaluation/${route.params.id}/${route.params.userId}`
+   const breadcrumbs = ref<BreadcrumbArgs[]>([
+        {
+            label: "Beranda",
+            route: "/admin/home"
+        },
+        {
+            label: "Data Kegiatan UKGS",
+            route: "/admin/ukgs"
+        },
+        {
+            label: "Sekolah",
+            route: `/admin/ukgs/${route.params.schoolId}`
+        },
+        {
+            label: "Detail Kegiatan",
+            route: `/admin/ukgs/${route.params.schoolId}/${route.params.activityId}`
+        },
+        {
+            label: "Detail Hasil",
+            route: `/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/evaluation?id=${route.query.id}`
         }
     ])
 
@@ -150,13 +157,13 @@
     const userData = ref<User | null>(null)
 
     const evalTotalScore = computed(() => {
-            if (evalEntryData.value == undefined) return undefined
-            return evalEntryData.value.sections.reduce((acc, data) => acc + (data.score ?? 0), 0) / evalEntryData.value.sections.length
+        if (evalEntryData.value == undefined) return undefined
+        return evalEntryData.value.sections.reduce((acc, data) => acc + (data.score ?? 0), 0) / evalEntryData.value.sections.length
     })
 
     onMounted(async () => {
-        const teacherResult = await useGetEntryById(userStore.school?.id ?? "-", route.params.id as string, `${route.params.userId as string}-teacher`)
-        const evalResult = await useGetEntryById(userStore.school?.id ?? "-", route.params.id as string, `${route.params.userId as string}-eval`)
+        const teacherResult = await useGetEntryById(route.params.schoolId as string, route.params.activityId as string, `${route.query.id as string}-teacher`)
+        const evalResult = await useGetEntryById(route.params.schoolId as string, route.params.activityId as string, `${route.query.id as string}-eval`)
 
         if (isLeft(teacherResult) && isLeft(evalResult)) {
             uiStore.showToast("Terjadi kesalahan memuat data", ToastType.ERROR)
@@ -166,7 +173,7 @@
         if (isRight(teacherResult)) teacherEntryData.value = unwrapEither(teacherResult)
         if (isRight(evalResult)) evalEntryData.value = unwrapEither(evalResult)
 
-        const userResult = await useGetUserById(route.params.userId as string)
+        const userResult = await useGetUserById(route.query.id as string)
         if (isLeft(userResult)) {
             uiStore.showToast(unwrapEither(userResult), ToastType.ERROR)
             router.back()
