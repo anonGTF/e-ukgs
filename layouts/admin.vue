@@ -11,9 +11,9 @@
                 <div class="flex-1 justify-end"></div>
                 <div class="flex-none gap-2">
                     <div class="border-2 border-primary rounded-full w-10 h-10 flex items-center justify-center">
-                        <Icon name="mdi:account" size="1.75rem" class="text-primary"/>
+                        <Icon :name="profileIcon" size="1.75rem" class="text-primary"/>
                     </div>
-                    <Text :typography="Typography.Label" class="font-semibold" color="text-black">Admin</Text>
+                    <Text :typography="Typography.Label" class="font-semibold" color="text-black">{{ userStore.user?.name }}</Text>
                     <Button
                         dense
                         @click="logout"
@@ -30,7 +30,7 @@
         <div class="drawer-side border-e border-border-divider z-[100]">
             <label for="admin-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
             <div class="hidden lg:block w-full p-6 h-[7vh] border-b border-border-divider">
-                <Text :typography="Typography.Label" class="text-center font-bold" color="text-black">Dashboard Admin | E-UKGS</Text>
+                <Text :typography="Typography.Label" class="text-center font-bold" color="text-black">Dashboard Perawat | E-UKGS</Text>
             </div>
             <ul class="menu bg-white h-svh lg:h-auto w-80 pt-4 gap-4 px-4">
                 <li class="menu-title -ms-4">MENU</li>
@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
     const uiStore = useUiStore()
+    const userStore = useUserStore()
 
     const adminMenuItems: Ref<Array<MenuItemArgs>> = ref([
         {
@@ -92,6 +93,8 @@
             selectedIcon: "mdi:help-circle" 
         }
     ])
+
+    const profileIcon = computed(() => userStore.user?.gender == "Laki-laki" ? "mdi:face-man" : "mdi:face-woman")
 
     const isDrawerOpen = ref(false)
 
