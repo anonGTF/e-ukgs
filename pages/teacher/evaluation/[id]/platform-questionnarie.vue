@@ -1,6 +1,6 @@
 <template>
     <div class="my-6 min-h-dvh">
-        <Text :typography="Typography.H1" class="text-center">Form Kuesioner Peran Guru</Text>
+        <Text :typography="Typography.H1" class="text-center">Form Kuesioner Evaluasi E-UKGS</Text>
         <Spacer height="h-6"/>
         <template v-if="entryData" v-for="section in entryData.sections">
             <div class="bg-white rounded-2xl px-6 py-4">
@@ -66,11 +66,11 @@
         isLoading.value = true
         const result = await useAddEntry(userStore.school?.id ?? "-", route.params.id as string, {
             ...entryData.value,
-            id: userStore.user?.id ?? "-",
-            sections: [{
-                ...entryData.value.sections[0],
-                score: getScore(entryData.value.sections[0])
-            }]
+            id: `${userStore.user?.id ?? "-"}-eval`,
+            sections: entryData.value.sections.map((section) => ({
+                ...section,
+                score: getScore(section)
+            }))
         })
 
         if (isLeft(result)) {

@@ -66,7 +66,7 @@
         isLoading.value = true
         const result = await useAddEntry(userStore.school?.id ?? "-", route.params.id as string, {
             ...entryData.value,
-            id: userStore.user?.id ?? "-",
+            id: `${userStore.user?.id ?? "-"}-teacher`,
             sections: [{
                 ...entryData.value.sections[0],
                 score: getScore(entryData.value.sections[0])

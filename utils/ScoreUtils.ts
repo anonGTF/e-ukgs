@@ -88,30 +88,6 @@ export const gumScoreRule = [
 export const gumColor = ['#EE3D30', '#FFBE00', '#34D399', '#2DC653']
 export const gumLabels = ['Radang Berat', 'Radang sedang', 'Radang ringan', 'Sehat']
 
-export const parentScoreRule = [
-    {
-        min: 0,
-        max: 59,
-        label: "Kurang",
-        backgroundColor: "bg-error"
-    },
-    {
-        min: 60,
-        max: 79,
-        label: "Cukup",
-        backgroundColor: "bg-warning"
-    },
-    {
-        min: 80,
-        max: 100,
-        label: "Baik",
-        backgroundColor: "bg-success"
-    }
-]
-
-export const parentColor = ['#EE3D30', '#FFBE00', '#2DC653']
-export const parentLabels = ["Kurang", "Cukup", "Baik"]
-
 export const debrisLabel = {
     0: "Tidak ada debris atau stain",
     1: "Kurang dari 1/3 permukaan gigi tertutupi Debris atau terdapat stain menutupi permukaan gigi",
@@ -185,6 +161,83 @@ export const attitudeScoreRule = [
 
 export const attitudeColor = ['#EE3D30', '#FFBE00', '#2DC653']
 export const attitudeLabels = ['Kurang', 'Cukup', 'Baik']
+
+export const parentScoreRule = [
+    {
+        min: 0,
+        max: 59,
+        label: "Kurang",
+        backgroundColor: "bg-error"
+    },
+    {
+        min: 60,
+        max: 79,
+        label: "Cukup",
+        backgroundColor: "bg-warning"
+    },
+    {
+        min: 80,
+        max: 100,
+        label: "Baik",
+        backgroundColor: "bg-success"
+    }
+]
+
+export const parentColor = ['#EE3D30', '#FFBE00', '#2DC653']
+export const parentLabels = ["Kurang", "Cukup", "Baik"]
+
+export const teachertScoreRule = [
+    {
+        min: 0,
+        max: 59,
+        label: "Kurang",
+        backgroundColor: "bg-error"
+    },
+    {
+        min: 60,
+        max: 79,
+        label: "Cukup",
+        backgroundColor: "bg-warning"
+    },
+    {
+        min: 80,
+        max: 100,
+        label: "Baik",
+        backgroundColor: "bg-success"
+    }
+]
+
+export const teacherColor = ['#EE3D30', '#FFBE00', '#2DC653']
+export const teacherLabels = ["Kurang", "Cukup", "Baik"]
+
+export const evalScoreRule = [
+    {
+        min: 0,
+        max: 59,
+        label: "Kurang",
+        backgroundColor: "bg-error"
+    },
+    {
+        min: 60,
+        max: 79,
+        label: "Cukup",
+        backgroundColor: "bg-warning"
+    },
+    {
+        min: 80,
+        max: 100,
+        label: "Baik",
+        backgroundColor: "bg-success"
+    }
+]
+
+export const evalColor = ['#EE3D30', '#FFBE00', '#2DC653']
+export const evalLabels = ["Kurang", "Cukup", "Baik"]
+
+export const getEvalTotalScore = (evaluation: Questionnarie | undefined): number | undefined => {
+    if (evaluation == undefined) return undefined
+    return evaluation.sections.reduce((acc, data) => acc + (data.score ?? 0), 0) / evaluation.sections.length
+}
 
 export const findRule = (rules: ScoreStatusRule[], value: number) => rules.find((rule) => value >= rule.min && value <= rule.max)
 export const countByLabel = (scoreRules: ScoreStatusRule[]): Record<string, number> => scoreRules.reduce((acc, rule) => {

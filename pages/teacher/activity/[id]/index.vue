@@ -461,6 +461,11 @@
                     </div>
                 </div>
             </div>
+
+            <div v-if="activity.type == ActivityType.EVALUATION" class="bg-white border border-border-primary rounded-2xl p-6">
+                <Text :typography="Typography.H2">Outcome Kegiatan Penilaian Peran Orang Tua</Text>
+                <Spacer height="h-8"/>
+            </div>
         </template>
 
         <Spacer class="h-6"/>
@@ -644,7 +649,51 @@
                 </DataTable>
             </template>
             <template v-if="activity.type == ActivityType.EVALUATION">
-
+                <DataTable
+                    :headers="evalTableHeaders"
+                >
+                    <tr v-for="(data, index) in evalEntryData">
+                        <th>
+                            <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}.</Text>
+                        </th>
+                        <td>
+                            <Text :typography="Typography.Body2">{{ data.user.name }}</Text>
+                        </td>
+                        <td>
+                            <Text :typography="Typography.Body2">{{ data.user.role == 'teacher' ? 'Guru' : 'Perawat' }}</Text>
+                        </td>
+                        <td>
+                            <ScoreStatusCard
+                                v-if="data.peranGuru?.sections[0].score != undefined"
+                                :rules="teachertScoreRule"
+                                :value="data.peranGuru?.sections[0].score ?? 0"
+                            />
+                            <Text v-else-if="data.user.role == 'teacher'" :typography="Typography.Body2">-</Text>
+                            <Text v-else>Tidak tersedia</Text>
+                        </td>
+                        <td>
+                            <ScoreStatusCard
+                                v-if="data.evalTotalScore != undefined"
+                                :rules="evalScoreRule"
+                                :value="data.evalTotalScore"
+                            />
+                            <Text v-else :typography="Typography.Body2">-</Text>
+                        </td>
+                        <td class="flex justify-end">
+                            <Button
+                                v-if="data.peranGuru != null || data.evaluation != null"
+                                :type="ButtonType.Outlined" 
+                                dense
+                                :to="`/teacher/evaluation/${route.params.id}/${data.user.id}`"
+                            >
+                                Lihat Detail
+                            </Button>
+                            <div v-else class="p-2">
+                                <Text>Belum Mengisi</Text>
+                            </div>
+                        </td>
+                    </tr>
+                </DataTable>
             </template>
         </div>
     </div>
@@ -737,6 +786,38 @@
         "Hasil Gusi",
         ""
     ])
+
+    const evalTableHeaders = ref([
+        "",
+        "Nama",
+        "Tugas",
+        "Peran Guru",
+        "Evaluasi",
+        ""
+    ])
+
+    const allUsers = useGetAllUsers()
+    const filteredUsers = computed(() => allUsers.value
+        .filter((user) => user.role == "admin" || user.schoolId == userStore.school?.id)
+        .sort((a, b) => {
+            if (a.role === b.role) return 0
+            if (a.role === "teacher") return -1
+            if (b.role === "teacher") return 1
+            if (a.role === "admin") return -1
+            if (b.role === "admin") return 1
+            return 0
+        })
+    )
+    const evalEntries = computed(() => useGetAllEntries(userStore.school?.id ?? "", route.params.id as string))
+    const evalEntryData = computed(() => filteredUsers.value.map((user) => {
+        const evaluation = evalEntries.value.value.find((entry) => entry.id == `${user.id}-eval` && entry.type == QuestionType.EvaluasiEUkgs)
+        return {
+            user,
+            evaluation,
+            evalTotalScore: getEvalTotalScore(evaluation),
+            peranGuru: evalEntries.value.value.find((entry) => entry.id == `${user.id}-teacher` && entry.type == QuestionType.PeranGuru)
+        }
+    }))
 
     const educationChartData = computed(() => {
         const scoreList = entries.value.map((data) => findRule(educationActionScoreRule, data.sections[0].score ?? 0)).filter((data) => data != undefined)

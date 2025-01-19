@@ -22,10 +22,39 @@
             </div>
             <Spacer class="h-6"/>
             <div class="bg-white border border-border-primary rounded-2xl p-6">
+                <Text :typography="Typography.H3" class="font-semibold">Kegiatan Evaluasi yang Berjalan</Text>
+                <Spacer height="h-6"/>
+                <div class="flex flex-row gap-4">
+                    <BarCard
+                        :labels="parentLabels"
+                        :background-colors="parentColor"
+                        :data="teacherChartData"
+                        class="flex-1"
+                        max-height="h-72"
+                        title="Hasil Peran Guru"
+                    />
+                    <BarCard
+                        :labels="evalLabels"
+                        :background-colors="evalColor"
+                        :data="evalChartData"
+                        class="flex-1"
+                        max-height="h-72"
+                        title="Hasil Evaluasi"
+                    />
+                    <ProgressChart 
+                        title="Progress Penilaian"
+                        :positive="positiveDataCount"
+                        positive-label="Sudah mengisi"
+                        :negative="negativeDataCount"
+                        negative-label="Belum mengisi"
+                        description="Kegiatan penilaian sudah mencapai:"
+                    />
+                </div>
+                <Spacer height="h-12"/>
                 <DataTable
                     :headers="teacherTableHeaders"
                 >
-                    <tr v-for="(data, index) in teacherWithEntryData">
+                    <tr v-for="(data, index) in usersWithEntryData">
                         <th>
                             <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}.</Text>
                         </th>
@@ -33,24 +62,31 @@
                             <Text :typography="Typography.Body2">{{ data.user.name }}</Text>
                         </td>
                         <td>
-                            <Text :typography="Typography.Body2">{{ data.user.role }}</Text>
+                            <Text :typography="Typography.Body2">{{ data.user.role == 'teacher' ? 'Guru' : 'Perawat' }}</Text>
                         </td>
                         <td>
-                            <Text :typography="Typography.Body2">
-                                {{ data.peranGuru ? "Sudah Mengisi" : "Belum Mengisi" }}
-                            </Text>
+                            <ScoreStatusCard
+                                v-if="data.peranGuru?.sections[0].score != undefined"
+                                :rules="teachertScoreRule"
+                                :value="data.peranGuru?.sections[0].score ?? 0"
+                            />
+                            <Text v-else-if="data.user.role == 'teacher'" :typography="Typography.Body2">-</Text>
+                            <Text v-else>Tidak tersedia</Text>
                         </td>
                         <td>
-                            <Text :typography="Typography.Body2">
-                                {{ data.evaluation ? "Sudah Mengisi" : "Belum Mengisi" }}
-                            </Text>
+                            <ScoreStatusCard
+                                v-if="data.evalTotalScore != undefined"
+                                :rules="evalScoreRule"
+                                :value="data.evalTotalScore"
+                            />
+                            <Text v-else :typography="Typography.Body2">-</Text>
                         </td>
                         <td class="flex justify-end">
                             <Button
                                 v-if="data.peranGuru != null || data.evaluation != null"
                                 :type="ButtonType.Outlined" 
                                 dense
-                                :to="`/teacher/evaluation/${activeActivity.id}`"
+                                :to="`/teacher/evaluation/${activeActivity.id}/${data.user.id}`"
                             >
                                 Lihat Detail
                             </Button>
@@ -120,12 +156,16 @@
         })
     )
     const entries = computed(() => useGetAllEntries(userStore.school?.id ?? "", activeActivity.value?.id ?? "-"))
-    const teacherWithEntryData = computed(() => filteredUsers.value.map((user) => ({
-        user,
-        peranGuru: entries.value.value.find((entry) => entry.id == user.id && entry.type == QuestionType.PeranGuru),
-        evaluation: entries.value.value.find((entry) => entry.id == user.id && entry.type == QuestionType.EvaluasiEUkgs)
-    })))
-    const currentTeacherData = computed(() => teacherWithEntryData.value.find((data) => data.user.id == userStore.user?.id))
+    const usersWithEntryData = computed(() => filteredUsers.value.map((user) => {
+        const evaluation = entries.value.value.find((entry) => entry.id == `${user.id}-eval` && entry.type == QuestionType.EvaluasiEUkgs)
+        return {
+            user,
+            evaluation,
+            evalTotalScore: getEvalTotalScore(evaluation),
+            peranGuru: entries.value.value.find((entry) => entry.id == `${user.id}-teacher` && entry.type == QuestionType.PeranGuru)
+        }
+    }))
+    const currentTeacherData = computed(() => usersWithEntryData.value.find((data) => data.user.id == userStore.user?.id))
     const teacherTableHeaders = ref([
         "",
         "Nama",
@@ -134,6 +174,30 @@
         "Evaluasi",
         ""
     ])
+
+    const teacherChartData = computed(() => {
+        const scoreList = usersWithEntryData.value.map((data) => findRule(teachertScoreRule, data.peranGuru?.sections[0].score ?? -1)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, teacherLabels)
+    })
+
+    const evalChartData = computed(() => {
+        const scoreList = usersWithEntryData.value.map((data) => findRule(evalScoreRule, data.evalTotalScore ?? -1)).filter((data) => data != undefined)
+        const scoreLabel = countByLabel(scoreList)
+        return getCountsInOrder(scoreLabel, evalLabels)
+    })
+
+    const positiveDataCount = computed(() => usersWithEntryData.value.reduce((acc, data) => {
+        let count = 0
+        if (data.user.role == "teacher" && data.peranGuru != null) count += 1
+        if (data.evaluation != null) count += 1
+        return acc + count
+    }, 0))
+
+    const negativeDataCount = computed(() => {
+        const totalCount = usersWithEntryData.value.reduce((acc, data) => acc + ((data.user.role == "teacher") ? 2 : 1), 0)
+        return totalCount - positiveDataCount.value
+    })
 
     onMounted(async () => {
         const result = await useGetActiveActivityByType(userStore.school?.id as string, ActivityType.EVALUATION)
