@@ -481,7 +481,7 @@
                 </div>
 
                 <Spacer height="h-8"/>
-                <Text :typography="Typography.H3" class="font-semibold">Evaluasi E-UKGS</Text>
+                <Text :typography="Typography.H3" class="font-semibold">Mutu Manajemen UKGS</Text>
                 <Spacer height="h-3"/>
                 <div class="flex flex-row gap-4">
                     <BarCard
@@ -490,10 +490,10 @@
                         :data="evalChartData"
                         class="flex-1"
                         max-height="h-96"
-                        title="Skor Evaluasi E-UKGS"
+                        title="Skor Mutu Manajemen UKGS"
                     />
                     <div class="bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Kriteria Skor Evaluasi</Text>
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Kriteria Skor Mutu Manajemen UKGS</Text>
                         <Spacer height="h-2"/>
                         <div class="space-y-3">
                             <div class="flex items-start">
@@ -713,7 +713,14 @@
                             />
                             <Text v-else :typography="Typography.Body2">-</Text>
                         </td>
-                        <td class="flex justify-end">
+                        <td class="flex flex-row gap-2 justify-end">
+                            <Button
+                                v-if="data.result && data.result?.referral?.letterLink == null"
+                                dense
+                                @click="openReferralModal(data.result, data.student)"
+                            >
+                                Buat Surat Rujukan
+                            </Button>
                             <Button 
                                 v-if="data.result"
                                 :type="ButtonType.Outlined" 
@@ -727,6 +734,20 @@
                 </DataTable>
             </template>
             <template v-if="activity.type == ActivityType.EVALUATION">
+                <template v-if="activity.status == ActivityStatus.ONPROGRESS">
+                    <div class="flex flex-row justify-between items-center">
+                        <Text :typography="Typography.Label" class="font-semibold">Evaluasi Mutu Manajemen UKGS</Text>
+                        <Button 
+                            v-if="!(currentUserData?.evaluation ?? false)" 
+                            dense 
+                            :to="`/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/platform-questionnarie`"
+                        >
+                            Isi Kuesioner
+                        </Button>
+                        <Text v-else>Sudah Mengisi</Text>
+                    </div>
+                    <div class="w-full border border-border-divider border-dashed my-4"/>
+                </template>
                 <DataTable
                     :headers="evalTableHeaders"
                 >
@@ -775,6 +796,47 @@
             </template>
         </div>
     </div>
+
+    <dialog
+        class="modal modal-bottom sm:modal-middle"
+        :class="{ 'modal-open': showReferralModal }"
+    >
+        <div class="rounded-2xl bg-white p-4 w-full lg:w-[50%] min-h-[50%] lg:min-h-[60%] flex flex-col">
+            <div class="flex flex-row justify-between items-center mb-2">
+                <Text :typography="Typography.Label" class="font-semibold">Buat Surat Rujukan</Text>
+                <btn 
+                    class="btn btn-square flex justify-center bg-transparent text-content-non-essential"
+                    @click="closeReferralModal"
+                >
+                    <Icon name="mdi:close"/>
+                </btn>
+            </div>
+            <DataTable v-if="tempReferralData" :headers="referralTableHeader">
+                <tr v-for="(data, index) in tempReferralData.evidences">
+                    <th>
+                        <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
+                    </th>
+                    <td>
+                        <img :src="data" class="w-full h-auto max-w-96 rounded-lg"/>
+                    </td>
+                    <td>
+                        <TextArea
+                            v-model="tempReferralData.treatment[index]"
+                            placeholder="Masukkan Perawatan"
+                            :rows="7"
+                        />
+                    </td>
+                </tr>
+            </DataTable>
+            <Spacer height="h-6"/>
+            <Button
+                :loading="isReferralLoading"
+                @click="saveReferral"
+            >
+                Buat Rujukan
+            </Button>
+        </div>
+    </dialog>
 </template>
 
 <script setup lang="ts">
@@ -842,6 +904,80 @@
         )
     )
 
+    const showReferralModal = ref(false)
+    const tempReferralData = ref<Referral | null>(null)
+    const selectedUserData = ref<Student | null>(null)
+    const selectedToothHealthData = ref<ToothHealth | null>(null)
+    const isReferralLoading = ref(false)
+
+    const referralTableHeader = ref([
+        "",
+        "Foto",
+        "Penanganan"
+    ])
+
+    const openReferralModal = (data: ToothHealth | undefined, studentData: Student) => {
+        tempReferralData.value = data?.referral ?? {
+            evidences: [],
+            treatment: [],
+            letterLink: undefined
+        }
+        selectedUserData.value = studentData
+        selectedToothHealthData.value = data ?? null
+        showReferralModal.value = true
+    }
+
+    const closeReferralModal = () => {
+        showReferralModal.value = false
+        selectedUserData.value = null
+        selectedToothHealthData.value = null
+        tempReferralData.value = null
+    }
+
+    const saveReferral = async () => {
+        if (selectedToothHealthData.value == null || tempReferralData.value == null || selectedUserData.value == null) return
+
+        isReferralLoading.value = true
+
+        const schoolResult = await useGetSchoolById(route.params.schoolId as string)
+        if (isLeft(schoolResult)) {
+            uiStore.showToast(unwrapEither(schoolResult), ToastType.ERROR)
+            isReferralLoading.value = false
+            return
+        }
+
+        const school = unwrapEither(schoolResult)
+
+        const referralResult = await useUploadReferral(school, route.params.activityId as string, selectedUserData.value, tempReferralData.value)
+        if (isLeft(referralResult)) {
+            uiStore.showToast(unwrapEither(referralResult), ToastType.ERROR)
+            isReferralLoading.value = false
+            return
+        }
+
+        const result = await useSaveToothHealth(route.params.schoolId as string, route.params.activityId as string, {
+            ...selectedToothHealthData.value,
+            referral: {
+                ...tempReferralData.value,
+                letterLink: unwrapEither(referralResult)
+            }
+        })
+
+        if (isLeft(result)) {
+            uiStore.showToast(unwrapEither(result), ToastType.ERROR)
+            isReferralLoading.value = false
+        } else {
+            uiStore.showToast("Surat Rujukan Berhasil Dibuat", ToastType.SUCCESS)
+            closeReferralModal()
+        }
+    }
+    
+    useEventListener("keyup", (event: Event) => {
+        if ((event as KeyboardEvent).code == "Escape") {
+            closeReferralModal()
+        }
+    })
+
     const studentFormTableHeader = ref([
         "",
         "Nama Siswa",
@@ -875,7 +1011,7 @@
         "Nama",
         "Tugas",
         "Peran Guru",
-        "Evaluasi",
+        "Mutu Manajemen",
         ""
     ])
 
@@ -901,6 +1037,7 @@
             peranGuru: evalEntries.value.value.find((entry) => entry.id == `${user.id}-teacher` && entry.type == QuestionType.PeranGuru)
         }
     }))
+    const currentUserData = computed(() => evalEntryData.value.find((data) => data.user.id == userStore.user?.id))
 
     const teacherChartData = computed(() => {
         const scoreList = evalEntryData.value.map((data) => findRule(teachertScoreRule, data.peranGuru?.sections[0].score ?? -1)).filter((data) => data != undefined)

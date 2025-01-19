@@ -72,7 +72,7 @@
             label: "Kelola Kuesioner",
             route: "/admin/questionnarie" ,
             icon: "mdi:file-document-edit-outline" ,
-            selectedIcon: "mdi-file-document-edit" 
+            selectedIcon: "mdi:file-document-edit" 
         },
         {
             label: "Kelola Bahan Penyuluhan",

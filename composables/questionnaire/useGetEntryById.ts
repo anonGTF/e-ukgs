@@ -5,7 +5,6 @@ export const useGetEntryById = async (schoolId: string, activityId: string, stud
     const docRef = doc(db, SCHOOL_CONSTANTS.collectionName, schoolId, ACTIVITY_CONSTANTS.collectionName, activityId, QUESTIONNARIE_CONSTANTS.entriesCollectionName, studentId)
     return getDoc(docRef)
     .then((document) => {
-        console.log(document)
         if (!document.exists() || document.data() == undefined) {
             return makeLeft('Entry tidak ditemukan')
         }

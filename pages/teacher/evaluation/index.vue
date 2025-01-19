@@ -14,7 +14,7 @@
                 </div>
                 <Spacer height="h-6"/>
                 <div class="flex flex-row justify-between items-center">
-                    <Text :typography="Typography.Label" class="font-semibold">2. Evaluasi E-UKGS</Text>
+                    <Text :typography="Typography.Label" class="font-semibold">2. Evaluasi Mutu Manajemen UKGS</Text>
                     <Button v-if="!(currentTeacherData?.evaluation ?? false)" dense :to="`/teacher/evaluation/${activeActivity.id}/platform-questionnarie`">
                         Isi Kuesioner
                     </Button>
@@ -39,7 +39,7 @@
                         :data="evalChartData"
                         class="flex-1"
                         max-height="h-72"
-                        title="Hasil Evaluasi"
+                        title="Hasil Mutu Manajemen"
                     />
                     <ProgressChart 
                         title="Progress Penilaian"
@@ -171,7 +171,7 @@
         "Nama",
         "Tugas",
         "Peran Guru",
-        "Evaluasi",
+        "Mutu Manajemen",
         ""
     ])
 

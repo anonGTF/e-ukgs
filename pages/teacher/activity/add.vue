@@ -163,7 +163,8 @@
             place: place.value,
             picId: selectedPic.value?.id ?? userStore.user?.id ?? "",
             title: selectedTypeOption?.data == ActivityType.OTHER ? customTitle.value : (selectedTypeOption?.label ?? ""),
-            type: selectedType.value ?? ActivityType.OTHER
+            type: selectedType.value ?? ActivityType.OTHER,
+            schoolId: null
         } satisfies Activity)
 
         if (isLeft(result)) {

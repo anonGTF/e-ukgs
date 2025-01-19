@@ -150,8 +150,9 @@
                 </div>
             </div>
 
+            <Spacer class="h-6"/>
             <template v-if="toothHealthData.referral?.evidences.length ?? 0 > 0">
-                <Spacer class="h-12"/>
+                <Spacer class="h-6"/>
                 <div class="w-full border border-border-divider border-dashed"/>
                 <Spacer height="h-8"/>
                 <Text :typography="Typography.H2">Foto Kondisi Gigi</Text>
@@ -191,14 +192,14 @@
                         Kirim ke Orang Tua
                     </Button>
                 </div>
-                <Button
-                    v-else
-                    full-width
-                    @click="openModal"
-                >
-                    Buat Surat Rujukan
-                </Button>
             </template>
+            <Button
+                v-if="toothHealthData.referral?.letterLink == null"
+                full-width
+                @click="openModal"
+            >
+                Buat Surat Rujukan
+            </Button>
         </div>
     </div>
 

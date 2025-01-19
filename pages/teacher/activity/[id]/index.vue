@@ -512,7 +512,7 @@
                 </div>
 
                 <Spacer height="h-8"/>
-                <Text :typography="Typography.H3" class="font-semibold">Evaluasi E-UKGS</Text>
+                <Text :typography="Typography.H3" class="font-semibold">Mutu Manajemen UKGS</Text>
                 <Spacer height="h-3"/>
                 <div class="flex flex-row gap-4">
                     <BarCard
@@ -521,10 +521,10 @@
                         :data="evalChartData"
                         class="flex-1"
                         max-height="h-96"
-                        title="Skor Evaluasi E-UKGS"
+                        title="Skor Mutu Manajemen"
                     />
                     <div class="bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Kriteria Skor Evaluasi</Text>
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Kriteria Skor Mutu Manajemen</Text>
                         <Spacer height="h-2"/>
                         <div class="space-y-3">
                             <div class="flex items-start">
@@ -911,7 +911,7 @@
         "Nama",
         "Tugas",
         "Peran Guru",
-        "Evaluasi",
+        "Mutu Manajemen",
         ""
     ])
 

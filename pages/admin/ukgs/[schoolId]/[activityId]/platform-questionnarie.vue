@@ -64,7 +64,7 @@
         if (entryData.value == null) return
 
         isLoading.value = true
-        const result = await useAddEntry(userStore.school?.id ?? "-", route.params.id as string, {
+        const result = await useAddEntry(route.params.schoolId as string, route.params.activityId as string, {
             ...entryData.value,
             id: `${userStore.user?.id ?? "-"}-eval`,
             sections: entryData.value.sections.map((section) => ({

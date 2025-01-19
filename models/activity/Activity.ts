@@ -6,7 +6,8 @@ export type Activity = {
     endTime: Date,
     status: ActivityStatus,
     place: string,
-    picId: string
+    picId: string,
+    schoolId: string | null
 }
 
 export enum ActivityType { STUDENT_FORM, PARENT_FORM, TOOTH_HEALTH, EVALUATION, OTHER }

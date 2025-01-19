@@ -88,7 +88,8 @@ function toActivity(this: DocumentSnapshot): Activity {
         status: data[ACTIVITY_CONSTANTS.statusAttr],
         type: data[ACTIVITY_CONSTANTS.typeAttr],
         place: data[ACTIVITY_CONSTANTS.placeAttr],
-        picId: data[ACTIVITY_CONSTANTS.picIdAttr]
+        picId: data[ACTIVITY_CONSTANTS.picIdAttr],
+        schoolId: this.ref.parent.parent?.id ?? null
     } satisfies Activity
 }
 

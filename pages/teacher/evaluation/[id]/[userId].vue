@@ -4,7 +4,7 @@
         <Spacer class="h-6"/>
         <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Detail Hasil Evaluasi</Text>
         <Spacer class="h-6"/>
-        <div v-if="userData != null && teacherEntryData != null" class="bg-white border border-border-primary rounded-2xl p-6">
+        <div v-if="userData != null" class="bg-white border border-border-primary rounded-2xl p-6">
             <Text :typography="Typography.H2">Identitas Diri</Text>
             <Spacer height="h-4"/>
             <Text :typography="Typography.Body1">Nama</Text>
@@ -22,13 +22,13 @@
                 <Spacer height="h-4"/>
                 <Text :typography="Typography.Body1">Skor Peran Guru</Text>
                 <Spacer class="h-0.5"/>
-                <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ roundScore(teacherEntryData.sections[0].score ?? 0) }}</Text>
+                <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ roundScore(teacherEntryData?.sections[0].score ?? 0) }}</Text>
                 <Spacer height="h-4"/>
                 <Text :typography="Typography.Body1">Kategori Skor Peran Guru</Text>
                 <Spacer class="h-0.5"/>
                 <ScoreStatusCard
                     :rules="teachertScoreRule"
-                    :value="teacherEntryData.sections[0].score ?? 0"
+                    :value="teacherEntryData?.sections[0].score ?? 0"
                 />
             </template>
             <template v-else>
@@ -39,11 +39,11 @@
             </template>
             <template v-if="evalTotalScore">
                 <Spacer height="h-4"/>
-                <Text :typography="Typography.Body1">Skor Evaluasi</Text>
+                <Text :typography="Typography.Body1">Skor Mutu Manajemen UKGS</Text>
                 <Spacer class="h-0.5"/>
                 <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ roundScore(evalTotalScore) }}</Text>
                 <Spacer height="h-4"/>
-                <Text :typography="Typography.Body1">Kategori Skor Evaluasi</Text>
+                <Text :typography="Typography.Body1">Kategori Skor Mutu Manajemen UKGS</Text>
                 <Spacer class="h-0.5"/>
                 <ScoreStatusCard
                     :rules="evalScoreRule"
@@ -87,7 +87,7 @@
             <template v-if="evalEntryData">
                 <div class="w-full border border-border-divider border-dashed"/>
                 <Spacer height="h-8"/>
-                <Text :typography="Typography.H2">Detail Jawaban Form Evaluasi</Text>
+                <Text :typography="Typography.H2">Detail Jawaban Form Mutu Manajemen UKGS</Text>
                 <Spacer height="h-4"/>
                 <div>
                     <template v-for="section in evalEntryData.sections">
