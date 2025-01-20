@@ -29,7 +29,7 @@
                 <!-- PEMERIKSAAN DEBRIS OHIS -->
     
                 <div class="flex flex-row justify-between items-center">
-                    <Text :typography="Typography.H2">Pemeriksaan Debris OHIS</Text>
+                    <Text :typography="Typography.H2">Debris Index - OHIS</Text>
                     <Button
                         :type="ButtonType.Ghost"
                         dense
@@ -42,7 +42,7 @@
                 <template v-if="showDebrisInstruction">
                     <Spacer height="h-4"/>
                     <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi Pemeriksaan Debris OHIS</Text>
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi Debris Index - OHIS</Text>
                     </div>
                 </template>
                 <Spacer height="h-4"/>
@@ -52,7 +52,7 @@
                         :label="index.toString()"
                         label-class="text-center font-semibold"
                         :label-typography="Typography.H3"
-                        :placeholder="`Pilih skor debris untuk gigi ${index}`"
+                        :placeholder="`Pilih debris index untuk gigi ${index}`"
                         :placeholder-overflow="PlaceholderOverflowType.ELLIPSIS"
                         :selected="wrapWithDropdownOption(score, debrisScoreOptions)"
                         :options="debrisScoreOptions"
@@ -66,7 +66,7 @@
                 <!-- PEMERIKSAAN KALKULUS OHIS -->
     
                 <div class="flex flex-row justify-between items-center">
-                    <Text :typography="Typography.H2">Pemeriksaan Kalkulus OHIS</Text>
+                    <Text :typography="Typography.H2">Kalkulus Index - OHIS</Text>
                     <Button
                         :type="ButtonType.Ghost"
                         dense
@@ -79,7 +79,7 @@
                 <template v-if="showKalkulusInstruction">
                     <Spacer height="h-4"/>
                     <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi Pemeriksaan Kalkulus OHIS</Text>
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi Kalkulus Index - OHIS</Text>
                     </div>
                 </template>
                 <Spacer height="h-4"/>
@@ -90,7 +90,7 @@
                         :label="index.toString()"
                         label-class="text-center font-semibold"
                         :label-typography="Typography.H3"
-                        :placeholder="`Pilih skor kalkulus untuk gigi ${index}`"
+                        :placeholder="`Pilih kalkulus index untuk gigi ${index}`"
                         :placeholder-overflow="PlaceholderOverflowType.ELLIPSIS"
                         :selected="wrapWithDropdownOption(score, kalkulusScoreOptions)"
                         :options="kalkulusScoreOptions"
@@ -104,7 +104,7 @@
                 <!-- PEMERIKSAAN DMFT -->
     
                 <div class="flex flex-row justify-between items-center">
-                    <Text :typography="Typography.H2">Pemeriksaan DMFT</Text>
+                    <Text :typography="Typography.H2">DMFT</Text>
                     <Button
                         :type="ButtonType.Ghost"
                         dense
@@ -117,7 +117,7 @@
                 <template v-if="showDmftInstruction">
                     <Spacer height="h-4"/>
                     <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi Pemeriksaan DMFT</Text>
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi DMFT</Text>
                     </div>
                 </template>
                 <Spacer height="h-4"/>
@@ -161,7 +161,7 @@
     
                 <!-- PEMERIKSAAN GUSI -->
                 <div class="flex flex-row justify-between items-center">
-                    <Text :typography="Typography.H2">Pemeriksaan Gusi</Text>
+                    <Text :typography="Typography.H2">Kondisi Gusi</Text>
                     <Button
                         :type="ButtonType.Ghost"
                         dense
@@ -174,7 +174,7 @@
                 <template v-if="showGumInstruction">
                     <Spacer height="h-4"/>
                     <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi Pemeriksaan Gusi</Text>
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi Pemeriksaan Kondisi Gusi</Text>
                     </div>
                 </template>
                 <Spacer height="h-4"/>

@@ -131,10 +131,10 @@
                         :data="ohisChartData"
                         class="flex-1"
                         max-height="h-96"
-                        title="Skor OHIS"
+                        title="OHIS"
                     />
                     <div class="bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Kriteria Skor OHIS</Text>
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Kriteria OHIS</Text>
                         <Spacer height="h-2"/>
                         <div class="space-y-3">
                             <div class="flex items-start">
@@ -205,10 +205,10 @@
                         :data="dmftChartData"
                         class="flex-1"
                         max-height="h-96"
-                        title="Skor DMFT"
+                        title="DMFT"
                     />
                     <div class="bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Kriteria Skor DMFT</Text>
+                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Kriteria DMFT</Text>
                         <Spacer height="h-2"/>
                         <div class="space-y-3">
                             <div class="flex items-start">
@@ -1013,9 +1013,9 @@
         "",
         "Nama Siswa",
         "Jenis Kelamin",
-        "Hasil OHIS",
-        "Hasil DMFT",
-        "Hasil Gusi",
+        "OHIS",
+        "DMFT",
+        "Kondisi Gusi",
         ""
     ])
 

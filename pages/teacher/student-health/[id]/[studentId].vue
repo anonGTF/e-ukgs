@@ -18,7 +18,7 @@
             <div class="w-full border border-border-divider border-dashed"/>
             <Spacer height="h-8"/>
             
-            <Text :typography="Typography.H2">Hasil Pemeriksaan Debris OHIS</Text>
+            <Text :typography="Typography.H2">Debris Index - OHIS</Text>
             <Spacer height="h-4"/>
             <div class="grid grid-cols-3 gap-6 w-full">
                 <div v-for="(data, index) in toothHealthData.ohis.debris">
@@ -31,7 +31,7 @@
             <div class="w-full border border-border-divider border-dashed"/>
             <Spacer height="h-8"/>
             
-            <Text :typography="Typography.H2">Hasil Pemeriksaan Kalkulus OHIS</Text>
+            <Text :typography="Typography.H2">Kalkulus Index - OHIS</Text>
             <Spacer height="h-4"/>
             <div class="grid grid-cols-3 gap-6 w-full">
                 <div v-for="(data, index) in toothHealthData.ohis.kalkulus">
@@ -44,7 +44,7 @@
             <div class="w-full border border-border-divider border-dashed"/>
             <Spacer height="h-8"/>
 
-            <Text :typography="Typography.H2">Hasil Pemeriksaan DMFT</Text>
+            <Text :typography="Typography.H2">DMFT</Text>
             <Spacer height="h-4"/>
             <div class="grid grid-cols-2 gap-6 w-full">
                 <ReadOnlyTextField
@@ -73,7 +73,7 @@
             <Spacer height="h-8"/>
 
             <!-- PEMERIKSAAN GUSI -->
-            <Text :typography="Typography.H2">Hasil Pemeriksaan Gusi</Text>
+            <Text :typography="Typography.H2">Kondisi Gusi</Text>
             <Spacer height="h-4"/>
             <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
                 <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Nilai Kondisi Gusi</Text>
@@ -124,27 +124,27 @@
                 <Text :typography="Typography.H2" color="text-white">Hasil Pemeriksaan</Text>
                 <Spacer height="h-4"/>
                 <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
-                    <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor OHIS</Text>
+                    <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">OHIS</Text>
                     <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(toothHealthData.ohis.totalScore) }}</Text>
                     <ScoreStatusCard :value="toothHealthData.ohis.totalScore" :rules="ohisScoreRule"/>
                 </div>
                 <div class="flex flex-row justify-between items-center border-b border-border-divider ms-4 mt-2">
-                    <Text :typography="Typography.Body1" color="text-white">Debris</Text>
+                    <Text :typography="Typography.Body1" color="text-white">Debris Index</Text>
                     <Text :typography="Typography.H3" color="text-white" class="font-semibold">{{ roundScore(debrisScore) }}</Text>
                 </div>
                 <div class="flex flex-row justify-between items-center border-b border-border-divider ms-4 mt-2">
-                    <Text :typography="Typography.Body1" color="text-white">Kalkulus</Text>
+                    <Text :typography="Typography.Body1" color="text-white">Kalkulus Index</Text>
                     <Text :typography="Typography.H3" color="text-white" class="font-semibold">{{ roundScore(kalkulusScore) }}</Text>
                 </div>
                 <br/>
                 <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
-                    <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor DMFT</Text>
+                    <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">DMFT</Text>
                     <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(toothHealthData.dmft.totalScore) }}</Text>
                     <ScoreStatusCard :value="toothHealthData.dmft.totalScore" :rules="dmftScoreRule"/>
                 </div>
                 <br/>
                 <div class="flex flex-row gap-2 items-center pb-2 border-b border-border-divider">
-                    <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Skor Gusi</Text>
+                    <Text :typography="Typography.Body1" color="text-white" class="font-semibold flex-1">Kondisi Gusi</Text>
                     <Text :typography="Typography.H3" color="text-white" class="font-bold">{{ roundScore(toothHealthData.gums.score.averageScore) }}</Text>
                     <ScoreStatusCard :value="toothHealthData.gums.score.averageScore" :rules="gumScoreRule"/>
                 </div>
