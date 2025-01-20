@@ -47,14 +47,28 @@
                         <Text><span class="font-bold">{{ index + 1 }}.</span> {{ question.question }}</Text>
                         <Spacer height="h-2"/>
                         <template v-if="section.answerType == AnswerType.MULTIPLE_CHOICE" v-for="(option, optionIndex) in question.answerOption">
-                            <div class="flex flex-row gap-2 items-center cursor-pointer">
+                            <div class="flex flex-row items-center cursor-pointer">
                                 <SelectionButton
                                     :selected="question.selectedAnswer?.text == option.text"
                                     :icon="multipleChoiceLabel[optionIndex].icon"
                                     :selected-icon="multipleChoiceLabel[optionIndex].selectedIcon"
                                     dense
                                 />
+                                <Spacer width="w-2"/>
                                 <Text>{{ option.text }}</Text>
+                                <Spacer width="w-1"/>
+                                <Icon 
+                                    v-if="question.selectedAnswer?.text == option.text && question.selectedAnswer.point != 1" 
+                                    name="mdi:close-circle" 
+                                    class="text-error" 
+                                    size="2rem"
+                                />
+                                <Icon 
+                                    v-if="option.point == 1" 
+                                    name="mdi:check-circle" 
+                                    class="text-success" 
+                                    size="2rem"
+                                />
                             </div>
                         </template>
                         <template v-if="section.answerType == AnswerType.BINARY_OPTION" v-for="option in question.answerOption">
