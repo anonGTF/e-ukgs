@@ -11,6 +11,7 @@
                     <Button v-if="!(currentTeacherData?.peranGuru ?? false)" dense :to="`/teacher/evaluation/${activeActivity.id}/teacher-questionnarie`">
                         Isi Kuesioner
                     </Button>
+                    <Text v-else>Sudah mengisi</Text>
                 </div>
                 <Spacer height="h-6"/>
                 <div class="flex flex-row justify-between items-center">
@@ -18,6 +19,7 @@
                     <Button v-if="!(currentTeacherData?.evaluation ?? false)" dense :to="`/teacher/evaluation/${activeActivity.id}/platform-questionnarie`">
                         Isi Kuesioner
                     </Button>
+                    <Text v-else>Sudah mengisi</Text>
                 </div>
             </div>
             <Spacer class="h-6"/>
