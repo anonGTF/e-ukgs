@@ -86,7 +86,7 @@
     </div>
     <Spacer height="h-6"/>
     <div class="bg-primary rounded-2xl p-6 mb-6">
-        <Text :typography="Typography.H1" class="text-center" color="text-white">Saatnya isi Kuesioner 🚀</Text>
+        <Text :typography="Typography.H1" class="text-center" color="text-white">Saatnya Pemeriksaan Kesehatan Gigi 🚀</Text>
         <Spacer height="h-4"/>
         <Text :typography="Typography.Label" class="text-center" color="text-white">
             Jawab dengan jujur yaa~ <span class="text-xl">💖</span>, 
