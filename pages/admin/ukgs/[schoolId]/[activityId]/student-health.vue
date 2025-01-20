@@ -334,9 +334,21 @@
             return
         }
 
-        const school = unwrapEither(schoolResult)
+        const activityResult = await useGetActivityById(route.params.schoolId as string, route.params.activityId as string)
+        if (isLeft(activityResult)) {
+            uiStore.showToast(unwrapEither(activityResult), ToastType.ERROR)
+            isLoading.value = false
+            return
+        }
 
-        const referralResult = await useUploadReferral(school, route.params.activityId as string, studentData.value, tempReferralData.value)
+        const activity = unwrapEither(activityResult)
+
+        const school = unwrapEither(schoolResult)
+        const tempToothHealthData = {
+            ...toothHealthData.value,
+            referral: tempReferralData.value
+        } satisfies ToothHealth
+        const referralResult = await useUploadReferral(school, activity, studentData.value, tempToothHealthData)
         if (isLeft(referralResult)) {
             uiStore.showToast(unwrapEither(referralResult), ToastType.ERROR)
             isLoading.value = false

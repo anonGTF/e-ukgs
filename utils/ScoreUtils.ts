@@ -246,6 +246,8 @@ export const countByLabel = (scoreRules: ScoreStatusRule[]): Record<string, numb
 }, {} as Record<string, number>)
 export const getCountsInOrder = (counts: Record<string, number>, orderedLabels: string[]): number[] => orderedLabels.map((label) => counts[label] || 0)
 
+export const getScore = (score: number, rules: ScoreStatusRule[]): string => rules.find((rule) => score >= rule.min && score <= rule.max)?.label ?? "-"
+
 export const ohisBaikActivity = [
     "Memberikan informasi tentang cara mempertahankan kebersihan mulut yang baik.",
     "Menginformasikan orang tua tentang pentingnya perawatan gigi dan kebersihan mulut.",
