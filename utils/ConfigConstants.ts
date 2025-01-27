@@ -4,6 +4,7 @@ export const CONFIG = {
         "/",
         "/login",
         "/student-questionnarie",
-        "/parent-questionnarie"
+        "/parent-questionnarie",
+        "/article"
     ]
 }

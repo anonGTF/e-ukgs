@@ -26,15 +26,15 @@
                 class="flex-1 bg-white/25"
             >
                 <Icon name="mdi:book-open-variant" size="1.5rem"/>
-                6 Ebook Edukasi
+                {{ ebooks.length }} Ebook Edukasi
             </Button>
             <Button class="flex-1 bg-white/25">
                 <Icon name="mdi:movie" size="1.5rem"/>
-                18 Video Edukasi
+                {{ videos.length }} Video Edukasi
             </Button>
             <Button class="flex-1 bg-white/25">
                 <Icon name="mdi:script-text" size="1.5rem"/>
-                10 Artikel Edukasi
+                {{ articles.length }} Artikel Edukasi
             </Button>
         </div>
     </div>
@@ -45,10 +45,23 @@
         <Text>Ebook penuh warna dengan panduan dan tips lengkap yang bisa diunduh dan dibaca kapan saja.</Text>
         <Spacer height="h-4"/>
         <div class="flex flex-row gap-4 overflow-scroll">
-            <div v-for="i in 5">
-                <div class="bg-gray-300 rounded-lg w-56 h-80"></div>
+            <div 
+                v-for="ebook in ebooks" 
+                class="cursor-pointer" 
+                @click="navigateTo(
+                    ebook.source, 
+                    {
+                        external: true,
+                        open: { target: '_blank' }
+                    }
+                )"
+            >
+                <img 
+                    :src="ebook.thumbnail"
+                    class="w-auto h-80 object-cover rounded-lg"
+                />
                 <Spacer height="h-2"/>
-                <Text :typography="Typography.Label" class=" font-semibold">Judul Ebook di sini</Text>
+                <Text :typography="Typography.Label" class=" font-semibold">{{ ebook.title }}</Text>
             </div>
         </div>
     </div>
@@ -59,14 +72,19 @@
         <Text color="text-white">Tonton langkah-langkah praktis dan tips sederhana untuk menjaga kesehatan gigi dengan cara yang menyenangkan.</Text>
         <Spacer height="h-4"/>
         <div class="flex flex-row gap-4 overflow-scroll">
-            <div v-for="i in 5">
-                <div class="bg-gray-300 rounded-lg w-56 h-32"></div>
+            <div v-for="video in videos" class="cursor-pointer" @click="selectedVideo = video">
+                <img 
+                    :src="video.thumbnail"
+                    class="w-auto h-32 object-cover rounded-lg"
+                />
                 <Spacer height="h-2"/>
                 <Text 
                     :typography="Typography.Label" 
                     class="font-semibold" 
                     color="text-white"
-                >Judul Video di sini</Text>
+                >
+                    {{ video.title }}
+                </Text>
             </div>
         </div>
     </div>
@@ -77,10 +95,13 @@
         <Text>Pelajari lebih banyak tentang kebiasaan sehat, mitos seputar kesehatan gigi, dan wawasan dari para ahli dari artikel-artikel di bawah.</Text>
         <Spacer height="h-4"/>
         <div class="flex flex-row gap-4 overflow-scroll">
-            <div v-for="i in 5">
-                <div class="bg-gray-300 rounded-lg w-56 h-32"></div>
+            <div v-for="article in articles" class="cursor-pointer" @click="navigateTo(`/article?id=${article.id}`)">
+                <img 
+                    :src="article.thumbnail"
+                    class="w-auto h-32 object-cover rounded-lg"
+                />
                 <Spacer height="h-2"/>
-                <Text :typography="Typography.Label" class=" font-semibold">Judul Artikel di sini</Text>
+                <Text :typography="Typography.Label" class=" font-semibold">{{ article.title }}</Text>
             </div>
         </div>
     </div>
@@ -107,7 +128,48 @@
             </Button>
         </div>
     </div>
+    <dialog
+        v-if="selectedVideo != null"
+        class="modal modal-bottom sm:modal-middle"
+        :class="{ 'modal-open': selectedVideo }"
+    >
+        <div class="rounded-2xl bg-white p-4 w-full lg:w-[50%] min-h-[50%] lg:min-h-[60%] flex flex-col">
+            <div class="flex flex-row justify-between items-center mb-2">
+                <Text :typography="Typography.Label" class="font-semibold">{{ selectedVideo.title }}</Text>
+                <btn 
+                    class="btn btn-square flex justify-center bg-transparent text-content-non-essential"
+                    @click="closeModal"
+                >
+                    <Icon name="mdi:close"/>
+                </btn>
+            </div>
+            <iframe 
+                class="flex-1"
+                :src="youtubeSourceToEmbed(selectedVideo.source)" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen
+            ></iframe>
+        </div>
+    </dialog>
 </template>
 
 <script setup lang="ts">
+
+    const articles = useGetAllArticles()
+    const ebooks = useGetAllEbooks()
+    const videos = useGetAllVideos()
+
+    const selectedVideo = ref<Media | null>(null)
+    const closeModal = () => {
+        selectedVideo.value = null
+    }
+
+    useEventListener("keyup", (event: Event) => {
+        if ((event as KeyboardEvent).code == "Escape") {
+            closeModal()
+        }
+    })
 </script>
