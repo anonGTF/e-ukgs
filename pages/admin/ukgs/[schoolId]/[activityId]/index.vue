@@ -713,7 +713,7 @@
                             />
                             <Text v-else :typography="Typography.Body2">-</Text>
                         </td>
-                        <td class="flex flex-row gap-2 justify-end">
+                        <td class="flex flex-row flex-wrap gap-2 justify-end">
                             <Button
                                 v-if="data.result && data.result?.referral?.letterLink == null"
                                 dense
