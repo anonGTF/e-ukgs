@@ -1,6 +1,9 @@
 <template>
     <div class="flex flex-row items-center gap-2 sm:gap-4 mt-4">
-        <div class="w-12 h-12 rounded-lg bg-gray-300"></div>
+        <img 
+            src="/android-chrome-512x512.png"
+            class="w-12 h-12 object-cover"
+        />
         <Text 
             :typography="Typography.Label" 
             class="font-bold flex-1" 

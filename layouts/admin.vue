@@ -46,6 +46,14 @@
 </template>
 
 <script setup lang="ts">
+    useHead({
+        title: "E-UKGS | Dashboard Perawat",
+        meta: [{
+            name: "description",
+            content: "Dashboard perawat manajemen Usaha Kesehatan Gigi Sekolah"
+        }]
+    })
+
     const uiStore = useUiStore()
     const userStore = useUserStore()
 

@@ -52,6 +52,14 @@
 </template>
 
 <script setup lang="ts">
+    useHead({
+        title: "E-UKGS | Dashboard Guru",
+        meta: [{
+            name: "description",
+            content: "Dashboard guru manajemen Usaha Kesehatan Gigi Sekolah"
+        }]
+    })
+
     const teacherMenuItems: Ref<Array<MenuItemArgs>> = ref([
         {
             label: "Beranda",
