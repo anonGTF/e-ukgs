@@ -98,6 +98,7 @@
     ])
 
     const schoolData = ref<School | null>(null)
+    const studentData = useGetAllStudents(route.params.id as string)
     const details = computed(() => [
         {
             label: "Nama Sekolah",
@@ -109,7 +110,7 @@
         },
         {
             label: "Total Siswa",
-            data: schoolData.value?.totalStudent
+            data: studentData.value.length
         }
     ])
     const teacherTableHeader = ref([

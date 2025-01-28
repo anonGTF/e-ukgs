@@ -103,6 +103,12 @@
             selectedIcon: "mdi:clipboard-text-search" 
         },
         {
+            label: "Profil Pengguna",
+            route: "/teacher/profile",
+            icon: "mdi:account-circle-outline" ,
+            selectedIcon: "mdi:account-circle"
+        },
+        {
             label: "Panduan Pengguna",
             route: "/teacher/help",
             icon: "mdi:help-circle-outline" ,

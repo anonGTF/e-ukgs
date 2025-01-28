@@ -95,6 +95,12 @@
             selectedIcon: "mdi:account-group"
         },
         {
+            label: "Profil Pengguna",
+            route: "/admin/profile",
+            icon: "mdi:account-circle-outline" ,
+            selectedIcon: "mdi:account-circle"
+        },
+        {
             label: "Panduan Pengguna",
             route: "/admin/help",
             icon: "mdi:help-circle-outline" ,

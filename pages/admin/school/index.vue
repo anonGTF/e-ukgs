@@ -35,9 +35,6 @@
                         <Text :typography="Typography.Body2">{{ data.name }}</Text>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.totalStudent }}</Text>
-                    </td>
-                    <td>
                         <Text :typography="Typography.Body2">{{ data.address }}</Text>
                     </td>
                     <td class="flex justify-end">
@@ -74,7 +71,6 @@
     const tableHeader = ref([
         "",
         "Nama Sekolah",
-        "Jumlah Siswa",
         "Alamat",
         ""
     ])

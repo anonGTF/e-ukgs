@@ -2,7 +2,30 @@
     <div class="m-2 sm:m-8">
         <Breadcrumb :items="breadcrumbs"/>
         <Spacer class="h-6"/>
-        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Daftar Siswa {{ userStore.school?.name }}</Text>
+        <Text :typography="Typography.H1" class="pb-4 border-b border-border-divider">Profil Sekolah dan Daftar Siswa {{ userStore.school?.name }}</Text>
+        <Spacer class="h-6"/>
+        <div class="bg-white border border-border-primary rounded-2xl p-6">
+            <div class="flex flex-row items-center justify-between pb-7 border-b border-border-divider">
+                <Text :typography="Typography.H2">Identitas Sekolah</Text>
+                <Button 
+                    :type="ButtonType.Outlined" 
+                    dense
+                    class="hidden md:block"
+                    @click="navigateTo(`/teacher/school/edit`)"
+                >
+                    Edit Data Sekolah
+                </Button>
+                <div class="btn btn-square md:hidden" @click="navigateTo(`/admin/teacher/${route.params.id}/edit`)">
+                    <Icon name="mdi:pencil" size="24px"/>
+                </div>
+            </div>
+            <template v-for="detail in details" :key="detail.label">
+                <Spacer class="h-6"/>
+                <Text :typography="Typography.Body1">{{ detail.label }}</Text>
+                <Spacer class="h-0.5"/>
+                <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ detail.data }}</Text>
+            </template>
+        </div>
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
             <div class="flex flex-row justify-between">
@@ -81,6 +104,21 @@
         "Kelas",
         "Jenis Kelamin",
         ""
+    ])
+
+    const details = computed(() => [
+        {
+            label: "Nama Sekolah",
+            data: userStore.school?.name
+        },
+        {
+            label: "Alamat Sekolah",
+            data: userStore.school?.address
+        },
+        {
+            label: "Total Siswa",
+            data: tableData.value.length
+        }
     ])
 
     const tableData = useGetAllStudents(userStore.school?.id ?? "")
