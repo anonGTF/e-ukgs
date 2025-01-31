@@ -59,12 +59,12 @@
                 />
                 <ReadOnlyTextField
                     :text="toothHealthData.dmft.loose.toString()"
-                    label="Jumlah Gigi Goyang"
+                    label="Jumlah Gigi Goyang karena Lubang"
                     class="flex-1"
                 />
                 <ReadOnlyTextField
                     :text="toothHealthData.dmft.missing.toString()"
-                    label="Jumlah Gigi Hilang"
+                    label="Jumlah Gigi Hilang karena Lubang"
                     class="flex-1"
                 />
             </div>

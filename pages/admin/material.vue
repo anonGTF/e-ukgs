@@ -36,7 +36,7 @@
                         <Text :typography="Typography.Body2">{{ data.title }}</Text>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.source }}</Text>
+                        <Text :typography="Typography.Body2">{{ trimLink(data.source) }}</Text>
                     </td>
                     <td>
                         <div class="flex flex-row gap-2 justify-end">
@@ -87,7 +87,7 @@
                         <Text :typography="Typography.Body2">{{ data.title }}</Text>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.source }}</Text>
+                        <Text :typography="Typography.Body2">{{ trimLink(data.source) }}</Text>
                     </td>
                     <td>
                         <div class="flex flex-row gap-2 justify-end">
@@ -138,7 +138,7 @@
                         <Text :typography="Typography.Body2">{{ data.title }}</Text>
                     </td>
                     <td>
-                        <Text :typography="Typography.Body2">{{ data.source }}</Text>
+                        <Text :typography="Typography.Body2">{{ trimLink(data.source) }}</Text>
                     </td>
                     <td>
                         <div class="flex flex-row gap-2 justify-end">
@@ -641,6 +641,8 @@
             uiStore.showToast("Data berhasil dihapus", ToastType.SUCCESS)
         }
     }
+
+    const trimLink = (link: string) => link.length > 100 ? link.slice(0, 97) + "..." : link
 
     useEventListener("keyup", (event: Event) => {
         if ((event as KeyboardEvent).code == "Escape") {

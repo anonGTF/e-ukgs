@@ -142,7 +142,7 @@
                         v-model:number="loose"
                         type="number"
                         placeholder="Masukkan banyak gigi goyang karena berlubang"
-                        label="Jumlah Gigi Goyang"
+                        label="Jumlah Gigi Goyang karena Lubang"
                         :error-message="looseErrorMessage"
                         class="flex-1"
                     />
@@ -150,7 +150,7 @@
                         v-model:number="missing"
                         type="number"
                         placeholder="Masukkan banyak gigi hilang karena berlubang"
-                        label="Jumlah Gigi Hilang"
+                        label="Jumlah Gigi Hilang karena Lubang"
                         :error-message="missingErrorMessage"
                         class="flex-1"
                     />

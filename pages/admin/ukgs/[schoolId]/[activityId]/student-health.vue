@@ -59,12 +59,12 @@
                 />
                 <ReadOnlyTextField
                     :text="toothHealthData.dmft.loose.toString()"
-                    label="Jumlah Gigi Goyang"
+                    label="Jumlah Gigi Goyang karena Lubang"
                     class="flex-1"
                 />
                 <ReadOnlyTextField
                     :text="toothHealthData.dmft.missing.toString()"
-                    label="Jumlah Gigi Hilang"
+                    label="Jumlah Gigi Hilang karena Lubang"
                     class="flex-1"
                 />
             </div>
@@ -172,8 +172,10 @@
                         </td>
                     </tr>
                 </DataTable>
+            </template>
+            <template v-if="toothHealthData.referral?.letterLink">
                 <Spacer height="h-6"/>
-                <div v-if="toothHealthData.referral?.letterLink" class="flex flex-row gap-4">
+                <div class="flex flex-row gap-4">
                     <Button
                         :type="ButtonType.Secondary"
                         class="flex-1"
@@ -217,7 +219,11 @@
                     <Icon name="mdi:close"/>
                 </btn>
             </div>
-            <DataTable v-if="tempReferralData" :headers="referralTableHeader">
+            <DataTable 
+                v-if="tempReferralData" 
+                :headers="referralTableHeader"
+                :is-empty="tempReferralData.evidences.length == 0"
+            >
                 <tr v-for="(data, index) in tempReferralData.evidences">
                     <th>
                         <Text :typography="Typography.Body2" class="font-semibold text-content-primary">{{ index + 1 }}</Text>
@@ -235,6 +241,7 @@
                 </tr>
             </DataTable>
             <Spacer height="h-6"/>
+            <div class="flex-1"/>
             <Button
                 :loading="isLoading"
                 @click="saveReferral"
