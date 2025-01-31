@@ -42,12 +42,12 @@
         </div>
     </div>
     <Spacer height="h-6"/>
-    <div class="p-4">
+    <div class="p-4 overflow-hidden">
         <Text :typography="Typography.H2"><span class="text-2xl">📚</span> Ebook Edukasi</Text>
         <Spacer height="h-2"/>
         <Text>Ebook penuh warna dengan panduan dan tips lengkap yang bisa diunduh dan dibaca kapan saja.</Text>
         <Spacer height="h-4"/>
-        <div class="flex flex-row gap-4 overflow-scroll">
+        <div class="flex flex-row gap-4 overflow-y-hidden overflow-x-scroll -mb-14 pb-14">
             <div 
                 v-for="ebook in ebooks" 
                 class="cursor-pointer" 
@@ -61,7 +61,7 @@
             >
                 <img 
                     :src="ebook.thumbnail"
-                    class="w-auto h-80 object-cover rounded-lg"
+                    class="w-auto min-w-64 h-80 object-cover rounded-lg"
                 />
                 <Spacer height="h-2"/>
                 <Text :typography="Typography.Label" class=" font-semibold">{{ ebook.title }}</Text>
@@ -69,16 +69,16 @@
         </div>
     </div>
     <Spacer height="h-6"/>
-    <div class="bg-primary rounded-2xl p-4">
+    <div class="bg-primary rounded-2xl p-4 overflow-hidden">
         <Text :typography="Typography.H2" color="text-white"><span class="text-2xl">🎦</span> Video Edukasi</Text>
         <Spacer height="h-2"/>
         <Text color="text-white">Tonton langkah-langkah praktis dan tips sederhana untuk menjaga kesehatan gigi dengan cara yang menyenangkan.</Text>
         <Spacer height="h-4"/>
-        <div class="flex flex-row gap-4 overflow-scroll">
+        <div class="flex flex-row gap-4 overflow-y-hidden overflow-x-scroll -mb-14 pb-14">
             <div v-for="video in videos" class="cursor-pointer" @click="selectedVideo = video">
                 <img 
                     :src="video.thumbnail"
-                    class="w-auto h-32 object-cover rounded-lg"
+                    class="w-auto min-w-64 h-32 object-cover rounded-lg"
                 />
                 <Spacer height="h-2"/>
                 <Text 
@@ -92,16 +92,16 @@
         </div>
     </div>
     <Spacer height="h-6"/>
-    <div class="p-4">
+    <div class="p-4 overflow-hidden">
         <Text :typography="Typography.H2"><span class="text-2xl">📒</span> Artikel Edukasi</Text>
         <Spacer height="h-2"/>
         <Text>Pelajari lebih banyak tentang kebiasaan sehat, mitos seputar kesehatan gigi, dan wawasan dari para ahli dari artikel-artikel di bawah.</Text>
         <Spacer height="h-4"/>
-        <div class="flex flex-row gap-4 overflow-scroll">
+        <div class="flex flex-row gap-4 overflow-y-hidden overflow-x-scroll -mb-14 pb-14">
             <div v-for="article in articles" class="cursor-pointer" @click="navigateTo(`/article?id=${article.id}`)">
                 <img 
                     :src="article.thumbnail"
-                    class="w-auto h-32 object-cover rounded-lg"
+                    class="w-auto min-w-64 h-32 object-cover rounded-lg"
                 />
                 <Spacer height="h-2"/>
                 <Text :typography="Typography.Label" class=" font-semibold">{{ article.title }}</Text>
@@ -129,6 +129,13 @@
             >
                 <span class="text-2xl">👨🏻🧕🏻</span> Kuesioner untuk Orang Tua/Wali
             </Button>
+        </div>
+        <Spacer height="h-6"/>
+        <div class="flex flex-row justify-center cursor-pointer items-center gap-2">
+            <Icon name="mdi:help-circle" class="text-white"/>
+            <Text class="underline font-bold" color="text-white">
+                Lihat panduan penggunaan website
+            </Text>
         </div>
     </div>
     <dialog
