@@ -7,3 +7,13 @@
         </main>
     </div>
 </template>
+
+<script setup lang="ts">
+    useHead({
+        title: "E-UKGS website",
+        meta: [{
+            name: "description",
+            content: "Website untuk manajemen Usaha Kesehatan Gigi Sekolah"
+        }]
+    })
+</script>

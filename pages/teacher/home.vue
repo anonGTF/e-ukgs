@@ -220,6 +220,23 @@
             ]
         },
         {
+            icon: "mdi:account-circle",
+            color: "bg-primary",
+            iconColor: "text-primary",
+            label: "Profil Pengguna",
+            route: "/teacher/profile",
+            submenu: [
+                {
+                    label: "Lihat detail profil",
+                    route: "/teacher/profile"
+                },
+                {
+                    label: "Edit detail profil",
+                    route: "/teacher/profile/edit"
+                }
+            ]
+        },
+        {
             icon: "mdi:help",
             color: "bg-primary",
             iconColor: "text-primary",

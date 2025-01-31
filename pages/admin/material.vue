@@ -160,6 +160,7 @@
 
     <!-- MODAL FOR PREVIEW -->
     <dialog
+        v-if="selectedPreviewMedia != null"
         class="modal modal-bottom sm:modal-middle"
         :class="{ 'modal-open': showPreviewModal }"
     >
@@ -173,10 +174,10 @@
                     <Icon name="mdi:close"/>
                 </btn>
             </div>
-            <template v-if="selectedType == MediaType.VIDEO">
+            <template v-if="selectedPreviewMedia.type == MediaType.VIDEO">
                 <iframe 
                     class="flex-1"
-                    :src="youtubeSourceToEmbed(selectedSource)" 
+                    :src="youtubeSourceToEmbed(selectedPreviewMedia.source)" 
                     title="YouTube video player" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -184,11 +185,13 @@
                     allowfullscreen
                 ></iframe>
             </template>
-            <template v-else-if="selectedType == MediaType.ARTICLE">
-                <iframe :src="selectedSource" class="flex-1"></iframe>
+            <template v-else-if="selectedPreviewMedia.type == MediaType.ARTICLE">
+                <Text :typography="Typography.H3" color="text-black" class="font-semibold">{{ selectedPreviewMedia.title }}</Text>
+                <Spacer height="h-4"/>
+                <iframe :src="selectedPreviewMedia.source" class="flex-1"></iframe>
             </template>
             <template v-else>
-                <iframe :src="selectedSource" class="h-[80svh] w-full"></iframe>
+                <iframe :src="selectedPreviewMedia.source" class="h-[80svh] w-full"></iframe>
             </template>
         </div>
     </dialog>
@@ -394,8 +397,7 @@
     const showEbookModal = ref(false)
     const showArticleModal = ref(false)
     const showPreviewModal = ref(false)
-    const selectedSource = ref("")
-    const selectedType = ref<MediaType | null>(null)
+    const selectedPreviewMedia = ref<Media | null>(null)
 
     const saveVideoThumbnail = (file: File | null | undefined) => { videoThumbnail.value = file }
     const saveEbookFile = (file: File | null | undefined) => { ebookFile.value = file }
@@ -421,18 +423,20 @@
         showEbookModal.value = true
     }
 
-    const openArticleModal = (data: Media | null) => {
+    const openArticleModal = async (data: Media | null) => {
         if (data != null) {
             selectedArticle.value = data
             articleTitle.value = data.title
             articleThumbnailPreview.value = data.thumbnail
+
+            const sourceResponse = await fetch(data.source)
+            articleContent.value = await sourceResponse.text()
         }
         showArticleModal.value = true
     }
 
     const openPreviewModal = (data: Media) => {
-        selectedType.value = data.type
-        selectedSource.value = data.source
+        selectedPreviewMedia.value = data
         showPreviewModal.value = true
     }
 
@@ -459,8 +463,7 @@
         showEbookModal.value = false
         showArticleModal.value = false
         showPreviewModal.value = false
-        selectedType.value = null
-        selectedSource.value = ""
+        selectedPreviewMedia.value = null
     }
 
     const saveVideo = async () => {

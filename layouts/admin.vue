@@ -46,6 +46,14 @@
 </template>
 
 <script setup lang="ts">
+    useHead({
+        title: "E-UKGS | Dashboard Perawat",
+        meta: [{
+            name: "description",
+            content: "Dashboard perawat manajemen Usaha Kesehatan Gigi Sekolah"
+        }]
+    })
+
     const uiStore = useUiStore()
     const userStore = useUserStore()
 
@@ -85,6 +93,12 @@
             route: "/admin/account",
             icon: "mdi:account-group-outline" ,
             selectedIcon: "mdi:account-group"
+        },
+        {
+            label: "Profil Pengguna",
+            route: "/admin/profile",
+            icon: "mdi:account-circle-outline" ,
+            selectedIcon: "mdi:account-circle"
         },
         {
             label: "Panduan Pengguna",

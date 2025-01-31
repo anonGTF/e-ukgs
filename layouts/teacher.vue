@@ -52,6 +52,14 @@
 </template>
 
 <script setup lang="ts">
+    useHead({
+        title: "E-UKGS | Dashboard Guru",
+        meta: [{
+            name: "description",
+            content: "Dashboard guru manajemen Usaha Kesehatan Gigi Sekolah"
+        }]
+    })
+
     const teacherMenuItems: Ref<Array<MenuItemArgs>> = ref([
         {
             label: "Beranda",
@@ -93,6 +101,12 @@
             route: "/teacher/evaluation",
             icon: "mdi:clipboard-text-search-outline" ,
             selectedIcon: "mdi:clipboard-text-search" 
+        },
+        {
+            label: "Profil Pengguna",
+            route: "/teacher/profile",
+            icon: "mdi:account-circle-outline" ,
+            selectedIcon: "mdi:account-circle"
         },
         {
             label: "Panduan Pengguna",
