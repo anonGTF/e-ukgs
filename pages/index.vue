@@ -51,13 +51,7 @@
             <div 
                 v-for="ebook in ebooks" 
                 class="cursor-pointer" 
-                @click="navigateTo(
-                    ebook.source, 
-                    {
-                        external: true,
-                        open: { target: '_blank' }
-                    }
-                )"
+                @click="openExternalLink(ebook.source)"
             >
                 <img 
                     :src="ebook.thumbnail"
@@ -131,7 +125,10 @@
             </Button>
         </div>
         <Spacer height="h-6"/>
-        <div class="flex flex-row justify-center cursor-pointer items-center gap-2">
+        <div 
+            class="flex flex-row justify-center cursor-pointer items-center gap-2"
+            @click="openExternalLink(CONFIG.parentStudentTutorialLink)"
+        >
             <Icon name="mdi:help-circle" class="text-white"/>
             <Text class="underline font-bold" color="text-white">
                 Lihat panduan penggunaan website

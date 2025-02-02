@@ -34,17 +34,12 @@
                         :type="ButtonType.Ghost"
                         dense
                         class="text-primary"
-                        @click="showDebrisInstruction = !showDebrisInstruction"
+                        external
+                        :to="CONFIG.ohisTutorialLink"
                     >
-                        {{ showDebrisInstruction ? "Sembunyikan Instruksi" : "Tampilkan Instruksi" }}
+                        Lihat Instruksi
                     </Button>
                 </div>
-                <template v-if="showDebrisInstruction">
-                    <Spacer height="h-4"/>
-                    <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi Debris Index - OHIS</Text>
-                    </div>
-                </template>
                 <Spacer height="h-4"/>
                 <div class="grid grid-cols-3 gap-6 w-full">
                     <CustomDropdownSelector
@@ -71,17 +66,12 @@
                         :type="ButtonType.Ghost"
                         dense
                         class="text-primary"
-                        @click="showKalkulusInstruction = !showKalkulusInstruction"
+                        external
+                        :to="CONFIG.ohisTutorialLink"
                     >
-                        {{ showKalkulusInstruction ? "Sembunyikan Instruksi" : "Tampilkan Instruksi" }}
+                        Lihat Instruksi
                     </Button>
                 </div>
-                <template v-if="showKalkulusInstruction">
-                    <Spacer height="h-4"/>
-                    <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi Kalkulus Index - OHIS</Text>
-                    </div>
-                </template>
                 <Spacer height="h-4"/>
                 <div class="grid grid-cols-3 gap-6 w-full">
                     <CustomDropdownSelector
@@ -109,17 +99,12 @@
                         :type="ButtonType.Ghost"
                         dense
                         class="text-primary"
-                        @click="showDmftInstruction = !showDmftInstruction"
+                        external
+                        :to="CONFIG.dmftTutorialLink"
                     >
-                        {{ showDmftInstruction ? "Sembunyikan Instruksi" : "Tampilkan Instruksi" }}
+                        Lihat Instruksi
                     </Button>
                 </div>
-                <template v-if="showDmftInstruction">
-                    <Spacer height="h-4"/>
-                    <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi DMFT</Text>
-                    </div>
-                </template>
                 <Spacer height="h-4"/>
                 <div class="grid grid-cols-2 gap-6 w-full">
                     <TextField
@@ -166,17 +151,12 @@
                         :type="ButtonType.Ghost"
                         dense
                         class="text-primary"
-                        @click="showGumInstruction = !showGumInstruction"
+                        external
+                        :to="CONFIG.gumTutorialLink"
                     >
-                        {{ showGumInstruction ? "Sembunyikan Instruksi" : "Tampilkan Instruksi" }}
+                        Lihat Instruksi
                     </Button>
                 </div>
-                <template v-if="showGumInstruction">
-                    <Spacer height="h-4"/>
-                    <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
-                        <Text :typography="Typography.Label" color="text-black" class="font-semibold">Instruksi Pemeriksaan Kondisi Gusi</Text>
-                    </div>
-                </template>
                 <Spacer height="h-4"/>
                 <div class="w-full bg-primary/10 p-4 rounded-lg border border-dashed border-primary">
                     <Text :typography="Typography.Label" color="text-black" class="font-semibold">Catatan: Nilai Kondisi Gusi</Text>
@@ -332,7 +312,6 @@
     }
     const toothHealthData = computed(() => useGetAllToothHealth(userStore.school?.id ?? "", activeActivity.value?.id ?? "-"))
 
-    const showDebrisInstruction = ref(false)
     const debris = ref({
         16: -1,
         11: -1,
@@ -368,7 +347,6 @@
         return scoreList.reduce((sum, value) => sum + value, 0) / scoreList.length
     })
 
-    const showKalkulusInstruction = ref(false)
     const kalkulus = ref({
         16: -1,
         11: -1,
@@ -405,7 +383,6 @@
     })
     const ohisScore = computed(() => debrisScore.value + kalkulusScore.value)
 
-    const showGumInstruction = ref(false)
     const gumScoreOptions = ref<CustomDropdownOption<number>[]>([
         {
             label: "0",

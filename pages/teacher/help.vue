@@ -6,22 +6,12 @@
         <Spacer class="h-6"/>
         <div class="bg-white border border-border-primary rounded-2xl p-6">
             <div class="flex flex-row justify-between items-center">
-                <Text :typography="Typography.Label" class="font-semibold">1. Panduan A</Text>
-                <Button dense>
-                    Download
-                </Button>
-            </div>
-            <Spacer height="h-4"/>
-            <div class="flex flex-row justify-between items-center">
-                <Text :typography="Typography.Label" class="font-semibold">2. Panduan B</Text>
-                <Button dense>
-                    Download
-                </Button>
-            </div>
-            <Spacer height="h-4"/>
-            <div class="flex flex-row justify-between items-center">
-                <Text :typography="Typography.Label" class="font-semibold">3. Panduan C</Text>
-                <Button dense>
+                <Text :typography="Typography.Label" class="font-semibold">Panduan E-UKGS untuk Guru</Text>
+                <Button 
+                    dense
+                    external
+                    :to="CONFIG.teacherTutorialLink"
+                >
                     Download
                 </Button>
             </div>

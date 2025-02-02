@@ -204,3 +204,11 @@ export const getWhatsappParentLink = (parentNumber: string, referralLetterLink: 
     "https://wa.me/" + parentNumber + 
     "?text=Kepada Orang tua/wali Murid. Setelah kami lakukan pemeriksaan kesehatan gigi, diperlukan pemeriksaan lebih lanjut. Kami buatkan surat rujukan yang bisa Anda bawa ketika datang ke Puskesmas/RS. Surat rujukan bisa Anda akses pada link berikut:%0a%0a" + 
     encodeURIComponent(referralLetterLink.replace(/\/o\/(.*?)(?=\?alt=media)/, (_, p1) => `/o/${p1.replace(/\//g, "%2F")}`).replace(/%/g, "%25"))
+
+export const openExternalLink = (link: string) => navigateTo(
+    link, 
+    {
+        external: true,
+        open: { target: '_blank' }
+    }
+)
