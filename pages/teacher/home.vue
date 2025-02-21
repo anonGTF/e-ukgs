@@ -181,7 +181,7 @@
             icon: "mdi:tooth",
             color: "bg-success",
             iconColor: "text-success",
-            label: "Pemeriksaan Gigi Siswa",
+            label: "Kesehatan Gigi Siswa",
             route: "/teacher/student-health",
             submenu: [
                 {

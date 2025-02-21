@@ -699,23 +699,12 @@
                 </DataTable>
             </template>
             <template v-if="activity.type == ActivityType.TOOTH_HEALTH">
-                <div class="flex flex-row justify-between">
-                    <TextField
-                        v-model="searchQuery"
-                        placeholder="Cari siswa dgn nama"
-                        leading-icon="mdi:magnify"
-                        class="me-1 w-52 sm:w-[16.7rem]"
-                    />
-                    <Button class="hidden sm:block" to="/teacher/student-health/check">
-                        Lakukan Pemeriksaan
-                    </Button>
-                    <div 
-                        class="drawer-button btn btn-square flex justify-center sm:hidden bg-primary text-white"
-                        @click="navigateTo('/teacher/student-health/check')"
-                    >
-                        <Icon name="mdi:doctor" size="24px"/>
-                    </div>
-                </div>
+                <TextField
+                    v-model="searchQuery"
+                    placeholder="Cari siswa dgn nama"
+                    leading-icon="mdi:magnify"
+                    class="me-1 w-52 sm:w-[16.7rem]"
+                />
                 <Spacer class="h-6"/>
                 <DataTable
                     :headers="healthTableHeader"
@@ -757,11 +746,12 @@
                         </td>
                         <td class="flex justify-end">
                             <Button 
-                                :type="data.result == undefined ? ButtonType.Primary : ButtonType.Outlined" 
+                                v-if="data.result"
+                                :type="ButtonType.Outlined" 
                                 dense
-                                @click="getAction(data)"
+                                @click="`/teacher/student-health/${activity?.id ?? '-'}/${data.student.id}`"
                             >
-                                {{ data.result == undefined ? "Periksa" : "Lihat Detail" }}
+                                Lihat Detail
                             </Button>
                         </td>
                     </tr>
@@ -1133,10 +1123,5 @@
                 uiStore.hideConfirmationModal()
             }
         )
-    }
-
-    const getAction = (data: { student: Student, result?: ToothHealth}) => {
-        const link = data.result == undefined ? `/teacher/student-health/check?id=${data.student.id}` : `/teacher/student-health/${activity.value?.id ?? '-'}/${data.student.id}`
-        navigateTo(link)
     }
 </script>

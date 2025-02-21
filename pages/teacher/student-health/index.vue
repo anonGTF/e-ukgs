@@ -43,23 +43,12 @@
                     />
                 </div>
                 <Spacer height="h-12"/>
-                <div class="flex flex-row justify-between">
-                    <TextField
-                        v-model="searchQuery"
-                        :placeholder="isSmall(activeBreakpoint) ? 'Cari siswa dgn nama' : 'Cari siswa berdasarkan nama'"
-                        leading-icon="mdi:magnify"
-                        class="me-1 w-52 sm:w-[16.7rem]"
-                    />
-                    <Button class="hidden sm:block" to="/teacher/student-health/check">
-                        Lakukan Pemeriksaan
-                    </Button>
-                    <div 
-                        class="drawer-button btn btn-square flex justify-center sm:hidden bg-primary text-white"
-                        @click="navigateTo('/teacher/student-health/check')"
-                    >
-                        <Icon name="mdi:doctor" size="24px"/>
-                    </div>
-                </div>
+                <TextField
+                    v-model="searchQuery"
+                    :placeholder="isSmall(activeBreakpoint) ? 'Cari siswa dgn nama' : 'Cari siswa berdasarkan nama'"
+                    leading-icon="mdi:magnify"
+                    class="me-1 w-52 sm:w-[16.7rem]"
+                />
                 <Spacer class="h-6"/>
                 <DataTable
                     :headers="tableHeader"
@@ -101,11 +90,12 @@
                         </td>
                         <td class="flex justify-end">
                             <Button 
-                                :type="data.result == undefined ? ButtonType.Primary : ButtonType.Outlined" 
+                                v-if="data.result"
+                                :type="ButtonType.Outlined" 
                                 dense
-                                @click="getAction(data)"
+                                @click="`/teacher/student-health/${activeActivity?.id ?? '-'}/${data.student.id}`"
                             >
-                                {{ data.result == undefined ? "Periksa" : "Lihat Detail" }}
+                                Lihat Detail
                             </Button>
                         </td>
                     </tr>
@@ -238,11 +228,6 @@
 
     const doneActivities = useGetDoneActivitiesByType(userStore.school?.id as string, ActivityType.TOOTH_HEALTH)
     const doneTableHeader = ["", ""]
-
-    const getAction = (data: StudentResult) => {
-        const link = data.result == undefined ? `/teacher/student-health/check?id=${data.student.id}` : `/teacher/student-health/${activeActivity.value?.id ?? '-'}/${data.student.id}`
-        navigateTo(link)
-    }
 
     useEventListener("resize", () => {
         activeBreakpoint.value = getActiveBreakpoint()

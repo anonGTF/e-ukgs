@@ -668,12 +668,20 @@
                 </DataTable>
             </template>
             <template v-if="activity.type == ActivityType.TOOTH_HEALTH">
-                <TextField
-                    v-model="searchQuery"
-                    placeholder="Cari siswa dgn nama"
-                    leading-icon="mdi:magnify"
-                    class="me-1 w-52 sm:w-[16.7rem]"
-                />
+                <div class="flex flex-row justify-between items-center">
+                    <TextField
+                        v-model="searchQuery"
+                        placeholder="Cari siswa dgn nama"
+                        leading-icon="mdi:magnify"
+                        class="me-1 w-52 sm:w-[16.7rem]"
+                    />
+                    <Button
+                        v-if="activity.status == ActivityStatus.ONPROGRESS"
+                        :to="`/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/health-check`"
+                    >
+                        Lakukan Pemeriksaan
+                    </Button>
+                </div>
                 <Spacer class="h-6"/>
                 <DataTable
                     :headers="healthTableHeader"
@@ -728,6 +736,13 @@
                                 :to="`/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/student-health?id=${data.result.studentId}`"
                             >
                                 Lihat Detail
+                            </Button>
+                            <Button 
+                                v-else-if="activity.status == ActivityStatus.ONPROGRESS"
+                                dense
+                                :to="`/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/health-check?id=${data.student.id}`"
+                            >
+                                Periksa
                             </Button>
                         </td>
                     </tr>
@@ -890,7 +905,7 @@
     const studentHealthData = computed(() => students.value.map((student) => ({
         student,
         result: toothHealthData.value.find((entry) => entry.studentId == student.id)
-    })))
+    })).sort((curr, next) => curr.result === undefined ? -1 : next.result === undefined ? 1 : 0))
 
     const filteredStudentResultData = computed(() => 
         studentResultData.value.filter((data) => 

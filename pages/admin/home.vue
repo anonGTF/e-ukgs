@@ -27,7 +27,7 @@
                                 dense
                                 :to="`/admin/ukgs/${data.school?.id ?? '-'}/${data.data.id}`"
                             >
-                                Buat Rujukan
+                                Lakukan Pemeriksaan
                             </Button>
                         </td>
                     </tr>

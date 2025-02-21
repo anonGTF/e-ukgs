@@ -91,7 +91,7 @@
             route: "/teacher/parent-questionnarie"
         },
         {
-            label: "Pemeriksaan Gigi Siswa",
+            label: "Kesehatan Gigi Siswa",
             route: "/teacher/student-health",
             icon: "mdi:tooth-outline" ,
             selectedIcon: "mdi:tooth" 

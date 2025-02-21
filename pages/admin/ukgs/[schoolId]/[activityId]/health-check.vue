@@ -21,7 +21,7 @@
                 <div class="flex flex-col items-center">
                     <Text>Pemeriksaan pada {{ selectedStudent?.gender == "Laki-laki" ? "siswa" : "siswi" }} <span class="font-semibold">{{ selectedStudent?.name }}</span> sudah dilakukan</Text>
                     <Spacer height="h-4"/>
-                    <Button :to="`/teacher/student-health/${activeActivity?.id ?? '-'}/${selectedStudent?.id}`" class="w-fit">Lihat Hasil Pemeriksaan</Button>
+                    <Button :to="`/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/student-health?id=${selectedStudent?.id}`" class="w-fit">Lihat Hasil Pemeriksaan</Button>
                 </div>
             </template>
             <template v-else>
@@ -272,32 +272,39 @@
 
 <script setup lang="ts">
     definePageMeta({
-        layout: 'teacher'
+        layout: 'admin'
     })
-
-    const breadcrumbs = ref<BreadcrumbArgs[]>([
-        {
-            label: "Beranda",
-            route: "/teacher/home"
-        },
-        {
-            label: "Kesehatan Gigi Siswa",
-            route: "/teacher/student-health"
-        },
-        {
-            label: "Periksa",
-            route: "/teacher/student-health/check"
-        },
-    ])
 
     const route = useRoute()
     const router = useRouter()
-    const userStore = useUserStore()
     const uiStore = useUiStore()
+
+    const breadcrumbs = ref<BreadcrumbArgs[]>([
+    {
+            label: "Beranda",
+            route: "/admin/home"
+        },
+        {
+            label: "Data Kegiatan UKGS",
+            route: "/admin/ukgs"
+        },
+        {
+            label: "Sekolah",
+            route: `/admin/ukgs/${route.params.schoolId}`
+        },
+        {
+            label: "Detail Kegiatan",
+            route: `/admin/ukgs/${route.params.schoolId}/${route.params.activityId}`
+        },
+        {
+            label: "Pemeriksaan",
+            route: `/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/health-check?id=${route.query.id}`
+        }
+    ])
 
     const activeActivity = ref<Activity | null>(null)
     const selectedStudent = ref<Student | null>(null)
-    const allStudents = useGetAllStudents(userStore.school?.id as string)
+    const allStudents = useGetAllStudents(route.params.schoolId as string)
     const studentDropdownOptions = computed<CustomDropdownOption<Student>[]>(() => allStudents.value.map((student) => ({
         label: student.name,
         data: student
@@ -310,7 +317,7 @@
     const selectStudent = (data: CustomDropdownOption<Student>) => {
         selectedStudent.value = data.data
     }
-    const toothHealthData = computed(() => useGetAllToothHealth(userStore.school?.id ?? "", activeActivity.value?.id ?? "-"))
+    const toothHealthData = computed(() => useGetAllToothHealth(route.params.schoolId as string, activeActivity.value?.id ?? "-"))
 
     const debris = ref({
         16: -1,
@@ -505,7 +512,6 @@
     const wrapWithDropdownOption = (data: number, options: CustomDropdownOption<number>[]): CustomDropdownOption<number> | undefined => 
         options.find((option) => option.data == data)
 
-    const showDmftInstruction = ref(false)
     const cavity = ref<number>(0)
     const filled = ref<number>(0)
     const loose = ref<number>(0)
@@ -537,7 +543,7 @@
         isLoading.value = true
         let evidencesLink: string[] = []
         if (evidences.value.length > 0) {
-            const uplaodJob = evidences.value.map((evidence) => useUploadFile(evidence, `${userStore.school?.id ?? '-'}/${activeActivity.value?.id ?? '-'}`))
+            const uplaodJob = evidences.value.map((evidence) => useUploadFile(evidence, `${route.params.schoolId}/${activeActivity.value?.id ?? '-'}`))
             const uploadResults = await Promise.all(uplaodJob)
             if (uploadResults.some((result) => isLeft(result))) {
                 uiStore.showToast("Upload Foto gagal", ToastType.ERROR)
@@ -547,7 +553,7 @@
             evidencesLink = uploadResults.map((result) => unwrapEither(result))
         }
 
-        const result = await useAddToothHealth(userStore.school?.id ?? "", activeActivity.value.id, {
+        const result = await useAddToothHealth(route.params.schoolId as string, activeActivity.value.id, {
             id: "",
             studentId: selectedStudent.value.id,
             ohis: {
@@ -589,7 +595,7 @@
     })
 
     onMounted(async () => {
-        const result = await useGetActiveActivityByType(userStore.school?.id as string, ActivityType.TOOTH_HEALTH)
+        const result = await useGetActiveActivityByType(route.params.schoolId as string, ActivityType.TOOTH_HEALTH)
         if (isLeft(result)) {
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
             router.back()
@@ -598,7 +604,7 @@
         }
 
         if (route.query.id != null) {
-            const studentResult = await useGetStudentById(route.query.id as string, userStore.school?.id as string)
+            const studentResult = await useGetStudentById(route.query.id as string, route.params.schoolId as string)
             if (isLeft(studentResult)) {
                 uiStore.showToast(unwrapEither(studentResult), ToastType.ERROR)
             } else {
