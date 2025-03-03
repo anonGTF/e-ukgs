@@ -115,6 +115,13 @@
             <Button to="/">Kembali ke beranda</Button>
         </div>
     </div>
+    <StudentResultDialog
+        v-model="showResultModal"
+        :education-score="educationScore"
+        :attitude-score="attitudeScore"
+        :action-score="actionScore"
+        @dismiss="handleDismiss"
+    />
 </template>
 
 <script setup lang="ts">
@@ -144,6 +151,10 @@
     const entryData = ref<Questionnarie | null>(null)
     const activeActivity = ref<Activity | null>(null)
     const isLoading = ref(false)
+    const showResultModal = ref(false)
+    const educationScore = ref(0)
+    const attitudeScore = ref(0)
+    const actionScore = ref(0)
 
     const goToQuestionMode = async () => {
         if (selectedSchool.value == null || selectedStudent.value == null || activeActivity.value == null) return
@@ -163,13 +174,14 @@
         if (selectedSchool.value == null || selectedStudent.value == null || activeActivity.value == null || entryData.value == null) return
 
         isLoading.value = true
+        const scores = getScore()
         const result = await useAddEntry(
             selectedSchool.value.id, 
             activeActivity.value.id, 
             {
                 ...entryData.value,
                 id: selectedStudent.value.id,
-                sections: getScore()
+                sections: scores
             }
         )
 
@@ -177,9 +189,22 @@
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
             isLoading.value = false
         } else {
-            uiStore.showToast("Jawaban Berhasil Disimpan!", ToastType.SUCCESS)
-            router.back()
+            educationScore.value = scores[0].score
+            attitudeScore.value = scores[1].score
+            actionScore.value = scores[2].score
+
+            showResultModal.value = true
+            isLoading.value = false
         }
+
+    }
+
+    const handleDismiss = () => {
+        educationScore.value = 0
+        attitudeScore.value = 0
+        actionScore.value = 0
+        showResultModal.value = false
+        router.back()
     }
 
     const getScore = () => {

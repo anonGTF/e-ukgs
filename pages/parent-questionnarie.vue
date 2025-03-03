@@ -103,6 +103,11 @@
             <Button to="/">Kembali ke beranda</Button>
         </div>
     </div>
+    <ParentResultDialog
+        v-model="showResultModal"
+        :score="score"
+        @dismiss="handleDismiss"
+    />
 </template>
 
 <script setup lang="ts">
@@ -140,6 +145,9 @@
     const activeActivity = ref<Activity | null>(null)
     const isLoading = ref(false)
 
+    const showResultModal = ref(false)
+    const score = ref(0)
+
     const goToQuestionMode = async () => {
         if (selectedSchool.value == null || selectedStudent.value == null || activeActivity.value == null) return
 
@@ -158,6 +166,8 @@
         if (selectedSchool.value == null || selectedStudent.value == null || activeActivity.value == null || entryData.value == null) return
 
         isLoading.value = true
+        const scoreResult = getScore(entryData.value.sections[0])
+
         const result = await useAddEntry(
             selectedSchool.value.id,
             activeActivity.value.id, 
@@ -166,7 +176,7 @@
                 id: selectedStudent.value.id,
                 sections: [{
                     ...entryData.value.sections[0],
-                    score: getScore(entryData.value.sections[0])
+                    score: scoreResult
                 }]
             },
             {
@@ -179,9 +189,16 @@
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
             isLoading.value = false
         } else {
-            uiStore.showToast("Jawaban Berhasil Disimpan!", ToastType.SUCCESS)
-            router.back()
+            isLoading.value = false
+            score.value = scoreResult
+            showResultModal.value = true
         }
+    }
+
+    const handleDismiss = () => {
+        showResultModal.value = false
+        score.value = 0
+        router.back()
     }
 
     const getScore = (section: Section): number => {
