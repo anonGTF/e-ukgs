@@ -93,7 +93,7 @@
                                 v-if="data.result"
                                 :type="ButtonType.Outlined" 
                                 dense
-                                @click="`/teacher/student-health/${activeActivity?.id ?? '-'}/${data.student.id}`"
+                                :to="`/teacher/student-health/${activeActivity?.id ?? '-'}/${data.student.id}`"
                             >
                                 Lihat Detail
                             </Button>
