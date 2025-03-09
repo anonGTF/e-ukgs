@@ -114,6 +114,22 @@ export const gumsLabel = {
 
 export const roundScore = (score: number) => parseFloat(score.toFixed(2)) === score ? score : parseFloat(score.toFixed(2))
 
+export const getDebrisScore = (data: ToothHealth | undefined) => {
+    if (data?.ohis.debris == null) return 0
+
+    const scoreList = Object.values(data?.ohis.debris)
+    return scoreList.reduce((sum, value) => sum + value, 0) / scoreList.length
+}
+
+export const getKalkulusScore = (data: ToothHealth | undefined) => {
+    if (data?.ohis.kalkulus == null) return 0
+
+    const scoreList = Object.values(data?.ohis.kalkulus)
+    return scoreList.reduce((sum, value) => sum + value, 0) / scoreList.length
+}
+
+export const getSelectedRule = (rules: ScoreStatusRule[], value: number) => rules.find((rule) => value >= rule.min && value <= rule.max)?.label
+
 export const educationActionScoreRule = [
     {
         min: 76,

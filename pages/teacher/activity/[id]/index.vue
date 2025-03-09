@@ -591,12 +591,20 @@
 
         <div v-if="activity && activity.type != ActivityType.OTHER" class="bg-white border border-border-primary rounded-2xl p-6">
             <template v-if="activity.type == ActivityType.STUDENT_FORM">
-                <TextField
-                    v-model="searchQuery"
-                    placeholder="Cari siswa dgn nama"
-                    leading-icon="mdi:magnify"
-                    class="me-1 w-52 sm:w-[16.7rem]"
-                />
+                <div class="flex flex-row justify-between">
+                    <TextField
+                        v-model="searchQuery"
+                        placeholder="Cari siswa dgn nama"
+                        leading-icon="mdi:magnify"
+                        class="me-1 w-52 sm:w-[16.7rem]"
+                    />
+                    <Button 
+                        v-if="activity.status == ActivityStatus.DONE"
+                        @click="downloadReport"
+                    >
+                        Download Report
+                    </Button>
+                </div>
                 <Spacer class="h-6"/>
                 <DataTable
                     :headers="studentFormTableHeader"
@@ -650,12 +658,20 @@
                 </DataTable>
             </template>
             <template v-if="activity.type == ActivityType.PARENT_FORM">
-                <TextField
-                    v-model="searchQuery"
-                    placeholder="Cari siswa dgn nama"
-                    leading-icon="mdi:magnify"
-                    class="me-1 w-52 sm:w-[16.7rem]"
-                />
+                <div class="flex flex-row justify-between">
+                    <TextField
+                        v-model="searchQuery"
+                        placeholder="Cari siswa dgn nama"
+                        leading-icon="mdi:magnify"
+                        class="me-1 w-52 sm:w-[16.7rem]"
+                    />
+                    <Button 
+                        v-if="activity.status == ActivityStatus.DONE"
+                        @click="downloadReport"
+                    >
+                        Download Report
+                    </Button>
+                </div>
                 <Spacer class="h-6"/>
                 <DataTable
                     :headers="parentTableHeader"
@@ -699,12 +715,20 @@
                 </DataTable>
             </template>
             <template v-if="activity.type == ActivityType.TOOTH_HEALTH">
-                <TextField
-                    v-model="searchQuery"
-                    placeholder="Cari siswa dgn nama"
-                    leading-icon="mdi:magnify"
-                    class="me-1 w-52 sm:w-[16.7rem]"
-                />
+                <div class="flex flex-row justify-between">
+                    <TextField
+                        v-model="searchQuery"
+                        placeholder="Cari siswa dgn nama"
+                        leading-icon="mdi:magnify"
+                        class="me-1 w-52 sm:w-[16.7rem]"
+                    />
+                    <Button 
+                        v-if="activity.status == ActivityStatus.DONE"
+                        @click="downloadHealthReport"
+                    >
+                        Download Report
+                    </Button>
+                </div>
                 <Spacer class="h-6"/>
                 <DataTable
                     :headers="healthTableHeader"
@@ -758,6 +782,14 @@
                 </DataTable>
             </template>
             <template v-if="activity.type == ActivityType.EVALUATION">
+                <div class="flex flex-row justify-end">
+                    <Button 
+                        v-if="activity.status == ActivityStatus.DONE"
+                        @click="downloadEvalReport"
+                    >
+                        Download Report
+                    </Button>
+                </div>
                 <DataTable
                     :headers="evalTableHeaders"
                 >
@@ -809,6 +841,7 @@
 </template>
 
 <script setup lang="ts">
+
     definePageMeta({
         layout: 'teacher'
     })
@@ -846,15 +879,21 @@
     const toothHealthData = useGetAllToothHealth(userStore.school?.id ?? "", route.params.id as string)
     const searchQuery = ref("")
 
-    const studentResultData = computed(() => students.value.map((student) => ({
-        student,
-        result: entries.value.find((entry) => entry.id == student.id)
-    })))
+    const studentResultData = computed(() => students.value
+        .sort((curr, next) => curr.name.localeCompare(next.name))
+        .map((student) => ({
+            student,
+            result: entries.value.find((entry) => entry.id == student.id)
+        }))
+    )
 
-    const studentHealthData = computed(() => students.value.map((student) => ({
-        student,
-        result: toothHealthData.value.find((entry) => entry.studentId == student.id)
-    })))
+    const studentHealthData = computed(() => students.value
+        .sort((curr, next) => curr.name.localeCompare(next.name))
+        .map((student) => ({
+            student,
+            result: toothHealthData.value.find((entry) => entry.studentId == student.id)
+        }))
+    )
 
     const filteredStudentResultData = computed(() => 
         studentResultData.value.filter((data) => 
@@ -1079,6 +1118,24 @@
                 completionData
             }
         }
+    }
+
+    const downloadReport = async () => {
+        if (activity.value == null || userStore.school == null) return
+
+        await useGenerateExcelReport(studentResultData.value, activity.value, userStore.school)
+    }
+
+    const downloadEvalReport = async () => {
+        if (activity.value == null || userStore.school == null) return
+
+        await useGenerateEvalReport(evalEntryData.value, activity.value, userStore.school)
+    }
+
+    const downloadHealthReport = async () => {
+        if (activity.value == null || userStore.school == null) return
+
+        await useGenerateHealthReport(studentHealthData.value, activity.value, userStore.school)
     }
 
     onMounted(async () => {

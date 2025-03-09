@@ -560,12 +560,20 @@
 
         <div v-if="activity && activity.type != ActivityType.OTHER" class="bg-white border border-border-primary rounded-2xl p-6">
             <template v-if="activity.type == ActivityType.STUDENT_FORM">
-                <TextField
-                    v-model="searchQuery"
-                    placeholder="Cari siswa dgn nama"
-                    leading-icon="mdi:magnify"
-                    class="me-1 w-52 sm:w-[16.7rem]"
-                />
+                <div class="flex flex-row justify-between">
+                    <TextField
+                        v-model="searchQuery"
+                        placeholder="Cari siswa dgn nama"
+                        leading-icon="mdi:magnify"
+                        class="me-1 w-52 sm:w-[16.7rem]"
+                    />
+                    <Button 
+                        v-if="activity.status == ActivityStatus.DONE"
+                        @click="downloadReport"
+                    >
+                        Download Report
+                    </Button>
+                </div>
                 <Spacer class="h-6"/>
                 <DataTable
                     :headers="studentFormTableHeader"
@@ -619,12 +627,20 @@
                 </DataTable>
             </template>
             <template v-if="activity.type == ActivityType.PARENT_FORM">
-                <TextField
-                    v-model="searchQuery"
-                    placeholder="Cari siswa dgn nama"
-                    leading-icon="mdi:magnify"
-                    class="me-1 w-52 sm:w-[16.7rem]"
-                />
+                <div class="flex flex-row justify-between">
+                    <TextField
+                        v-model="searchQuery"
+                        placeholder="Cari siswa dgn nama"
+                        leading-icon="mdi:magnify"
+                        class="me-1 w-52 sm:w-[16.7rem]"
+                    />
+                    <Button 
+                        v-if="activity.status == ActivityStatus.DONE"
+                        @click="downloadReport"
+                    >
+                        Download Report
+                    </Button>
+                </div>
                 <Spacer class="h-6"/>
                 <DataTable
                     :headers="parentTableHeader"
@@ -680,6 +696,12 @@
                         :to="`/admin/ukgs/${route.params.schoolId}/${route.params.activityId}/health-check`"
                     >
                         Lakukan Pemeriksaan
+                    </Button>
+                    <Button 
+                        v-else-if="activity.status == ActivityStatus.DONE"
+                        @click="downloadHealthReport"
+                    >
+                        Download Report
                     </Button>
                 </div>
                 <Spacer class="h-6"/>
@@ -763,6 +785,14 @@
                     </div>
                     <div class="w-full border border-border-divider border-dashed my-4"/>
                 </template>
+                <div class="flex flex-row justify-end">
+                    <Button 
+                        v-if="activity.status == ActivityStatus.DONE"
+                        @click="downloadEvalReport"
+                    >
+                        Download Report
+                    </Button>
+                </div>
                 <DataTable
                     :headers="evalTableHeaders"
                 >
@@ -884,6 +914,7 @@
     ])
 
     const activity = ref<Activity | null>(null)
+    const school = ref<School | null>(null)
     const pic = ref<User | null>(null)
     const updates = useGetAllUpdates(route.params.schoolId as string, route.params.activityId as string)
     const updateList = computed(() => [
@@ -897,15 +928,21 @@
     const toothHealthData = useGetAllToothHealth(route.params.schoolId as string, route.params.activityId as string)
     const searchQuery = ref("")
 
-    const studentResultData = computed(() => students.value.map((student) => ({
-        student,
-        result: entries.value.find((entry) => entry.id == student.id)
-    })))
+    const studentResultData = computed(() => students.value
+        .sort((curr, next) => curr.name.localeCompare(next.name))
+        .map((student) => ({
+            student,
+            result: entries.value.find((entry) => entry.id == student.id)
+        }))
+    )
 
-    const studentHealthData = computed(() => students.value.map((student) => ({
-        student,
-        result: toothHealthData.value.find((entry) => entry.studentId == student.id)
-    })).sort((curr, next) => curr.result === undefined ? -1 : next.result === undefined ? 1 : 0))
+    const studentHealthData = computed(() => students.value
+        .sort((curr, next) => curr.name.localeCompare(next.name))
+        .map((student) => ({
+            student,
+            result: toothHealthData.value.find((entry) => entry.studentId == student.id)
+        })).sort((curr, next) => curr.result === undefined ? -1 : next.result === undefined ? 1 : 0)
+    )
 
     const filteredStudentResultData = computed(() => 
         studentResultData.value.filter((data) => 
@@ -950,33 +987,16 @@
     }
 
     const saveReferral = async () => {
-        if (selectedToothHealthData.value == null || tempReferralData.value == null || selectedUserData.value == null) return
+        if (selectedToothHealthData.value == null || tempReferralData.value == null || selectedUserData.value == null || school.value == null || activity.value == null) return
 
         isReferralLoading.value = true
-
-        const schoolResult = await useGetSchoolById(route.params.schoolId as string)
-        if (isLeft(schoolResult)) {
-            uiStore.showToast(unwrapEither(schoolResult), ToastType.ERROR)
-            isReferralLoading.value = false
-            return
-        }
-
-        const school = unwrapEither(schoolResult)
-
-        const activityResult = await useGetActivityById(route.params.schoolId as string, route.params.activityId as string)
-        if (isLeft(activityResult)) {
-            uiStore.showToast(unwrapEither(activityResult), ToastType.ERROR)
-            isReferralLoading.value = false
-            return
-        }
-
-        const activity = unwrapEither(activityResult)
 
         const tempToothHealth = {
             ...selectedToothHealthData.value,
             referral: tempReferralData.value
         } satisfies ToothHealth
-        const referralResult = await useUploadReferral(school, activity, selectedUserData.value, tempToothHealth)
+
+        const referralResult = await useUploadReferral(school.value, activity.value, selectedUserData.value, tempToothHealth)
         if (isLeft(referralResult)) {
             uiStore.showToast(unwrapEither(referralResult), ToastType.ERROR)
             isReferralLoading.value = false
@@ -1220,7 +1240,33 @@
         }
     }
 
+    const downloadReport = async () => {
+        if (activity.value == null || school.value == null) return
+
+        await useGenerateExcelReport(studentResultData.value, activity.value, school.value)
+    }
+
+    const downloadEvalReport = async () => {
+        if (activity.value == null || school.value == null) return
+
+        await useGenerateEvalReport(evalEntryData.value, activity.value, school.value)
+    }
+
+    const downloadHealthReport = async () => {
+        if (activity.value == null || school.value == null) return
+
+        await useGenerateHealthReport(studentHealthData.value, activity.value, school.value)
+    }
+
     onMounted(async () => {
+        const schoolResult = await useGetSchoolById(route.params.schoolId as string)
+        if (isLeft(schoolResult)) {
+            uiStore.showToast(unwrapEither(schoolResult), ToastType.ERROR)
+            router.back()
+            return
+        }
+        school.value = unwrapEither(schoolResult)
+
         const result = await useGetActivityById(route.params.schoolId as string, route.params.activityId as string)
         if (isLeft(result)) {
             uiStore.showToast(unwrapEither(result), ToastType.ERROR)
