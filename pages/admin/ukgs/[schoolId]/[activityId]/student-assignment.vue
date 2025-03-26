@@ -15,17 +15,17 @@
            <Spacer class="h-0.5"/>
            <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ studentData.grade }}</Text>
            <Spacer height="h-4"/>
-           <Text :typography="Typography.Body1">Skor OHIS</Text>
+           <Text :typography="Typography.Body1">Skor Pengetahuan</Text>
            <Spacer class="h-0.5"/>
-           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.parentData?.name }}</Text>
+           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ roundScore(entryData.sections[0].score ?? 0) }}</Text>
            <Spacer height="h-4"/>
-           <Text :typography="Typography.Body1">Skor DMFT</Text>
+           <Text :typography="Typography.Body1">Skor Sikap</Text>
            <Spacer class="h-0.5"/>
-           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.parentData?.relation }}</Text>
+           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ roundScore(entryData.sections[1].score ?? 0) }}</Text>
            <Spacer height="h-4"/>
-           <Text :typography="Typography.Body1">Skor Gusi</Text>
+           <Text :typography="Typography.Body1">Skor Tindakan</Text>
            <Spacer class="h-0.5"/>
-           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.sections[0].score?.toFixed(2) ?? 0 }}</Text>
+           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ roundScore(entryData.sections[2].score ?? 0) }}</Text>
            <Spacer height="h-12"/>
            <div class="w-full border border-border-divider border-dashed"/>
            <Spacer height="h-8"/>
