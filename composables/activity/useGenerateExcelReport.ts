@@ -20,19 +20,37 @@ export const useGenerateExcelReport = async (
         {
             column: 'Hasil Pengetahuan',
             type: String,
-            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.sections[0].score ?? 999)} (${getSelectedRule(educationActionScoreRule, result.sections[0].score ?? 999)})`),
+            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.sections[0].score ?? 999)}`),
+            width: 30,
+        },
+        {
+            column: 'Kategori Pengetahuan',
+            type: String,
+            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${getSelectedRule(educationActionScoreRule, result.sections[0].score ?? 999)}`),
             width: 30,
         },
         {
             column: 'Hasil Sikap',
             type: String,
-            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.sections[1].score ?? 999)} (${getSelectedRule(attitudeScoreRule, result.sections[1].score ?? 999)})`),
+            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.sections[1].score ?? 999)}`),
+            width: 30,
+        },
+        {
+            column: 'Kategori Sikap',
+            type: String,
+            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${getSelectedRule(attitudeScoreRule, result.sections[1].score ?? 999)}`),
             width: 30,
         },
         {
             column: 'Hasil Perilaku',
             type: String,
-            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.sections[2].score ?? 999)} (${getSelectedRule(educationActionScoreRule, result.sections[2].score ?? 999)})`),
+            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.sections[2].score ?? 999)}`),
+            width: 30,
+        },
+        {
+            column: 'Kategori Perilaku',
+            type: String,
+            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${getSelectedRule(educationActionScoreRule, result.sections[2].score ?? 999)}`),
             width: 30,
         },
     ]
@@ -59,7 +77,13 @@ export const useGenerateExcelReport = async (
         {
             column: 'Hasil',
             type: String,
-            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.sections[0].score ?? 0)} (${getSelectedRule(parentScoreRule, result.sections[0].score ?? 0)})`),
+            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.sections[0].score ?? 0)}`),
+            width: 30,
+        },
+        {
+            column: 'Kategori',
+            type: String,
+            value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${getSelectedRule(parentScoreRule, result.sections[0].score ?? 0)}`),
             width: 30,
         },
     ]

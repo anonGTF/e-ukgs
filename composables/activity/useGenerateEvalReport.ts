@@ -51,7 +51,18 @@ export const useGenerateEvalReport = async (
                 evaluation: Questionnarie | undefined;
                 evalTotalScore: number | undefined;
                 peranGuru: Questionnarie | undefined;
-            }) => item.user.role == 'teacher' ? getResultOrDefault(item.peranGuru, (result) => `${roundScore(result.sections[0].score ?? 0)} (${getSelectedRule(teachertScoreRule, result.sections[0].score ?? 0)})`) : 'Tidak tersedia',
+            }) => item.user.role == 'teacher' ? getResultOrDefault(item.peranGuru, (result) => `${roundScore(result.sections[0].score ?? 0)}`) : 'Tidak tersedia',
+            width: 30,
+        },
+        {
+            column: 'Kategori Peran Guru',
+            type: String,
+            value: (item: {
+                user: User;
+                evaluation: Questionnarie | undefined;
+                evalTotalScore: number | undefined;
+                peranGuru: Questionnarie | undefined;
+            }) => item.user.role == 'teacher' ? getResultOrDefault(item.peranGuru, (result) => `${getSelectedRule(teachertScoreRule, result.sections[0].score ?? 0)}`) : 'Tidak tersedia',
             width: 30,
         },
         {
@@ -62,7 +73,62 @@ export const useGenerateEvalReport = async (
                 evaluation: Questionnarie | undefined;
                 evalTotalScore: number | undefined;
                 peranGuru: Questionnarie | undefined;
-            }) => getScoreOrDefault(item.evalTotalScore, (score) => `${roundScore(score)} (${getSelectedRule(evalScoreRule, score)})`),
+            }) => getScoreOrDefault(item.evalTotalScore, (score) => `${roundScore(score)}`),
+            width: 30,
+        },
+        {
+            column: 'Kategori Mutu Manajemen',
+            type: String,
+            value: (item: {
+                user: User;
+                evaluation: Questionnarie | undefined;
+                evalTotalScore: number | undefined;
+                peranGuru: Questionnarie | undefined;
+            }) => getScoreOrDefault(item.evalTotalScore, (score) => `${getSelectedRule(evalScoreRule, score)}`),
+            width: 30,
+        },
+        {
+            column: 'Perencaan',
+            type: String,
+            value: (item: {
+                user: User;
+                evaluation: Questionnarie | undefined;
+                evalTotalScore: number | undefined;
+                peranGuru: Questionnarie | undefined;
+            }) => getScoreOrDefault(item.evaluation?.sections[0].score, (score) => `${roundScore(score)}`),
+            width: 30,
+        },
+        {
+            column: 'Pelaksanaan',
+            type: String,
+            value: (item: {
+                user: User;
+                evaluation: Questionnarie | undefined;
+                evalTotalScore: number | undefined;
+                peranGuru: Questionnarie | undefined;
+            }) => getScoreOrDefault(item.evaluation?.sections[1].score, (score) => `${roundScore(score)}`),
+            width: 30,
+        },
+        {
+            column: 'Monitoring',
+            type: String,
+            value: (item: {
+                user: User;
+                evaluation: Questionnarie | undefined;
+                evalTotalScore: number | undefined;
+                peranGuru: Questionnarie | undefined;
+            }) => getScoreOrDefault(item.evaluation?.sections[2].score, (score) => `${roundScore(score)}`),
+            width: 30,
+        },
+        {
+            column: 'Evaluasi',
+            type: String,
+            value: (item: {
+                user: User;
+                evaluation: Questionnarie | undefined;
+                evalTotalScore: number | undefined;
+                peranGuru: Questionnarie | undefined;
+            }) => getScoreOrDefault(item.evaluation?.sections[3].score, (score) => `${roundScore(score)}`),
             width: 30,
         },
     ]

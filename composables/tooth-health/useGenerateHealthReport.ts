@@ -38,19 +38,37 @@ export const useGenerateHealthReport = async (
         {
             column: 'OHIS',
             type: String,
-            value: (item: { student: Student; result: ToothHealth | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.ohis.totalScore)} (${getSelectedRule(ohisScoreRule, result.ohis.totalScore)})`),
+            value: (item: { student: Student; result: ToothHealth | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.ohis.totalScore)}`),
+            width: 20,
+        },
+        {
+            column: 'Kategori OHIS',
+            type: String,
+            value: (item: { student: Student; result: ToothHealth | undefined; }) => getScoreOrDefault(item.result, (result) => `${getSelectedRule(ohisScoreRule, result.ohis.totalScore)}`),
             width: 20,
         },
         {
             column: 'DMFT',
             type: String,
-            value: (item: { student: Student; result: ToothHealth | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.dmft.totalScore)} (${getSelectedRule(dmftScoreRule, result.dmft.totalScore)})`),
+            value: (item: { student: Student; result: ToothHealth | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.dmft.totalScore)}`),
+            width: 20,
+        },
+        {
+            column: 'Kategori DMFT',
+            type: String,
+            value: (item: { student: Student; result: ToothHealth | undefined; }) => getScoreOrDefault(item.result, (result) => `${getSelectedRule(dmftScoreRule, result.dmft.totalScore)}`),
             width: 20,
         },
         {
             column: 'Kondisi Gusi',
             type: String,
-            value: (item: { student: Student; result: ToothHealth | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.gums.score.averageScore)} (${getSelectedRule(gumScoreRule, result.gums.score.averageScore)})`),
+            value: (item: { student: Student; result: ToothHealth | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.gums.score.averageScore)}`),
+            width: 20,
+        },
+        {
+            column: 'Kategori Kondisi Gusi',
+            type: String,
+            value: (item: { student: Student; result: ToothHealth | undefined; }) => getScoreOrDefault(item.result, (result) => `${getSelectedRule(gumScoreRule, result.gums.score.averageScore)}`),
             width: 20,
         }
     ]
