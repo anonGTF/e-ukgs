@@ -17,15 +17,15 @@
            <Spacer height="h-4"/>
            <Text :typography="Typography.Body1">Skor Pengetahuan</Text>
            <Spacer class="h-0.5"/>
-           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.sections[0].score?.toFixed(0) ?? 0 }}</Text>
+           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ roundScore(entryData.sections[0].score ?? 0) }}</Text>
            <Spacer height="h-4"/>
            <Text :typography="Typography.Body1">Skor Sikap</Text>
            <Spacer class="h-0.5"/>
-           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.sections[1].score?.toFixed(0) ?? 0 }}</Text>
+           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ roundScore(entryData.sections[1].score ?? 0) }}</Text>
            <Spacer height="h-4"/>
            <Text :typography="Typography.Body1">Skor Tindakan</Text>
            <Spacer class="h-0.5"/>
-           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ entryData.sections[2].score?.toFixed(0) ?? 0 }}</Text>
+           <Text :typography="Typography.Label" class="font-medium" color="text-black">{{ roundScore(entryData.sections[2].score ?? 0) }}</Text>
            <Spacer height="h-12"/>
            <div class="w-full border border-border-divider border-dashed"/>
            <Spacer height="h-8"/>

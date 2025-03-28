@@ -49,6 +49,15 @@
                     :rules="evalScoreRule"
                     :value="evalTotalScore"
                 />
+                <Spacer height="h-4"/>
+                <Text :typography="Typography.Body1">Detail Skor Mutu Manajemen UKGS</Text>
+                <Spacer class="h-2"/>
+                <div class="w-full grid gap-2 grid-cols-[auto_1fr]">
+                    <template v-for="(item, index) in evalEntryData?.sections" :key="index">
+                        <Text :typography="Typography.Label" color="text-black">{{ `${index + 1}. ${item.title}` }}</Text>
+                        <Text :typography="Typography.Label" color="text-black">: {{ roundScore(item.score ?? 0) }}</Text>
+                    </template>
+                </div>
             </template>
             <Spacer height="h-12"/>
             <template v-if="teacherEntryData">
