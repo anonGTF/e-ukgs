@@ -315,7 +315,7 @@
                 <Spacer height="h-3"/>
                 <div class="flex flex-row gap-4">
                     <BarCard
-                        :labels="gumLabels"
+                        :labels="gumChartLabels"
                         :background-colors="gumColor"
                         :data="gumsChartData"
                         class="flex-1"

@@ -86,7 +86,8 @@ export const gumScoreRule = [
 ]
 
 export const gumColor = ['#EE3D30', '#FFBE00', '#34D399', '#2DC653']
-export const gumLabels = ['Radang Berat', 'Radang sedang', 'Radang ringan', 'Sehat']
+export const gumLabels = ['Peradangan Berat', 'Peradangan Sedang', 'Peradangan Ringan', 'Sehat']
+export const gumChartLabels = ['Radang Berat', 'Radang sedang', 'Radang ringan', 'Sehat']
 
 export const debrisLabel = {
     0: "Tidak ada debris atau stain",
