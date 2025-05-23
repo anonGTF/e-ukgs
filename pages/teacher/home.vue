@@ -55,6 +55,51 @@
                  </div>
             </div>
         </div>
+
+        <Spacer class="h-6"/>
+        <div class="bg-white border border-border-primary rounded-2xl p-6">
+            <Text :typography="Typography.H2" class="border-border-divider border-b">Rekap Hasil Kegiatan</Text>
+            <Spacer height="h-6"/>
+            <Text :typography="Typography.H3" class="font-semibold">Kesehatan Gigi Siswa</Text>
+            <Spacer height="h-4"/>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 min-h-72">
+                <ComparisonChart
+                    :labels="['Ohis', 'DMFT', 'Gusi']"
+                    :titles="['Pemeriksaan Terakhir', 'Pemeriksaan Sebelumnya']"
+                    :data="lastStudentHealth"
+                />
+            </div>
+            <Spacer height="h-12"/>
+            <Text :typography="Typography.H3" class="font-semibold">Penilaian Perilaku Siswa</Text>
+            <Spacer height="h-4"/>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 min-h-72">
+                <ComparisonChart
+                    :labels="['Pengatahuan', 'Sikap', 'Tindakan']"
+                    :titles="['Penilaian Terakhir', 'Penilaian Sebelumnya']"
+                    :data="lastStudentAssignment"
+                />
+            </div>
+            <Spacer height="h-12"/>
+            <Text :typography="Typography.H3" class="font-semibold">Penilaian Peran Orang Tua</Text>
+            <Spacer height="h-4"/>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 min-h-72">
+                <ComparisonChart
+                    :labels="['Peran Orang Tua']"
+                    :titles="['Penilaian Terakhir', 'Penilaian Sebelumnya']"
+                    :data="lastParentQuestionnaire"
+                />
+            </div>
+            <Spacer height="h-12"/>
+            <Text :typography="Typography.H3" class="font-semibold">Evaluasi</Text>
+            <Spacer height="h-4"/>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 min-h-72">
+                <ComparisonChart
+                    :labels="['Perencanaan', 'Pelaksanaan', 'Monitoring', 'Evaluasi', 'Aksesibilitas']"
+                    :titles="['Penilaian Terakhir', 'Penilaian Sebelumnya']"
+                    :data="lastEvaluation"
+                />
+            </div>
+        </div>
     </div>
 </template>
 
@@ -99,6 +144,11 @@
     }
 
     const activities = computed(() => useGetAllActivitiesByDate(userStore.school?.id ?? "", weekDates.value[0], weekDates.value[weekDates.value.length - 1]))
+
+    const lastStudentAssignment = ref<number[][]>()
+    const lastParentQuestionnaire = ref<number[][]>()
+    const lastEvaluation = ref<number[][]>()
+    const lastStudentHealth = ref<number[][]>()
 
     const menus = [
         {
@@ -245,7 +295,35 @@
         }
     ]
 
-    onMounted(() => {
+    onMounted(async () => {
         initWeek()
+
+        const studentAssignmentResult = await useGetLastActivitiesByType(ActivityType.STUDENT_FORM, userStore.school?.id ?? "", 2)
+        if (isLeft(studentAssignmentResult)) {
+            // show toast
+        } else {
+            lastStudentAssignment.value = unwrapEither(studentAssignmentResult)
+        }
+
+        const parentQuestionnaireResult = await useGetLastActivitiesByType(ActivityType.PARENT_FORM, userStore.school?.id ?? "", 2)
+        if (isLeft(parentQuestionnaireResult)) {
+            // show toast
+        } else {
+            lastParentQuestionnaire.value = unwrapEither(parentQuestionnaireResult)
+        }
+
+        const evaluationResult = await useGetLastActivitiesByType(ActivityType.EVALUATION, userStore.school?.id ?? "", 2)
+        if (isLeft(evaluationResult)) {
+            // show toast
+        } else {
+            lastEvaluation.value = unwrapEither(evaluationResult)
+        }
+
+        const studentHealthResult = await useGetLastStudentHealth(userStore.school?.id ?? "", 2)
+        if (isLeft(studentHealthResult)) {
+            // show toast
+        } else {
+            lastStudentHealth.value = unwrapEither(studentHealthResult)
+        }
     })
 </script>

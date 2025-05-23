@@ -912,7 +912,7 @@
         "Nama Siswa",
         "Hasil Pengetahuan",
         "Hasil Sikap",
-        "Hasil Perilaku",
+        "Hasil Tindakan",
         ""
     ])
 

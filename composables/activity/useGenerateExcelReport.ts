@@ -42,13 +42,13 @@ export const useGenerateExcelReport = async (
             width: 30,
         },
         {
-            column: 'Hasil Perilaku',
+            column: 'Hasil Tindakan',
             type: String,
             value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${roundScore(result.sections[2].score ?? 999)}`),
             width: 30,
         },
         {
-            column: 'Kategori Perilaku',
+            column: 'Kategori Tindakan',
             type: String,
             value: (item: { student: Student; result: Questionnarie | undefined; }) => getScoreOrDefault(item.result, (result) => `${getSelectedRule(educationActionScoreRule, result.sections[2].score ?? 999)}`),
             width: 30,

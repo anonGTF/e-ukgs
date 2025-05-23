@@ -66,3 +66,9 @@ export type Referral = {
     treatment: string[],
     letterLink?: string
 }
+
+export type Summary = {
+    ohis: number,
+    dmft: number,
+    gum: number
+}
