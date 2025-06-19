@@ -1,6 +1,7 @@
 import { collection, getDocs, limit, orderBy, query, where } from "firebase/firestore"
+import type { LastActivity } from "~/models/activity/LastActivity"
 
-export const useGetLastActivitiesByType = async (type: ActivityType, schoolId: string, max: number): Promise<Either<String, number[][]>> => {
+export const useGetLastActivitiesByType = async (type: ActivityType, schoolId: string, max: number): Promise<Either<String, LastActivity>> => {
     const db = useFirestore()
     const collectionRef = collection(db, SCHOOL_CONSTANTS.collectionName, schoolId, ACTIVITY_CONSTANTS.collectionName)
     const queryRef = query(
@@ -33,7 +34,10 @@ export const useGetLastActivitiesByType = async (type: ActivityType, schoolId: s
 
             return totals.map((total, index) => total / counts[index])
         })
-        return makeRight(endResults)
+        return makeRight({
+            activities,
+            data: endResults
+        } satisfies LastActivity)
     } catch(error) {
         return makeLeft(error as string)
     }

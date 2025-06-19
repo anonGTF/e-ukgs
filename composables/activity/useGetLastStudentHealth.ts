@@ -1,6 +1,7 @@
 import { collection, getDocs, limit, orderBy, query, where } from "firebase/firestore"
+import type { LastActivity } from "~/models/activity/LastActivity"
 
-export const useGetLastStudentHealth = async (schoolId: string, max: number): Promise<Either<String, number[][]>> => {
+export const useGetLastStudentHealth = async (schoolId: string, max: number): Promise<Either<String, LastActivity>> => {
     const db = useFirestore()
     const collectionRef = collection(db, SCHOOL_CONSTANTS.collectionName, schoolId, ACTIVITY_CONSTANTS.collectionName)
     const queryRef = query(
@@ -31,7 +32,10 @@ export const useGetLastStudentHealth = async (schoolId: string, max: number): Pr
             
             return [(totalOhis / count), (totalDmft / count), (totalGum / count)]
         })
-        return makeRight(endResults)
+        return makeRight({
+            activities,
+            data: endResults
+        } satisfies LastActivity)
     } catch(error) {
         return makeLeft(error as string)
     }

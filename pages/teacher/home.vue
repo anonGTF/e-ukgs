@@ -60,43 +60,43 @@
         <div class="bg-white border border-border-primary rounded-2xl p-6">
             <Text :typography="Typography.H2" class="border-border-divider border-b">Rekap Hasil Kegiatan</Text>
             <Spacer height="h-6"/>
-            <Text :typography="Typography.H3" class="font-semibold">Kesehatan Gigi Siswa</Text>
+            <Text :typography="Typography.H3" class="font-semibold">Pemeriksaan Kesehatan Gigi oleh Tenaga Kesehatan Gigi</Text>
             <Spacer height="h-4"/>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 min-h-72">
                 <ComparisonChart
                     :labels="['Ohis', 'DMFT', 'Gusi']"
-                    :titles="['Pemeriksaan Terakhir', 'Pemeriksaan Sebelumnya']"
-                    :data="lastStudentHealth"
+                    :titles="getLastActivityTitle(lastStudentHealth, true)"
+                    :data="lastStudentHealth?.data"
                 />
             </div>
             <Spacer height="h-12"/>
-            <Text :typography="Typography.H3" class="font-semibold">Penilaian Perilaku Siswa</Text>
+            <Text :typography="Typography.H3" class="font-semibold">Penilaian Perilaku Siswa oleh Guru</Text>
             <Spacer height="h-4"/>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 min-h-72">
                 <ComparisonChart
                     :labels="['Pengatahuan', 'Sikap', 'Tindakan']"
-                    :titles="['Penilaian Terakhir', 'Penilaian Sebelumnya']"
-                    :data="lastStudentAssignment"
+                    :titles="getLastActivityTitle(lastStudentHealth, false)"
+                    :data="lastStudentAssignment?.data"
                 />
             </div>
             <Spacer height="h-12"/>
-            <Text :typography="Typography.H3" class="font-semibold">Penilaian Peran Orang Tua</Text>
+            <Text :typography="Typography.H3" class="font-semibold">Penilaian Peran Orang Tua oleh Guru</Text>
             <Spacer height="h-4"/>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 min-h-72">
                 <ComparisonChart
                     :labels="['Peran Orang Tua']"
-                    :titles="['Penilaian Terakhir', 'Penilaian Sebelumnya']"
-                    :data="lastParentQuestionnaire"
+                    :titles="getLastActivityTitle(lastStudentHealth, false)"
+                    :data="lastParentQuestionnaire?.data"
                 />
             </div>
             <Spacer height="h-12"/>
-            <Text :typography="Typography.H3" class="font-semibold">Evaluasi</Text>
+            <Text :typography="Typography.H3" class="font-semibold">Evaluasi oleh Tenaga Kesehatan Gigi dan Guru</Text>
             <Spacer height="h-4"/>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 min-h-72">
                 <ComparisonChart
                     :labels="['Perencanaan', 'Pelaksanaan', 'Monitoring', 'Evaluasi', 'Aksesibilitas']"
-                    :titles="['Penilaian Terakhir', 'Penilaian Sebelumnya']"
-                    :data="lastEvaluation"
+                    :titles="getLastActivityTitle(lastStudentHealth, false)"
+                    :data="lastEvaluation?.data"
                 />
             </div>
         </div>
@@ -104,6 +104,8 @@
 </template>
 
 <script setup lang="ts">
+import type { LastActivity } from '~/models/activity/LastActivity'
+
     definePageMeta({
         layout: "teacher"
     })
@@ -145,10 +147,17 @@
 
     const activities = computed(() => useGetAllActivitiesByDate(userStore.school?.id ?? "", weekDates.value[0], weekDates.value[weekDates.value.length - 1]))
 
-    const lastStudentAssignment = ref<number[][]>()
-    const lastParentQuestionnaire = ref<number[][]>()
-    const lastEvaluation = ref<number[][]>()
-    const lastStudentHealth = ref<number[][]>()
+    const lastStudentAssignment = ref<LastActivity>()
+    const lastParentQuestionnaire = ref<LastActivity>()
+    const lastEvaluation = ref<LastActivity>()
+    const lastStudentHealth = ref<LastActivity>()
+
+    const getLastActivityTitle = (lastActivity: LastActivity | undefined, isHealth: boolean): string[] => {
+        if (lastActivity == null) {
+            return isHealth ? ["Pemeriksaan Terakhir", "Pemeriksaan Sebelumnya"] : ["Penilaian Terakhir", "Penilaian Sebelumnya"]
+        }
+        return lastActivity.activities.map((activity) => useDateFormat(activity.startTime, "DD MMM YYYY", { locales: "id-ID" }).value)
+    }
 
     const menus = [
         {
