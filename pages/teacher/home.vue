@@ -74,7 +74,7 @@
             <Spacer height="h-4"/>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 min-h-72">
                 <ComparisonChart
-                    :labels="['Pengatahuan', 'Sikap', 'Tindakan']"
+                    :labels="['Pengetahuan', 'Sikap', 'Tindakan']"
                     :titles="getLastActivityTitle(lastStudentHealth, false)"
                     :data="lastStudentAssignment?.data"
                 />
