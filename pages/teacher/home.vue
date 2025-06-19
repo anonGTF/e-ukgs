@@ -64,7 +64,7 @@
             <Spacer height="h-4"/>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 min-h-72">
                 <ComparisonChart
-                    :labels="['Ohis', 'DMFT', 'Gusi']"
+                    :labels="['OHI-S', 'DMF-T', 'Gingival Index']"
                     :titles="getLastActivityTitle(lastStudentHealth, true)"
                     :data="lastStudentHealth?.data"
                 />
